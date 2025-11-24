@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
-import { IUserRepository } from "../interfaces/repositories/userRepository.interface";
-import { IUser,UserModel } from "../models/user.model";
-import { BaseRepository } from "./base_repository";
+import { IUserRepository } from "../../interfaces/repositories/user/userRepository.interface";
+import { IUser,UserModel } from "../../models/user/user.model";
+import { BaseRepository } from "../base_repository";
 
 
  @injectable()

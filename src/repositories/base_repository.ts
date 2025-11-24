@@ -37,4 +37,6 @@ async find(query: any): Promise<T[]> {
      return this.model.findByIdAndDelete(id);
  }
 
+ 
+
 }

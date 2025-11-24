@@ -1,5 +1,5 @@
-import { IUser } from "../../models/user.model";
-import { IBaseRepository } from "./baseRepository.interface";
+import { IUser } from "../../../models/user/user.model";
+import { IBaseRepository } from "../baseRepository.interface";
 
 
 export interface IUserRepository extends IBaseRepository<IUser>{

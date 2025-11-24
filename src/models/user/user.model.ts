@@ -1,4 +1,6 @@
 import mongoose,{Schema,Document} from "mongoose";
+import { Role } from "../enums/enum";
+
 
 export interface IUser extends Document{
     _id:string;
@@ -20,7 +22,7 @@ export interface IUser extends Document{
     additionalDoc?:string;
     isBlacklisted?: boolean;
     status?: string;
-    role?:"user" | "vendor" | "admin"
+    role?:Role.User|Role.Vendor|Role.Admin;
     createdAt?: Date;
     updatedAt?: Date;
     message?: string;
@@ -54,7 +56,7 @@ const UserSchema = new Schema<IUser>(
             default:"pending"
         },
 
-        role:{type:String,enum:["user","vendor","admin"],default:"user"},
+        role:{type:String,enum:Object.values(Role),default:Role.User},
 
     },
     {collection:"user",timestamps:true}
