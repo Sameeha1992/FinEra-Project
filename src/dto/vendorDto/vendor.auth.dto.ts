@@ -1,9 +1,10 @@
 export interface VendorRegisterDto{
    name: string,
    email:string,
-   registerNumber:string,
+   registerNumber?:string,
    role?:string,
-   password:string
+   password?:string
+   vendorId?:string
 }
 
 

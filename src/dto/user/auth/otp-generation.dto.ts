@@ -10,3 +10,8 @@ export interface OtpVerifyDto{
     otp:string;
     role:string;
 }
+
+export interface OtpVerifyForgetDto{
+    email:string,
+    otp:string
+}

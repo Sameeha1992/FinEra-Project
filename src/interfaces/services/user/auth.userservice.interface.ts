@@ -1,6 +1,7 @@
 import {
   otpgenerateDto,
   OtpVerifyDto,
+  OtpVerifyForgetDto,
 } from "../../../dto/user/auth/otp-generation.dto";
 import { UserRegisterDTO } from "../../../dto/user/auth/userRegisterDTO";
 import { IOtp } from "../../helper/otp.Interface";
@@ -19,4 +20,8 @@ export interface IAuthUserService {
     refreshToken: string;
   }>;
   refreshToken(refreshToken: string): Promise<string>;
+  forgetPassword(email:string):Promise<string>;
+  verifyforgetOtp(data:OtpVerifyForgetDto):Promise<void>;
+  resetPassword(email:string,password:string):Promise<string>;
+  googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>
 }

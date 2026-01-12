@@ -12,7 +12,7 @@ export const redisClient = createClient({
 });
 
 redisClient.on("error", (error) => {
-  logger.error("Redis Client Error: ", error);
+  logger.error({err:error},"Redis Client Error: ");
 });
 
 export async function connectRedis() {
@@ -20,7 +20,7 @@ export async function connectRedis() {
     await redisClient.connect();
     logger.info("Redis connected successfully");
   } catch (error: any) {
-    logger.error("Redis connection failed: ", error);
+    logger.error({err: error},"Redis connection failed: ");
     throw error;
   }
 }

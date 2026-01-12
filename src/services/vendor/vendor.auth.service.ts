@@ -14,15 +14,19 @@ import { vendorRegisterMapper } from "../../mappers/vendor/vendor.register.mappe
 import { IOtp } from "../../interfaces/helper/otp.Interface";
 import { IEmailService } from "../../interfaces/helper/email.sevice.interface";
 import logger from "../../middleware/loggerMiddleware";
-import { OtpVerifyDto } from "../../dto/user/auth/otp-generation.dto";
+import { OtpVerifyDto, OtpVerifyForgetDto } from "../../dto/user/auth/otp-generation.dto";
 import { LoginDto, LoginResponseDto } from "../../dto/shared/login.dto";
-import { IVendor } from "../../models/vendor/vendor.model";
+import { IVendor, VendorModel } from "../../models/vendor/vendor.model";
 import { UserMapper, VendorMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { IVendorLoginService } from "../../interfaces/services/share/auth.vendor.interface";
 import { IUserRepository } from "../../interfaces/repositories/user/userRepository.interface";
 import { STATUS_CODES } from "../../config/constants/statusCode";
 import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import { Role } from "../../models/enums/enum";
+import { normalize } from "path";
+import { error } from "console";
+import { OAuth2Client } from "google-auth-library";
+import { UserRegisterDTO } from "@/dto/user/auth/userRegisterDTO";
 @injectable()
 export class VendorAuthService implements IVendorAuthService {
   private readonly OTP_TTLSECONDS = 10 * 60;
@@ -105,14 +109,14 @@ export class VendorAuthService implements IVendorAuthService {
         content
       );
 
-      logger.debug(`Vendor OTP for ${normalizedEmail} : ${otp}`);
+      logger.debug({normalizedEmail,otp},`Vendor OTP generated`);
       console.log(otp);
-      logger.info(`Otp generated and send to ${normalizedEmail}`);
+      logger.info({normalizedEmail},`Otp generated and send to you email`);
 
       return { email: normalizedEmail, otp: otp, expireAt };
     } catch (error: any) {
-      logger.error(`Failed to generate OTP for ${email}:`, {
-        message: error.message,
+      logger.error({email,message: error.message},`Failed to generate OTP`, {
+        
       });
 
       throw new CustomError("Failed to send OTP.Please try again");
@@ -147,14 +151,14 @@ export class VendorAuthService implements IVendorAuthService {
         "vendor",
         this.OTP_TTLSECONDS
       );
-      logger.info(`OTP verified for ${normalizedEmail}`);
+      logger.info({normalizedEmail},`OTP verified for the email`);
       return true;
     } catch (error: any) {
-      logger.error("OTP verification failed", {
+      logger.error({
         email: vendorData.email,
         error: error.message,
         stack: error.stack,
-      });
+      },"OTP verification failed");
       return false;
     }
 
@@ -208,7 +212,107 @@ export class VendorAuthService implements IVendorAuthService {
     )
   }
   
+  async forgetVendorPassword(email:string):Promise<string>{
+    const vendor = await this._vendorRepository.findByEmail(email);
+    if(!vendor){
+      logger.error("Vendor not found in the forget password")
+      throw new CustomError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+    }
+
+    const otp = Math.floor(100000+Math.random()*900000).toString()
+
+    const redisKey = `forgetotp:vendor:${email}`
+    await this._redisService.set(redisKey,otp,this.OTP_TTLSECONDS)
+    console.log("stored in redis vendor forget password")
+
+    const content = this._emailService.generateOtpEmailContent(Number(otp))
+    const subject = "Your OTP is here"
+
+    await this._emailService.sendEmail(email,subject,content);
+
+    console.log("vendor otp generated for forget password");
+    logger.info({email,otp},"Otp generated for forget password on the vendor side")
+    return "Otp send successfully"
+  }
+
+  async verifyVendorForgetOtp(data:OtpVerifyForgetDto):Promise<void>{
    
+    const {email,otp} = data;
+    const normalizeEmail = email.toLowerCase().trim()
+    const redisKey = `forgetotp:vendor:${normalizeEmail}`
+    const storedOtp = await this._redisService.get(redisKey)
+
+    if(!storedOtp){
+      logger.error({err:error},"No otp storde in the forget password functionality");
+      throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.BAD_REQUEST)
+    }
+
+    if(storedOtp !== otp){
+      logger.error({err:error},"OTP of vendor doesnot match forget password");
+      throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.UNAUTHORIZED)
+    }
+
+    await this._redisService.delete(redisKey);
+    console.log("delete redis key in the forget password");
+    await this._redisService.set(`verified-reset:vendor:${email}`,"true",this.OTP_TTLSECONDS)
+    logger.info({email:normalizeEmail},"Forget-password OTP verified successfully")
+  }
+   
+
+   async resetPassword(email: string, password: string): Promise<string> {
+    const vendor = await this._vendorRepository.findByEmail(email);
+    if(!vendor){
+      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    }
+
+   const hashedPassword = await this._IpasswordService.hashPassword(password);
+   console.log(hashedPassword,"vendor hashed password")
+   
+   await this._vendorRepository.updateVendorPassword(email,hashedPassword)
+   return "Password reset successfully"
+  }
+
+
+ async googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,vendor:LoginResponseDto}>{
+
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+  const ticket = await client.verifyIdToken({idToken:googleToken,audience:process.env.GOOGLE_CLIENT_ID});
+  const payload = ticket.getPayload()
+
+  if(!payload || !payload.email){
+    throw new CustomError(MESSAGES.EMAIL_NOT_FOUND)
+  }
+
+  const {email,name} = payload
+
+  let vendor:IVendor |null = await this._vendorRepository.findByEmail(email)
+
+  if(!vendor){
+    const VendorData:VendorRegisterDto={
+      name:name || "No name",
+      email:email,
+      vendorId:Math.random().toString(36).substring(2,9),
+    }
+
+    const vendorModel:Partial<IVendor>={
+      vendorName:VendorData.name,
+      contact_email:VendorData.email,
+      vendorId:VendorData.vendorId,
+      role:Role.Vendor
+
+    }
+
+    vendor = await this._vendorRepository.create(vendorModel)
+
+  }
+
+  const vendorResponse = VendorMapper.VendorResponse(vendor)
+  const accessToken= this._IJwtService.generateAccessToken(vendor._id.toString(),"vendor")
+  const refreshToken = this._IJwtService.generateRefreshToken(vendor._id.toString(),"vendor")
+
+  return {accessToken,refreshToken,vendor:vendorResponse}
+ }
+
 }
 
 

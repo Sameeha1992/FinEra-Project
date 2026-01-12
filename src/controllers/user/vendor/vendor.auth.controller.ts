@@ -6,7 +6,9 @@ import { inject, injectable } from "tsyringe";
 import logger from "../../../middleware/loggerMiddleware";
 import { LoginDto } from "../../../dto/shared/login.dto";
 import { getCookieOptions } from "../../../utils/setAuthCookies";
-import { success } from "zod";
+import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
+import { CustomError } from "../../../middleware/errorMiddleware";
+import { access } from "fs";
 
 @injectable()
 export class VendorAuthController {
@@ -62,7 +64,7 @@ export class VendorAuthController {
           res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.OTP_VERIFIED})
     
     } catch (error:any) {
-      logger.error("OTP verification for vendor had failed in the controller",{error:error.message});
+      logger.error({error:error.message},"OTP verification for vendor had failed in the controller");
       return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.OTP_VERIFICATION_FAILED})
     }
   }
@@ -116,4 +118,92 @@ async refreshToken(req:Request,res:Response,next:NextFunction){
         .json({ success: false, message: "no access token available" });
     }
 }
+
+async forgetPassword(req:Request,res:Response,next:NextFunction){
+    try {
+
+      const email = req.body.email;
+      if(!email){
+        return res.status(STATUS_CODES.NOT_FOUND).json({success:false,message:"Email not required for forget password"})
+      }
+
+      const result = await this._IvendorAuthService.forgetVendorPassword(email);
+
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:result})
+      logger.info({email},"forget password OTP sent successfully")
+
+      
+    } catch (error:any) {
+      logger.error({err:error},"Forget password failed");
+      next(error)
+    }
+  }
+
+  async verifyforgetPassword(req:Request,res:Response,next:NextFunction){
+
+    try {
+      const {email,otp} = req.body;
+      console.log(email,otp,"email,otp")
+
+      if(!email || !otp){
+        return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:"Email and OTP are required"})
+      }
+
+      const otpData:OtpVerifyForgetDto={email,otp};
+      console.log(otpData,"otpdata")
+      await this._IvendorAuthService.verifyVendorForgetOtp(otpData);
+
+      logger.info({email},"Forget password OTP verified successfully");
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:"OTP verified you can now reset your password"})
+    } catch (error) {
+      logger.error({error},"Forget password otp verification failed")
+      next(error)
+    }
+
+  }
+
+  async resetPassword(req:Request,res:Response,next:NextFunction){
+
+    try {
+
+      const {email,password} = req.body;
+
+      if(!email || !password){
+        return res.status(STATUS_CODES.BAD_REQUEST).json({message:"Email and password required"})
+      }
+
+      const result = await this._IvendorAuthService.resetPassword(email,password);
+      res.status(STATUS_CODES.SUCCESS).json({message:result})
+      
+    } catch (error) {
+      console.error("Reset password error:",error);
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({message:error || "Something went wrong in reset password"})
+      
+    }
+  }
+
+  async googlelogin(req:Request,res:Response,next:NextFunction){
+
+    try {
+      const token = req.body.token;
+      if(!token){
+        throw new CustomError("Google token not required for vendor")
+      }
+
+      const {accessToken,refreshToken,vendor} = await this._IvendorAuthService.googleLogin(token)
+
+      const cookieOptions = getCookieOptions();
+      res.cookie("accessToken",accessToken,cookieOptions.accessToken);
+      res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
+
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:"Vendor google login success",vendor})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async profile(req:Request,res:Response,next:NextFunction){
+    
+  }
+
 }

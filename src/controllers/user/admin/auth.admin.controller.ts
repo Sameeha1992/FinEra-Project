@@ -3,7 +3,6 @@ import { IAdminAuthService } from "../../../interfaces/services/admin/admin.auth
 import { Request, Response, NextFunction } from "express";
 import { LoginDto } from "../../../dto/shared/login.dto";
 import { STATUS_CODES } from "../../../config/constants/statusCode";
-import { success } from "zod";
 import { MESSAGES } from "../../../config/constants/message";
 
 @injectable()
@@ -42,11 +41,12 @@ export class AdminAuthController {
         message: MESSAGES.LOGIN_SUCCESS,
       });
       console.log("Admin login completed successfully");
-    } catch (error: any) {
+    } catch (error) {
       res
         .status(STATUS_CODES.UNAUTHORIZED)
         .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS });
     }
+    
   }
 
   async refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -61,7 +61,9 @@ export class AdminAuthController {
       const accessToken: string = await this._adminAuthService.refreshToken(
         refreshToken
       );
-      res.status(STATUS_CODES.ACCEPTED).json({ message: "new token" });
-    } catch (error) {}
+      res.status(STATUS_CODES.ACCEPTED).json({ message: "new token",accessToken });
+    } catch (error) {
+      next(error)
+    }
   }
 }

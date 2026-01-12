@@ -9,9 +9,9 @@ import { IOtp } from "../../interfaces/helper/otp.Interface";
 import {
   otpgenerateDto,
   OtpVerifyDto,
+  OtpVerifyForgetDto,
 } from "../../dto/user/auth/otp-generation.dto";
 import logger from "../../middleware/loggerMiddleware";
-import { redisClient } from "../../config/redis/redis.connect";
 import { LoginDto, LoginResponseDto } from "../../dto/shared/login.dto";
 import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
@@ -19,6 +19,9 @@ import { MESSAGES } from "../../config/constants/message";
 import { IRedisService } from "../../interfaces/services/redis.interface";
 import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { Role } from "../../models/enums/enum";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { error } from "console";
+import { OAuth2Client } from "google-auth-library";
 
 @injectable()
 export class AuthUserService implements IAuthUserService {
@@ -91,9 +94,9 @@ export class AuthUserService implements IAuthUserService {
       const subject = "Your OTP Code";
       await this._emailService.sendEmail(normalizedEmail, subject, content);
 
-      logger.debug(`OTP for ${normalizedEmail}: ${otp}`);
+      logger.debug({normalizedEmail,otp},"OTP generated and sent successfully");
       console.log(otp);
-      logger.info(`OTP generated and sent to ${normalizedEmail}`);
+      logger.info({normalizedEmail},`OTP generated and sent to`);
 
       return {
         email: normalizedEmail,
@@ -101,9 +104,7 @@ export class AuthUserService implements IAuthUserService {
         expireAt,
       };
     } catch (error: any) {
-      logger.error(`Failed to generate OTP for ${email}:`, {
-        message: error.message,
-      });
+      logger.error({err:error,email},"Failed to generate OTP")
 
       throw new Error("Failed to send OTP. Please try again.");
     }
@@ -151,9 +152,9 @@ export class AuthUserService implements IAuthUserService {
         this.OTP_TTLSECONDS
       );
 
-      logger.info(`OTP verified successfully for ${normalizedEmail}`);
+      logger.info({normalizedEmail},`OTP verified successfully`);
     } catch (error: any) {
-      logger.error(`OTP verification failed for ${email}:`, error.message);
+      logger.error({err:error,email},`OTP verification failed`);
       throw error;
     }
   }
@@ -188,10 +189,10 @@ export class AuthUserService implements IAuthUserService {
 
     if (!isPassword) {
       console.log("password is mismatching wrong credentials");
+      logger.error({err:error},"Password does not math")
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
     }
-    console.log("Password is matching correct credentials");
-    console.log(userData._id);
+    
 
     const loginResponse: LoginResponseDto = UserMapper.UserResponse(userData);
 
@@ -208,6 +209,8 @@ export class AuthUserService implements IAuthUserService {
     return { user: loginResponse, accessToken, refreshToken };
   }
 
+  //Refresh Token:-
+
   async refreshToken(refreshToken: string): Promise<string> {
     const decoded = await this._jwtService.verifyToken(refreshToken, "refresh");
 
@@ -220,4 +223,102 @@ export class AuthUserService implements IAuthUserService {
 
     return this._jwtService.generateAccessToken(userId, role || Role.User);
   }
+
+  //Forget Password:-
+
+  async forgetPassword(email:string):Promise<string>{
+    const user = await this._userRepository.findByEmail(email);
+    if(!user){
+      logger.error("User not found in forget password")
+      throw new CustomError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+    }
+
+    const otp = Math.floor(100000 +Math.random() * 900000).toString();
+
+    const redisKey = `forgetotp:user:${email}`
+
+    await this._redisService.set(redisKey,otp,this.OTP_TTLSECONDS);
+    console.log("stored in redis the forget password")
+
+    const content = this._emailService.generateOtpEmailContent(Number(otp)) 
+    const subject = "Your OTP is here"
+    await this._emailService.sendEmail(email,subject,content,)
+
+
+    console.log('Otp generated for forget password');
+    logger.info({email,otp},"Otp generated for forget password")
+    return "OTP send successfully"
+                       
+  }
+
+  async verifyforgetOtp(data:OtpVerifyForgetDto):Promise<void>{
+    const {email,otp} = data;
+    const normaliseEmail = email.toLowerCase().trim()
+    const redisKey = `forgetotp:user:${normaliseEmail}`
+    const storedOtp = await this._redisService.get(redisKey);
+    if(!storedOtp){
+      logger.error({err:error},"No OTP stored in forget password functionality")
+      throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.BAD_REQUEST)
+    }
+
+    if(storedOtp!==otp){
+      logger.error({err:error},"OTP does not match-forget password")
+     throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.UNAUTHORIZED)
+    }
+
+    await this._redisService.delete(redisKey);
+    console.log("deleted redis key in the forget password")
+    await this._redisService.set(`verified-reset:user:${email}`,"true",this.OTP_TTLSECONDS)
+  logger.info({email:normaliseEmail},"Forget-password OTP verified successfully")
+
+  }
+
+  async resetPassword(email: string, password: string): Promise<string> {
+    const user = await this._userRepository.findByEmail(email);
+    if(!user){
+      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    }
+
+   const hashedPassword = await this._passwordService.hashPassword(password);
+   
+   await this._userRepository.updatePassword(email,hashedPassword)
+   return "Password reset successfully"
+  }
+
+  async googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>{
+     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+     const ticket = await client.verifyIdToken({idToken:googleToken,audience:process.env.GOOGLE_CLIENT_ID})
+     const payload= ticket.getPayload()
+
+     if(!payload || !payload.email){
+      throw new CustomError(MESSAGES.EMAIL_NOT_FOUND)
+     }
+
+     const {email,name} = payload
+
+     let user:IUser |null = await this._userRepository.findByEmail(email)
+     if(!user){
+      const UserData:UserRegisterDTO = {
+        name:name||"No name",
+        email:email,
+        customerId:Math.random().toString(36).substring(2,9),
+     }
+
+const userModel:Partial<IUser>={
+  name:UserData.name,
+  email:UserData.email,
+  customerId:UserData.customerId,
+  role:Role.User                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+}
+
+user = await this._userRepository.create(userModel)
+  }
+
+  const userResponse = UserMapper.UserResponse(user)
+  const accessToken = this._jwtService.generateAccessToken(user._id,"user");
+  const refreshToken = this._jwtService.generateRefreshToken(user._id,"user");
+
+  return {accessToken,refreshToken,user:userResponse}
+
+}
 }

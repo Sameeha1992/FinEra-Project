@@ -58,6 +58,7 @@ export const MESSAGES = {
 
   // Notifications & OTP
   EMAIL_VERIFICATION_SENT: "Verification email sent successfully.",
+  EMAIL_NOT_FOUND:"Email not found",
   EMAIL_VERIFICATION_SUCCESS: "Email successfully verified.",
   EMAIL_VERIFICATION_FAILED: "Failed to verify email.",
   OTP_NOT_VERIFIED: "Please verify OTP before registering",

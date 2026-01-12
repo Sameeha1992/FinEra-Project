@@ -18,11 +18,11 @@ const startServer = async ()=>{
         await connectRedis()
         let PORT = process.env.PORT
         server.listen(PORT,()=>{
-           logger.info("Server running on PORT",PORT)
+           logger.info({port:PORT},"Server running")
         })
         
     } catch (error) {
-        logger.error("Server failed to start:",error)
+        logger.error({err:error},"Server failed to start")
         process.exit(1)
     }
 }

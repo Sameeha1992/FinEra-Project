@@ -14,6 +14,7 @@ export interface IUser extends Document{
     gender?: "male"| "female" | "other";
     password?:string;
     adhaarNumber?:string;
+    vendorId:string;
     panNumber?:string;
     cibilScore?: number;
     adhaarDoc?: string;
@@ -50,6 +51,7 @@ const UserSchema = new Schema<IUser>(
         additionalDoc:{type:String},
         isBlacklisted:{type:Boolean, default:false},
         message:{type:String},
+        vendorId:{type:String},
         status:{
             type:String,
             enum:["pending","completed","verified","rejected"],

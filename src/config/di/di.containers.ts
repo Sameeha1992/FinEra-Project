@@ -20,13 +20,12 @@ import { AdminAuthService } from '../../services/admin/admin.auth.service'
 import { AdminAuthController } from '../../controllers/user/admin/auth.admin.controller'
 import { IVendorAuthRepository } from '../../interfaces/repositories/vendor/vendor.auth'
 import { vendorAuthRepository } from '../../repositories/vendor/vendor.auth.repo'
-import { IVendorLoginService } from '../../interfaces/services/share/auth.vendor.interface'
 import { UserLoginService } from '../../services/shared/login/user.login.stratergy'
 import {IUserLoginService} from '../../interfaces/services/share/auth.user.interface'
-import { VendorLoginService } from '../../services/shared/login/vendor.login.strategy'
 import { VendorAuthController } from '../../controllers/user/vendor/vendor.auth.controller'
 import { IVendorAuthService } from '../../interfaces/services/vendor/vendor.auth.service.interface'
 import { VendorAuthService } from '../../services/vendor/vendor.auth.service'
+import { IUserprofileService } from '../../interfaces/services/user/user.profile.interface'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -48,4 +47,6 @@ container.registerSingleton(VendorAuthController)
 container.registerSingleton<IAdminAuthRepo>('IAdminAuthRepo',AdminAuthRepo);
 container.registerSingleton<IAdminAuthService>('IAdminAuthService',AdminAuthService)
 container.registerSingleton(AdminAuthController)
+
+//User Profile
 export {container}

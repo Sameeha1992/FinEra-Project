@@ -1,42 +1,42 @@
-import { format } from "path"
-import { level, Logform, transports } from "winston"
+import pino from "pino";
 
-const winston = require('winston')
+const logger = pino({
+  level: process.env.NODE_ENV === "production" ? "info" : "debug",
 
+  transport: {
+    targets: [
+      {
+        target: "pino-pretty",
+        level: "debug",
+        options: {
+          colorize: true,
+          translateTime: "SYS:yyyy-mm-dd HH:MM:ss",
+          ignore: "pid,hostname",
+        },
+      },
 
+      {
+        target: "pino/file",
+        level: "info",
+        options: {
+          colorize: false, // no color in file
+          translateTime: "SYS:yyyy-mm-dd HH:MM:ss",
+          destination: "./logs/combined.log",
+        },
+      },
 
-const logger = winston.createLogger({
-    level:'info',
-    format:winston.format.combine(
-        winston.format.timestamp({format: 'YYYY-MM-DD'}),
-        winston.format.printf((info:Logform.TransformableInfo)=>{
-            const {level,message,timestamp} = info;
-
-            let coloredMessage = message;
-
-            if(level === 'info'){
-                coloredMessage = `\x1b[34m${message}\x1b[0m`; // Blue
-          
-            }else if(level === 'warn'){
-                coloredMessage =  `\x1b[33m${message}\x1b[0m`; // Yellow
-           
-            }else if(level === 'error'){
-                coloredMessage = `\x1b[31m${message}\x1b[0m`; // Red
-           
-            }else if(level === "success"){
-                coloredMessage = `\x1b[32m${message}\x1b[0m`; // Green
-            }
-
-            return `[${timestamp}] ${level.toUpperCase()}: ${coloredMessage}`
-        })
-    ),
-
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({filename: 'logs/error.log',level:'error'}),
-        new winston.transports.File({filename: 'logs/combined.log'})
-    ]
-})
-
+      {
+        target: "pino/file",
+        level: "error",
+        options: {
+          colorize: false,
+          destination: "./logs/error.log",
+          mkdir: true,
+          translateTime: "SYS:yyyy-mm-dd HH:MM:ss",
+        },
+      },
+    ],
+  },
+});
 
 export default logger;

@@ -6,8 +6,10 @@ import { LoginDto } from "../../../dto/shared/login.dto";
 import { CustomError } from "../../../middleware/errorMiddleware";
 import { MESSAGES } from "../../../config/constants/message";
 import { STATUS_CODES } from "../../../config/constants/statusCode";
-import { UserMapper } from "../../../mappers/sharedMappers/response.loginDto";
-import { userInfo } from "os";
+import logger from "../../../middleware/loggerMiddleware";
+import { success } from "zod";
+import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
+import { getCookieOptions } from "../../../utils/setAuthCookies";
 
 @injectable()
 export class AuthUserController {
@@ -135,4 +137,96 @@ export class AuthUserController {
         .json({ success: false, message: "no access token available" });
     }
   }
+
+  async forgetPassword(req:Request,res:Response,next:NextFunction){
+    try {
+
+      const email = req.body.email;
+      if(!email){
+        return res.status(STATUS_CODES.NOT_FOUND).json({success:false,message:"Email not required for forget password"})
+      }
+
+      const result = await this._authUserService.forgetPassword(email);
+
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:result})
+      logger.info({email},"forget password OTP sent successfully")
+
+      
+    } catch (error:any) {
+      logger.error({err:error},"Forget password failed");
+      next(error)
+    }
+  }
+
+  async verifyforgetPassword(req:Request,res:Response,next:NextFunction){
+
+    try {
+      const {email,otp} = req.body;
+      console.log(email,otp,"email,otp")
+
+      if(!email || !otp){
+        return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:"Email and OTP are required"})
+      }
+
+      const otpData:OtpVerifyForgetDto={email,otp};
+      console.log(otpData,"otpdata")
+      await this._authUserService.verifyforgetOtp(otpData);
+
+      logger.info({email},"Forget password OTP verified successfully");
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:"OTP verified you can now reset your password"})
+    } catch (error) {
+      logger.error({error},"Forget password otp verification failed")
+      next(error)
+    }
+
+  }
+
+  async resetPassword(req:Request,res:Response,next:NextFunction){
+
+    try {
+
+      const {email,password} = req.body;
+
+      if(!email || !password){
+        return res.status(STATUS_CODES.BAD_REQUEST).json({message:"Email and password required"})
+      }
+
+      const result = await this._authUserService.resetPassword(email,password);
+      res.status(STATUS_CODES.SUCCESS).json({message:result})
+      
+    } catch (error) {
+      console.error("Reset password error:",error);
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({message:error || "Something went wrong in reset password"})
+      
+    }
+  }
+
+  async googlelogin(req:Request,res:Response,next:NextFunction){
+    try {
+      const token = req.body.token;
+
+      if(!token){
+        throw new CustomError("Google token required",STATUS_CODES.BAD_REQUEST)
+      }
+      
+      const {accessToken,refreshToken,user} = await this._authUserService.googleLogin(token)
+      console.log(accessToken,"accesstoken google auth")
+      console.log(refreshToken,"refresh token google auth");
+      console.log(user,"user of google auth")
+
+      const cookieOptions = getCookieOptions();
+      res.cookie("accessToken",accessToken,cookieOptions.accessToken)
+      res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken)
+
+      res.status(STATUS_CODES.SUCCESS).json({
+        success:true,
+        message:"User logged through google",
+        user
+      })
+
+    } catch (error) {
+      next(error)
+    }
+  }
+  
 }

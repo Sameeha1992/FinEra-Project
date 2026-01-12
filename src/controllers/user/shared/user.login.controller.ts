@@ -33,8 +33,9 @@ export const vendorLogin = async (
     res.json({
       success: true,
       message: "Login Successfull",
+      user
     });
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };

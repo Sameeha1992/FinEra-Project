@@ -13,4 +13,7 @@ export class vendorAuthRepository extends BaseRepository<IVendor> implements IVe
     async findByEmail(email: string): Promise<IVendor|null> {
         return await VendorModel.findOne({contact_email:email})
     }
+    async updateVendorPassword(email:string,hashPassword:string){
+      return await VendorModel.findOneAndUpdate({contact_email:email},{password:hashPassword},{new:true})
+    }
 }

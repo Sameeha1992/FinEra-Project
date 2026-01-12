@@ -12,6 +12,10 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     async findByEmail(email: string): Promise<IUser | null> {
         return await UserModel.findOne({email})
     }
+
+    async updatePassword(email:string,hashPassword:string){
+        return await UserModel.findOneAndUpdate({email},{password:hashPassword},{new:true})
+    }
     
 }
 
