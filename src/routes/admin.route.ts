@@ -1,3 +1,4 @@
+import { AdminVendorMgtController } from "@/controllers/user/admin/admin.vendor.mgt.controller";
 import { AdminAuthController } from "../controllers/user/admin/auth.admin.controller";
 import express,{Request,Response,NextFunction } from "express";
 import { container } from "tsyringe";
@@ -7,10 +8,18 @@ import { container } from "tsyringe";
 const adminRouter = express.Router();
 
 const authAdminController = container.resolve(AdminAuthController)
+const adminAccountController = container.resolve(AdminVendorMgtController)
 
 adminRouter.post("/login",(req:Request,res:Response,next:NextFunction)=>{
     authAdminController.login(req,res,next)
 })
 
 
+adminRouter.get("/accounts",(req:Request,res:Response,next:NextFunction)=>{
+    adminAccountController.getAccounts(req,res,next)
+})
+
+adminRouter.patch("/accounts/:id/status",(req:Request,res:Response,next:NextFunction)=>{
+    adminAccountController.updatedStatus(req,res,next)
+})
 export default adminRouter

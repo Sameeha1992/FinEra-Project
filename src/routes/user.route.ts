@@ -4,11 +4,13 @@ import { container } from "../config/di/di.containers";
 import { AuthUserController } from "../controllers/user/user/auth.user.controller";
 import { validateRequest } from "../middleware/validationRequest";
 import { registerUserSchema } from "../validations/user/userRegister.validation";
+import { UserProfileController } from "../controllers/user/user/user.profile.controller";
+import { authenticateUser } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
 const authUserController = container.resolve(AuthUserController);
-
+const userProfileController = container.resolve(UserProfileController)
 router.post(
   "/generate-otp",
   (req: Request, res: Response, next: NextFunction) => {
@@ -54,6 +56,11 @@ router.post("/reset-password",(req:Request,res:Response,next:NextFunction)=>{
 router.post("/auth/google",(req:Request,res:Response,next:NextFunction)=>{
   console.log("google auth working");
   authUserController.googlelogin(req,res,next)
+})
+
+router.get("/userProfile",authenticateUser,(req:Request,res:Response,next:NextFunction)=>{
+  console.log("User profile successfully completed");
+  userProfileController.getProfile(req,res,next)
 })
 
 export default router;

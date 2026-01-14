@@ -135,7 +135,7 @@ export class AuthUserService implements IAuthUserService {
       const storedOTP = await this._redisService.get(`otp:${normalizedEmail}`);
       console.log("store otp chythu", storedOTP);
       if (!storedOTP) {
-        console.log("❌ No OTP found in database for email:", normalizedEmail);
+        console.log("No OTP found in database for email:", normalizedEmail);
 
         throw new Error("OTP expired or invalid");
       }
@@ -200,7 +200,7 @@ export class AuthUserService implements IAuthUserService {
       userData._id,
       "user"
     );
-    console.log("Access token generate cheythu");
+    console.log("Access token generate cheythu",accessToken);
     const refreshToken = this._jwtService.generateRefreshToken(
       userData._id,
       "user"

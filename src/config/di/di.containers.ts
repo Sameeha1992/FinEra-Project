@@ -14,7 +14,7 @@ import { JwtService } from '../../services/helper/jwt.service'
 import { IRedisService } from '../../interfaces/services/redis.interface'
 import { RedisService } from "../../services/helper/redis.service"
 import { IAdminAuthRepo } from '../../interfaces/repositories/admin/admin.auth.repo.interface'
-import { AdminAuthRepo } from '../../repositories/admin/admin.auth.repo'
+import { AdminAuthRepo } from '../../repositories/admin/admin.repo'
 import { IAdminAuthService } from '../../interfaces/services/admin/admin.auth.interface'
 import { AdminAuthService } from '../../services/admin/admin.auth.service'
 import { AdminAuthController } from '../../controllers/user/admin/auth.admin.controller'
@@ -26,6 +26,12 @@ import { VendorAuthController } from '../../controllers/user/vendor/vendor.auth.
 import { IVendorAuthService } from '../../interfaces/services/vendor/vendor.auth.service.interface'
 import { VendorAuthService } from '../../services/vendor/vendor.auth.service'
 import { IUserprofileService } from '../../interfaces/services/user/user.profile.interface'
+import { UserProfileService } from '../../services/user/user.profile.service'
+import { UserProfileController } from '../../controllers/user/user/user.profile.controller'
+import { IAdminVendorMgtRepo } from '@/interfaces/repositories/admin/admin.vendor.interface'
+import { AdminVendorMgtRepo } from '@/repositories/admin/admin.vendor.repo'
+import { IAdminVendorMgtService } from '@/interfaces/services/admin/admin.vendormgt.interface'
+import { AdminVendorMgtService } from '@/services/admin/admin.vendormgt'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -48,5 +54,14 @@ container.registerSingleton<IAdminAuthRepo>('IAdminAuthRepo',AdminAuthRepo);
 container.registerSingleton<IAdminAuthService>('IAdminAuthService',AdminAuthService)
 container.registerSingleton(AdminAuthController)
 
+//AdminVendorMgt:
+
+container.registerSingleton<IAdminVendorMgtRepo>("IAdminVendorMgtRepo",AdminVendorMgtRepo);
+container.registerSingleton<IAdminVendorMgtService>("IAdminVendorMgtService",AdminVendorMgtService)
+
 //User Profile
+
+container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
+container.registerSingleton<IUserprofileService>('IUserProfileService',UserProfileService)
+container.registerSingleton(UserProfileController)
 export {container}

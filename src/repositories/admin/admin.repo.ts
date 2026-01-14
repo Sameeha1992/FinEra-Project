@@ -9,6 +9,7 @@ export class AdminAuthRepo extends BaseRepository<IUser> implements IAdminAuthRe
         super(UserModel)
     }
    async findByEmail(email: string): Promise<IUser |null> {
-       return await UserModel.findOne({email})
+       return await this.model.findOne({email})
    }
+
 }

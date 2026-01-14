@@ -1,3 +1,4 @@
+import "tsconfig-paths/register";
 import { createServer } from "http";
 import { connectDB } from "./config/db";
 import app from "./app";

@@ -9,18 +9,18 @@
     "start": "node dist/server.ts",
     "lint": "eslint ."
   },
-  "_moduleAliases": {
-    "@": "dist"
-  },
+  
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/nodemailer": "^6.4.20",
     "@types/nodemon": "^3.1.1",
     "@types/otp-generator": "^4.0.2",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
