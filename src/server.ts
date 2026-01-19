@@ -1,33 +1,62 @@
 import "tsconfig-paths/register";
-import { createServer } from "http";
-import { connectDB } from "./config/db";
-import app from "./app";
 import dotenv from "dotenv"
-import { container } from "tsyringe";
-import { connectRedis } from "./config/redis/redis.connect";
-import logger from "./middleware/loggerMiddleware";
-
-
-
 dotenv.config()
 
-const startServer = async ()=>{
-    try {
-        await connectDB();
-        const server = createServer(app)
 
-        await connectRedis()
-        let PORT = process.env.PORT
-        server.listen(PORT,()=>{
-           logger.info({port:PORT},"Server running")
-        })
+import { createServer,Server } from "http";
+import { connectDB } from "./config/db";
+import App from "./app";
+import { connectRedis } from "./config/redis/redis.connect";
+import logger from "./middleware/loggerMiddleware";
+import {env} from "@/validations/envValidation"
+
+const appInstance = new App()
+
+// const startServer = async ()=>{
+//     try {
+//         await connectDB();
+//         const server = createServer(app)
+
+//         await connectRedis()
+//         let PORT = process.env.PORT
+//         server.listen(PORT,()=>{
+//            logger.info({port:PORT},"Server running")
+//         })
         
-    } catch (error) {
-        logger.error({err:error},"Server failed to start")
-        process.exit(1)
+//     } catch (error) {
+//         logger.error({err:error},"Server failed to start")
+//         process.exit(1)
+//     }
+// }
+
+
+
+// startServer()
+
+export class ServerApp {
+    private server:Server;
+
+    constructor(){
+        this.server = createServer(appInstance.app)
+    }
+
+    private async connectServices():Promise<void>{
+        await connectDB();
+        await connectRedis();
+    }
+
+    public async start():Promise<void>{
+        try {
+            await this.connectServices();
+            this.server.listen(env.PORT,()=>{
+                logger.info({port:env.PORT},"Server running")
+            })
+            
+        } catch (error) {
+            logger.error({err:error},"Server failed to start");
+            process.exit(1)
+        }
     }
 }
 
-
-
-startServer()
+new ServerApp().start()

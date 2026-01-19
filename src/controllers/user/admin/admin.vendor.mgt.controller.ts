@@ -3,7 +3,7 @@ import { STATUS_CODES } from "@/config/constants/statusCode";
 import { IAdminVendorMgtService } from "@/interfaces/services/admin/admin.vendormgt.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import { success } from "zod";
+
 
 @injectable()
 export class AdminVendorMgtController {

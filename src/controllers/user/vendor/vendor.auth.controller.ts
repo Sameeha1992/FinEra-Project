@@ -8,7 +8,7 @@ import { LoginDto } from "../../../dto/shared/login.dto";
 import { getCookieOptions } from "../../../utils/setAuthCookies";
 import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
 import { CustomError } from "../../../middleware/errorMiddleware";
-import { access } from "fs";
+
 
 @injectable()
 export class VendorAuthController {
@@ -24,7 +24,6 @@ export class VendorAuthController {
         vendorData
       );
       res.status(201).json({ success: true, data: createVendor });
-      console.log("vendor data",vendorData)
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ success: false, error: error.message });
@@ -35,7 +34,6 @@ export class VendorAuthController {
   async generateOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.body.email;
-      console.log("req.body of vendor side", email);
       await this._IvendorAuthService.generateOtp(email);
 
       res
@@ -56,15 +54,14 @@ export class VendorAuthController {
 
     try {
           const isVerified = await this._IvendorAuthService.verifyOtp(req.body);
-          console.log(isVerified,"isverified")
 
           if(!isVerified){
             return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.OTP_INVALID})
           }
           res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.OTP_VERIFIED})
     
-    } catch (error:any) {
-      logger.error({error:error.message},"OTP verification for vendor had failed in the controller");
+    } catch (error) {
+      logger.error({error:error},"OTP verification for vendor had failed in the controller");
       return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.OTP_VERIFICATION_FAILED})
     }
   }
@@ -73,25 +70,19 @@ export class VendorAuthController {
 
   try {
     const credentials: LoginDto = req.body;
-    console.log(credentials,"venodr data")
     const {vendor,accessToken,refreshToken} = await this._IvendorAuthService.vendorLogin(credentials);
-
-    console.log("vendor",vendor);
-    console.log(accessToken,"accessToken")
-    console.log(refreshToken,"refresh token");
 
     
     const cookieOptions = getCookieOptions();
     res.cookie("accessToken",accessToken,cookieOptions.accessToken);
     res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
 
-    console.log("vendor refresh token cookie set")
     res.status(STATUS_CODES.SUCCESS).json({
       success:true,
       message:"Vendor Login Successful",
       vendor
     })
-  } catch (error: any) {
+  } catch (error) {
     res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS})
     next(error);
   }
@@ -115,7 +106,7 @@ async refreshToken(req:Request,res:Response,next:NextFunction){
   } catch (error) {
       res
         .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: "no access token available" });
+        .json({ success: false, message: MESSAGES.INVALID_ACCESS_TOKEN,error});
     }
 }
 
@@ -133,7 +124,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       logger.info({email},"forget password OTP sent successfully")
 
       
-    } catch (error:any) {
+    } catch (error) {
       logger.error({err:error},"Forget password failed");
       next(error)
     }
@@ -202,8 +193,6 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
     }
   }
 
-  async profile(req:Request,res:Response,next:NextFunction){
-    
-  }
+ 
 
 }

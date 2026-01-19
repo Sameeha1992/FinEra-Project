@@ -2,23 +2,23 @@ import { injectable } from "tsyringe";
 import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import jwt from "jsonwebtoken";
 import ms from "ms";
+import { env } from "process";
 
 @injectable()
 export class JwtService implements IJwtService {
   generateAccessToken(_id: string, role: "user" | "vendor" | "admin"): string {
-    const expiry = process.env.JWT_ACCESS_EXPIRY_IN;
-    console.log(expiry,"expiry");
+    const expiry = env.JWT_ACCESS_EXPIRY_IN;
 
-    return jwt.sign({ _id,role }, process.env.JWT_ACCESS_SECRET as string, {
-      expiresIn: process.env.JWT_ACCESS_EXPIRY_IN as ms.StringValue,
+    return jwt.sign({ _id,role }, env.JWT_ACCESS_SECRET as string, {
+      expiresIn: env.JWT_ACCESS_EXPIRY_IN as ms.StringValue,
       
     });
   }
 
   
   generateRefreshToken(_id: string, role: "user" | "vendor" | "admin"): string {
-    return jwt.sign({ _id,role }, process.env.JWT_REFRESH_SECRET as string, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRY_IN as ms.StringValue,
+    return jwt.sign({ _id,role }, env.JWT_REFRESH_SECRET as string, {
+      expiresIn: env.JWT_REFRESH_EXPIRY_IN as ms.StringValue,
     });
   }
 
@@ -26,8 +26,8 @@ export class JwtService implements IJwtService {
     try {
       const secret =
         type === "access"
-          ? process.env.JWT_ACCESS_SECRET
-          : process.env.JWT_REFRESH_SECRET;
+          ? env.JWT_ACCESS_SECRET
+          : env.JWT_REFRESH_SECRET;
       return jwt.verify(token, secret as string);
     } catch (error) {
       return null;

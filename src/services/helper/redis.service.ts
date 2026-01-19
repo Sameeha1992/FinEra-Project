@@ -21,18 +21,12 @@ export class RedisService implements IRedisService {
     email: string,type: 'user'|'vendor',
     TTL_SECONDS: number
   ): Promise<void> {
-    console.log("MarkUserVerified was called !!!!")
-    console.log("Email:",email);
-    console.log("Type:",type);
-    console.log("TTL",TTL_SECONDS);
-
+   
 
     const normalized = email.toLowerCase().trim()
     const key = `verified:${type}:${normalized}`;
-    console.log("ABOUT TO SET REDIS KEY:", key);
     await this.set(key, "true", TTL_SECONDS);
 
-    console.log("SUCCESS — VERIFIED FLAG SET IN REDIS:", key);
   }
 
   async isUserVerified(

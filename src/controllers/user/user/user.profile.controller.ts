@@ -1,9 +1,9 @@
 import { IUserprofileService } from "../../../interfaces/services/user/user.profile.interface"
-import { Request,Response,NextFunction } from "express";
+import { Response,NextFunction } from "express";
 import {AuthenticatedRequest} from "../../../middleware/authMiddleware"
 import { inject, injectable } from "tsyringe";
 import {STATUS_CODES} from "../../../config/constants/statusCode"
-import { success } from "zod";
+
 
 @injectable()
 export class UserProfileController{
@@ -20,7 +20,7 @@ export class UserProfileController{
             
             return res.status(STATUS_CODES.SUCCESS).json({success:true,data:profile})
         } catch (error) {
-            console.error("Something went wrong on profile")
+            console.error("Something went wrong on profile",error)
         }
     }
 }

@@ -1,5 +1,4 @@
 import {
-  otpgenerateDto,
   OtpVerifyDto,
   OtpVerifyForgetDto,
 } from "../../../dto/user/auth/otp-generation.dto";

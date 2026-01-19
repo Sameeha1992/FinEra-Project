@@ -91,5 +91,7 @@ export const MESSAGES = {
   PASSWORD_NOT_REQUIRED: "Password is not required.",
   CREATED: "Created successfully.",
   UPDATED: "Updated successfully.",
-  DELETED: "Deleted successfully."
+  DELETED: "Deleted successfully.",
+  INTERNAL_SERVER_ERROR:"Internal Server Error",
+  ROUTES_NOT_FOUND:"Routes not found"
 };

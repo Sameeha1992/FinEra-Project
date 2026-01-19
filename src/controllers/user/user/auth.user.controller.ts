@@ -7,7 +7,6 @@ import { CustomError } from "../../../middleware/errorMiddleware";
 import { MESSAGES } from "../../../config/constants/message";
 import { STATUS_CODES } from "../../../config/constants/statusCode";
 import logger from "../../../middleware/loggerMiddleware";
-import { success } from "zod";
 import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
 import { getCookieOptions } from "../../../utils/setAuthCookies";
 
@@ -20,9 +19,7 @@ export class AuthUserController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const userData: UserRegisterDTO = req.body;
-      console.log("userData is this", req.body);
       const createUser = await this._authUserService.registerUser(userData);
-      console.log("createUserData", createUser);
       res.status(201).json({ success: true, data: createUser });
     } catch (error) {
       console.error("Controller error:", error);
@@ -40,7 +37,6 @@ export class AuthUserController {
   async generateOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.body.email;
-      console.log(email, "req.body");
       await this._authUserService.generateOtp(email);
 
       res.status(200).json({
@@ -66,7 +62,7 @@ export class AuthUserController {
         .status(200)
         .json({ success: true, message: "Otp verified successfully" });
     } catch (error) {
-      console.error(MESSAGES.OTP_NOT_VERIFIED);
+      console.error(MESSAGES.OTP_NOT_VERIFIED,error);
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: MESSAGES.OTP_NOT_VERIFIED });
@@ -75,12 +71,9 @@ export class AuthUserController {
 
   async Login(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("i am entering the login page");
 
       const loginCredentials: LoginDto = req.body;
-      console.log(req.body, "req.body of the login");
 
-      console.log("🔍 Calling authUserService.Login...");
 
       const { user, accessToken, refreshToken } =
         await this._authUserService.Login(loginCredentials);
@@ -99,7 +92,6 @@ export class AuthUserController {
         maxAge: 60 * 60 * 1000,
       });
 
-      console.log("Refresh token cookie set");
 
       res.status(STATUS_CODES.SUCCESS).json({
         success: true,
@@ -107,11 +99,10 @@ export class AuthUserController {
         message: MESSAGES.LOGIN_SUCCESS,
       });
 
-      console.log("Login completed successfully");
-    } catch (error: any) {
+    } catch (error) {
       res
         .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS });
+        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS,error});
     }
   }
 
@@ -124,6 +115,7 @@ export class AuthUserController {
           .json({ success: false, message: "no refresh token availabl" });
         return;
       }
+      
       const accessToken: string = await this._authUserService.refreshToken(
         refreshToken
       );
@@ -152,7 +144,7 @@ export class AuthUserController {
       logger.info({email},"forget password OTP sent successfully")
 
       
-    } catch (error:any) {
+    } catch (error) {
       logger.error({err:error},"Forget password failed");
       next(error)
     }
@@ -162,7 +154,6 @@ export class AuthUserController {
 
     try {
       const {email,otp} = req.body;
-      console.log(email,otp,"email,otp")
 
       if(!email || !otp){
         return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:"Email and OTP are required"})
@@ -210,9 +201,6 @@ export class AuthUserController {
       }
       
       const {accessToken,refreshToken,user} = await this._authUserService.googleLogin(token)
-      console.log(accessToken,"accesstoken google auth")
-      console.log(refreshToken,"refresh token google auth");
-      console.log(user,"user of google auth")
 
       const cookieOptions = getCookieOptions();
       res.cookie("accessToken",accessToken,cookieOptions.accessToken)

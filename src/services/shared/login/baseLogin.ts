@@ -28,7 +28,6 @@ export abstract class BaseLoginService implements IBaseLoginService {
     const entity = await this.findByEmail(email.toLowerCase().trim());
 
     if (!entity) {
-      console.log("no data for login");
       throw new CustomError(MESSAGES.USER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
 

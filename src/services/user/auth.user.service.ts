@@ -22,6 +22,7 @@ import { Role } from "../../models/enums/enum";
 import { STATUS_CODES } from "../../config/constants/statusCode";
 import { error } from "console";
 import { OAuth2Client } from "google-auth-library";
+import { env } from "process";
 
 @injectable()
 export class AuthUserService implements IAuthUserService {
@@ -41,15 +42,11 @@ export class AuthUserService implements IAuthUserService {
 
     const existingUser = await this._userRepository.findByEmail(email);
     if (existingUser) {
-      console.log("existed aanu");
 
       throw new CustomError(MESSAGES.EMAIL_ALREADY_USED);
     }
-    console.log("ivide nd");
-    console.log(await this._redisService.get(`verified:user:${email}`));
     const isVerified = await this._redisService.get(`verified:user:${email}`);
     if (!isVerified) {
-      console.log("Here the issue is");
       throw new CustomError(MESSAGES.OTP_NOT_VERIFIED);
     }
 
@@ -89,13 +86,11 @@ export class AuthUserService implements IAuthUserService {
       const redisKey = `otp:${normalizedEmail}`;
 
       await this._redisService.set(redisKey, otp, this.OTP_TTLSECONDS);
-      console.log("completed");
       const content = this._emailService.generateOtpEmailContent(Number(otp));
       const subject = "Your OTP Code";
       await this._emailService.sendEmail(normalizedEmail, subject, content);
 
       logger.debug({normalizedEmail,otp},"OTP generated and sent successfully");
-      console.log(otp);
       logger.info({normalizedEmail},`OTP generated and sent to`);
 
       return {
@@ -114,8 +109,6 @@ export class AuthUserService implements IAuthUserService {
 
   async verifyOtp(otpData: OtpVerifyDto): Promise<void> {
     const { email, otp } = otpData;
-    console.log(email);
-    console.log(otp);
 
     try {
       const normalizedEmail = email.toLowerCase().trim();
@@ -131,16 +124,13 @@ export class AuthUserService implements IAuthUserService {
         throw new Error("OTP must me 6 digits");
       }
 
-      console.log("StoredOTP vare varum");
       const storedOTP = await this._redisService.get(`otp:${normalizedEmail}`);
       console.log("store otp chythu", storedOTP);
       if (!storedOTP) {
-        console.log("No OTP found in database for email:", normalizedEmail);
 
         throw new Error("OTP expired or invalid");
       }
 
-      console.log("result", storedOTP === String(otp));
       if (storedOTP !== String(otp)) {
         throw new Error("Invalid otp");
       }
@@ -171,13 +161,10 @@ export class AuthUserService implements IAuthUserService {
     );
 
     if (!userData) {
-      console.log("No user found", credentials.email);
       throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
-    console.log("User found", userData.email);
 
     if (!userData.password) {
-      console.log("no passwordlogin");
       throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED);
     }
 
@@ -185,10 +172,8 @@ export class AuthUserService implements IAuthUserService {
       credentials.password,
       userData.password
     );
-    console.log("Password is matching correct", isPassword);
 
     if (!isPassword) {
-      console.log("password is mismatching wrong credentials");
       logger.error({err:error},"Password does not math")
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
     }
@@ -200,12 +185,10 @@ export class AuthUserService implements IAuthUserService {
       userData._id,
       "user"
     );
-    console.log("Access token generate cheythu",accessToken);
     const refreshToken = this._jwtService.generateRefreshToken(
       userData._id,
       "user"
     );
-    console.log("refresh and access token sheriyai");
     return { user: loginResponse, accessToken, refreshToken };
   }
 
@@ -238,14 +221,12 @@ export class AuthUserService implements IAuthUserService {
     const redisKey = `forgetotp:user:${email}`
 
     await this._redisService.set(redisKey,otp,this.OTP_TTLSECONDS);
-    console.log("stored in redis the forget password")
 
     const content = this._emailService.generateOtpEmailContent(Number(otp)) 
     const subject = "Your OTP is here"
     await this._emailService.sendEmail(email,subject,content,)
 
 
-    console.log('Otp generated for forget password');
     logger.info({email,otp},"Otp generated for forget password")
     return "OTP send successfully"
                        
@@ -267,7 +248,6 @@ export class AuthUserService implements IAuthUserService {
     }
 
     await this._redisService.delete(redisKey);
-    console.log("deleted redis key in the forget password")
     await this._redisService.set(`verified-reset:user:${email}`,"true",this.OTP_TTLSECONDS)
   logger.info({email:normaliseEmail},"Forget-password OTP verified successfully")
 
@@ -286,8 +266,8 @@ export class AuthUserService implements IAuthUserService {
   }
 
   async googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>{
-     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
-     const ticket = await client.verifyIdToken({idToken:googleToken,audience:process.env.GOOGLE_CLIENT_ID})
+     const client = new OAuth2Client(env.GOOGLE_CLIENT_ID)
+     const ticket = await client.verifyIdToken({idToken:googleToken,audience:env.GOOGLE_CLIENT_ID})
      const payload= ticket.getPayload()
 
      if(!payload || !payload.email){

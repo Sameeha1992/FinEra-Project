@@ -1,30 +1,31 @@
 import dotenv from "dotenv";
+import { env } from "process";
 dotenv.config();
 
 export const config = {
     database : {
-        URI :process.env.MONGODB_URL
+        URI :env.MONGODB_URL
     },
 
     googleAuth:{
-        emailURI:process.env.EMAIL_USER,
-        passURI:process.env.EMAIL_PASSWORD
+        emailURI:env.EMAIL_USER,
+        passURI:env.EMAIL_PASSWORD
 
     },
 
     jwt:{
-        refreshURI:process.env.JWT_REFRESH_SECRET,
-        accessURI:process.env.JWT_ACCESS_SECRET
+        refreshURI:env.JWT_REFRESH_SECRET,
+        accessURI:env.JWT_ACCESS_SECRET
     },
 
     PORT:{
-        PORTURI:process.env.PORT
+        PORTURI:env.PORT
     },
 
     redis:{
-          REDIS_PASS:process.env.REDIS_PASS,
-          REDIS_USER:process.env.REDIS_USER,
-          REDIS_HOST:process.env.REDIS_HOST,
-          REDIS_PORT:process.env.REDIS_PORT
+          REDIS_PASS:env.REDIS_PASS,
+          REDIS_USER:env.REDIS_USER,
+          REDIS_HOST:env.REDIS_HOST,
+          REDIS_PORT:env.REDIS_PORT
     }
 }

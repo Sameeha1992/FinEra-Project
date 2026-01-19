@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { IEmailService } from "../../interfaces/helper/email.sevice.interface";
 import dotenv from 'dotenv'
 import { injectable } from 'tsyringe';
+import { env } from 'process';
 
 dotenv.config()
 @injectable()
@@ -9,26 +10,23 @@ export class EmailService implements IEmailService{
     private transporter = nodemailer.createTransport({
         service:"gmail",
         auth:{
-            user:process.env.EMAIL_USER,
-            pass:process.env.EMAIL_PASSWORD
+            user:env.EMAIL_USER,
+            pass:env.EMAIL_PASSWORD
         }
     })
 
     async sendEmail(toEmail: string, subject: string, content: string): Promise<void> {
-      console.log("Attempts to send email to:",toEmail)  
       const mailOptions ={
-            from: process.env.EMAIL_USER,
+            from: env.EMAIL_USER,
             to:toEmail,
             subject,
             html:content
         };
         try {
-          console.log("mailoptions",mailOptions)
             const info = await this.transporter.sendMail(mailOptions)
-            console.log("Email sent successfully",info.response)
           
-        } catch (error:any) {
-          console.error("❌ Failed to send email:", error.message || error);
+        } catch (error) {
+          console.error("Failed to send email:",error);
 
         throw new Error("Failed to send OTP email. Please try again.");
         }

@@ -1,7 +1,6 @@
 import { IUser } from "../../models/user/user.model";
-import { IAdmin } from "../../models/admin/admin.model";
 
-import { LoginDto, LoginResponseDto } from "../../dto/shared/login.dto";
+import { LoginResponseDto } from "../../dto/shared/login.dto";
 import { Role } from "../../models/enums/enum";
 import { IVendor } from "../../models/vendor/vendor.model";
 

@@ -13,10 +13,9 @@ export class AdminAuthController {
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("Controller of admin");
+     
       const loginCredentials: LoginDto = req.body;
 
-      console.log("Data in the req.body", loginCredentials);
 
       const { admin, accessToken, refreshToken } =
         await this._adminAuthService.login(loginCredentials);
@@ -40,11 +39,10 @@ export class AdminAuthController {
         admin,
         message: MESSAGES.LOGIN_SUCCESS,
       });
-      console.log("Admin login completed successfully");
     } catch (error) {
       res
         .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS });
+        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS,error});
     }
     
   }

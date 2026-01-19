@@ -4,7 +4,6 @@ import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import { LoginResponseDto, LoginDto } from "../../dto/shared/login.dto";
 import { IAdminAuthRepo } from "../../interfaces/repositories/admin/admin.auth.repo.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
-import { STATUS_CODES } from "../../config/constants/statusCode";
 import { MESSAGES } from "../../config/constants/message";
 import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { Role } from "../../models/enums/enum";

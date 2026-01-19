@@ -1,7 +1,8 @@
 import { CookieOptions } from "express";
+import { env } from "process";
 
-const AccessTokenExpiry = parseInt(process.env.ACCESS_TOKEN_EXPIRY ||"900000");
-const RefreshTokenExpiry = parseInt(process.env.REFRESH_TOKEN_EXPIRY || "2592000000")
+const AccessTokenExpiry = parseInt(env.ACCESS_TOKEN_EXPIRY ||"900000");
+const RefreshTokenExpiry = parseInt(env.REFRESH_TOKEN_EXPIRY || "2592000000")
 
 export const getCookieOptions = (): {
   accessToken: CookieOptions;

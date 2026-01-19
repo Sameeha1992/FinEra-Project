@@ -6,7 +6,6 @@ import {
 import { IVendorAuthRepository } from "../../interfaces/repositories/vendor/vendor.auth";
 import { IVendorAuthService } from "../../interfaces/services/vendor/vendor.auth.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
-import { vendorAuthRepository } from "../../repositories/vendor/vendor.auth.repo";
 import { IRedisService } from "../../interfaces/services/redis.interface";
 import { inject, injectable } from "tsyringe";
 import { IPasswordService } from "../../interfaces/helper/passwordhashService.interface";
@@ -27,6 +26,7 @@ import { normalize } from "path";
 import { error } from "console";
 import { OAuth2Client } from "google-auth-library";
 import { UserRegisterDTO } from "@/dto/user/auth/userRegisterDTO";
+import { env } from "process";
 @injectable()
 export class VendorAuthService implements IVendorAuthService {
   private readonly OTP_TTLSECONDS = 10 * 60;
@@ -41,14 +41,11 @@ export class VendorAuthService implements IVendorAuthService {
   async vendorRegister(dto: VendorRegisterDto): Promise<VendorResponseDto> {
     try {
       const email = dto.email.toLowerCase().trim();
-      console.log("email on vendor", email);
       const existingVendor = await this._vendorRepository.findByEmail(
         email
       );
 
-      console.log(existingVendor, "vendor email");
       if (existingVendor) {
-        console.log("Venodr is existing");
 
         throw new CustomError(MESSAGES.USER_ALREADY_EXISTS);
       }
@@ -58,15 +55,12 @@ export class VendorAuthService implements IVendorAuthService {
         "vendor"
       );
 
-      console.log(isVerified, "isVerified on vendor");
       if (!isVerified) {
-        console.log("The otp not verified properly");
 
         throw new CustomError(MESSAGES.OTP_NOT_VERIFIED);
       }
 
       if (!dto.password) {
-        console.log("password not required");
         throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED);
       }
 
@@ -100,7 +94,6 @@ export class VendorAuthService implements IVendorAuthService {
       const expireAt = new Date(Date.now() + this.OTP_TTLSECONDS * 1000);
       const redisKey = `otp:vendor:${normalizedEmail}`;
       await this._redisService.set(redisKey, otp, this.OTP_TTLSECONDS);
-      console.log("otp coming from the evndor side");
       const content = this._emailService.generateOtpEmailContent(Number(otp));
       const subject = "Vendor OTP Code";
       await this._emailService.sendEmail(
@@ -110,7 +103,6 @@ export class VendorAuthService implements IVendorAuthService {
       );
 
       logger.debug({normalizedEmail,otp},`Vendor OTP generated`);
-      console.log(otp);
       logger.info({normalizedEmail},`Otp generated and send to you email`);
 
       return { email: normalizedEmail, otp: otp, expireAt };
@@ -168,32 +160,25 @@ export class VendorAuthService implements IVendorAuthService {
   async vendorLogin(credentials: LoginDto): Promise<{ vendor: LoginResponseDto; accessToken: string; refreshToken: string; }> {
     const vendorData:IVendor|null = await this._vendorRepository.findByEmail(credentials.email);
 
-    console.log(vendorData,"vendorData from service")
     if(!vendorData){
-      console.log("No vendors found with this email",credentials.email)
       throw new CustomError(MESSAGES.USER_NOT_FOUND,STATUS_CODES.BAD_REQUEST)
     }
 
-    console.log("data vendor und")
 
     if(!vendorData.password){
-      console.log("No Vendor password found");
       throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED,STATUS_CODES.BAD_REQUEST)
     }
 
     const isPassword:boolean = await this._IpasswordService.comparePassword(credentials.password,vendorData.password);
 
     if(!isPassword){
-      console.log("password of vendor is mismatching");
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH,STATUS_CODES.NOT_FOUND)
     }
 
     const loginResponse:LoginResponseDto = VendorMapper.VendorResponse(vendorData);
 
     const accessToken = this._IJwtService.generateAccessToken(vendorData.vendorId,"vendor");
-    console.log("AccessData for vendor generated")
     const refreshToken = this._IJwtService.generateRefreshToken(vendorData.vendorId,"vendor");
-    console.log("Refresh Token has been genearted")
 
     return {vendor:loginResponse,accessToken,refreshToken}
 
@@ -223,14 +208,12 @@ export class VendorAuthService implements IVendorAuthService {
 
     const redisKey = `forgetotp:vendor:${email}`
     await this._redisService.set(redisKey,otp,this.OTP_TTLSECONDS)
-    console.log("stored in redis vendor forget password")
 
     const content = this._emailService.generateOtpEmailContent(Number(otp))
     const subject = "Your OTP is here"
 
     await this._emailService.sendEmail(email,subject,content);
 
-    console.log("vendor otp generated for forget password");
     logger.info({email,otp},"Otp generated for forget password on the vendor side")
     return "Otp send successfully"
   }
@@ -253,7 +236,6 @@ export class VendorAuthService implements IVendorAuthService {
     }
 
     await this._redisService.delete(redisKey);
-    console.log("delete redis key in the forget password");
     await this._redisService.set(`verified-reset:vendor:${email}`,"true",this.OTP_TTLSECONDS)
     logger.info({email:normalizeEmail},"Forget-password OTP verified successfully")
   }
@@ -266,7 +248,6 @@ export class VendorAuthService implements IVendorAuthService {
     }
 
    const hashedPassword = await this._IpasswordService.hashPassword(password);
-   console.log(hashedPassword,"vendor hashed password")
    
    await this._vendorRepository.updateVendorPassword(email,hashedPassword)
    return "Password reset successfully"
@@ -275,8 +256,8 @@ export class VendorAuthService implements IVendorAuthService {
 
  async googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,vendor:LoginResponseDto}>{
 
-  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
-  const ticket = await client.verifyIdToken({idToken:googleToken,audience:process.env.GOOGLE_CLIENT_ID});
+  const client = new OAuth2Client(env.GOOGLE_CLIENT_ID)
+  const ticket = await client.verifyIdToken({idToken:googleToken,audience:env.GOOGLE_CLIENT_ID});
   const payload = ticket.getPayload()
 
   if(!payload || !payload.email){

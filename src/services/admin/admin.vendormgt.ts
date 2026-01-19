@@ -8,7 +8,6 @@ import {
 import { VendorMgtMapper } from "@/mappers/admin/vendor.mgt.mapper";
 import { IUser } from "@/models/user/user.model";
 import { IVendor } from "@/models/vendor/vendor.model";
-import { AdminVendorMgtRepo } from "@/repositories/admin/admin.vendor.repo";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
