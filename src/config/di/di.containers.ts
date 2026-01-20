@@ -32,6 +32,8 @@ import { IAdminVendorMgtRepo } from '@/interfaces/repositories/admin/admin.vendo
 import { AdminVendorMgtRepo } from '@/repositories/admin/admin.vendor.repo'
 import { IAdminVendorMgtService } from '@/interfaces/services/admin/admin.vendormgt.interface'
 import { AdminVendorMgtService } from '@/services/admin/admin.vendormgt'
+import { IStorageService } from '@/interfaces/helper/storageService.interface'
+import { StorageService } from '@/services/helper/storageService'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -64,4 +66,6 @@ container.registerSingleton<IAdminVendorMgtService>("IAdminVendorMgtService",Adm
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IUserprofileService>('IUserProfileService',UserProfileService)
 container.registerSingleton(UserProfileController)
+
+container.registerSingleton<IStorageService>('IStorageService',StorageService)
 export {container}

@@ -1,3 +1,3 @@
 export interface IStorageService{
-    uploadImage(file:File,key:string):Promise<string>
+    uploadImage(file:Express.Multer.File,key:string):Promise<string>
 }

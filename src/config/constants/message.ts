@@ -93,5 +93,8 @@ export const MESSAGES = {
   UPDATED: "Updated successfully.",
   DELETED: "Deleted successfully.",
   INTERNAL_SERVER_ERROR:"Internal Server Error",
-  ROUTES_NOT_FOUND:"Routes not found"
+  ROUTES_NOT_FOUND:"Routes not found",
+  IMAGE_UPLOAD_SUCCESS:"Image uplaod success",
+  IMAGE_UPLAOD_FAILED:"Failed to uplaod images",
+  FILE_MISSING:"File missing"
 };

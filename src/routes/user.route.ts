@@ -6,11 +6,13 @@ import { validateRequest } from "../middleware/validationRequest";
 import { registerUserSchema } from "../validations/user/userRegister.validation";
 import { UserProfileController } from "../controllers/user/user/user.profile.controller";
 import { authenticateUser } from "../middleware/authMiddleware";
+import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 
 const router = express.Router();
 
 const authUserController = container.resolve(AuthUserController);
-const userProfileController = container.resolve(UserProfileController)
+const userProfileController = container.resolve(UserProfileController);
+
 router.post(
   "/generate-otp",
   (req: Request, res: Response, next: NextFunction) => {
@@ -54,4 +56,12 @@ router.get("/userProfile",authenticateUser,(req:Request,res:Response,next:NextFu
   userProfileController.getProfile(req,res,next)
 })
 
+// router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
+
+  console.log("will come")
+
+router.put("/profile/image",authenticateUser,uploadImageMiddleware.single("image"),(req:Request,res:Response,next:NextFunction)=>{
+  userProfileController.updateProfileImage(req,res,next)
+
+})
 export default router;

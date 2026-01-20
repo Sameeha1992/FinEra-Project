@@ -77,7 +77,7 @@ export class AuthUserController {
 
       const { user, accessToken, refreshToken } =
         await this._authUserService.Login(loginCredentials);
-
+           console.log("accessToken",accessToken)
       res.cookie("userRefreshToken", refreshToken, {
         httpOnly: true,
         secure: true,

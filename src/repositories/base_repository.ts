@@ -30,7 +30,7 @@ async find(query: any): Promise<T[]> {
     return await this.model.find()
 }
  async updateById(id:string,updateData:Partial<T>):Promise<T | null>{
-    return await this.model.findByIdAndUpdate(id)
+    return await this.model.findByIdAndUpdate(id,updateData,{new:true})
  }
 
  async deleteById(id: string): Promise<T | null> {

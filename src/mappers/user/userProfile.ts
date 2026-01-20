@@ -7,7 +7,8 @@ export class UserProfileMapper{
             customerId:user.customerId,
             name:user.name,
             email:user.email,
-            phone:user.phone
+            phone:user.phone,
+            profileImage:user.profileImage
 
         }
     }

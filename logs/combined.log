@@ -4286,3 +4286,185 @@
 {"level":30,"time":1768802934070,"pid":15192,"hostname":"sameeha","email":"newbank@gmail.com","msg":"Forget password OTP verified successfully"}
 {"level":30,"time":1768803142137,"pid":15192,"hostname":"sameeha","normalizedEmail":"federalbank@gmail.com","msg":"Otp generated and send to you email"}
 {"level":30,"time":1768803160876,"pid":15192,"hostname":"sameeha","normalizedEmail":"federalbank@gmail.com","msg":"OTP verified for the email"}
+{"level":30,"time":1768803908379,"pid":23020,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768803908383,"pid":23020,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804162141,"pid":18960,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804162145,"pid":18960,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804333867,"pid":15992,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804333869,"pid":15992,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804405116,"pid":14612,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804405121,"pid":14612,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804414473,"pid":22520,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804414477,"pid":22520,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804474051,"pid":10828,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804474056,"pid":10828,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804483159,"pid":5504,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804483164,"pid":5504,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804513547,"pid":21864,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804513551,"pid":21864,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804554342,"pid":19500,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804554346,"pid":19500,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804573655,"pid":23176,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804573659,"pid":23176,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804682406,"pid":19976,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804682409,"pid":19976,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804694261,"pid":21252,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804694264,"pid":21252,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804725336,"pid":22416,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804725338,"pid":22416,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804743870,"pid":22100,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804743873,"pid":22100,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804775951,"pid":15888,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804775954,"pid":15888,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804808004,"pid":16156,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804808008,"pid":16156,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804838640,"pid":9220,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804838644,"pid":9220,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768804892237,"pid":22468,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768804892239,"pid":22468,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805031359,"pid":22440,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805031364,"pid":22440,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805231134,"pid":20936,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805231139,"pid":20936,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805327313,"pid":22784,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805327317,"pid":22784,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805344919,"pid":15128,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805344923,"pid":15128,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805451100,"pid":1672,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805451104,"pid":1672,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805466604,"pid":4040,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805466607,"pid":4040,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805529317,"pid":4504,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805529321,"pid":4504,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805549392,"pid":23464,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805549395,"pid":23464,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805595121,"pid":20076,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805595125,"pid":20076,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805621383,"pid":18420,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805621384,"pid":18420,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805631607,"pid":7144,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805631611,"pid":7144,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805662003,"pid":22160,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805662005,"pid":22160,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805706159,"pid":21180,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805706163,"pid":21180,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768805781911,"pid":21704,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768805781915,"pid":21704,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768807144920,"pid":22544,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768807144922,"pid":22544,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768807263447,"pid":23144,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768807263451,"pid":23144,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768807286486,"pid":16140,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768807286490,"pid":16140,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768807329954,"pid":17984,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768807329956,"pid":17984,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768808032751,"pid":4652,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768808032754,"pid":4652,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":50,"time":1768808225009,"pid":4652,"hostname":"sameeha","msg":"Password does not math"}
+{"level":50,"time":1768808235323,"pid":4652,"hostname":"sameeha","msg":"Password does not math"}
+{"level":50,"time":1768808316166,"pid":4652,"hostname":"sameeha","msg":"Password does not math"}
+{"level":50,"time":1768808323232,"pid":4652,"hostname":"sameeha","msg":"Password does not math"}
+{"level":50,"time":1768809861345,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:218:20)","errno":-4077,"code":"ECONNRESET","syscall":"read"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809861435,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809861550,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809861783,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809862095,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809862593,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809863562,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768809865283,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768813058714,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768813060836,"pid":4652,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":30,"time":1768813317239,"pid":24136,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768813317241,"pid":24136,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768821754807,"pid":23180,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768821754809,"pid":23180,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768822153844,"pid":2916,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768822153848,"pid":2916,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768822179493,"pid":7392,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768822179495,"pid":7392,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768822302335,"pid":18760,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768822302339,"pid":18760,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768825839129,"pid":24528,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768825839131,"pid":24528,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768825927654,"pid":16856,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768825927655,"pid":16856,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768825989708,"pid":19744,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768825989713,"pid":19744,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826005398,"pid":26576,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826005402,"pid":26576,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826027181,"pid":20452,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826027183,"pid":20452,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826259075,"pid":13732,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826259078,"pid":13732,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826276986,"pid":19112,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826276988,"pid":19112,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826284860,"pid":16048,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826284864,"pid":16048,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826452880,"pid":25228,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826452883,"pid":25228,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826557506,"pid":11020,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826557509,"pid":11020,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826712673,"pid":12764,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826712676,"pid":12764,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768826727614,"pid":24760,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768826727616,"pid":24760,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768827030873,"pid":5148,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768827030876,"pid":5148,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768827710955,"pid":9424,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768827710967,"pid":9424,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768827838678,"pid":24272,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768827838682,"pid":24272,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768827928687,"pid":23020,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768827928692,"pid":23020,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768828008018,"pid":21108,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768828008022,"pid":21108,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768828056385,"pid":12976,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768828056390,"pid":12976,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768828837432,"pid":23204,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768828837437,"pid":23204,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768830251611,"pid":20636,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768830251614,"pid":20636,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768830282104,"pid":25940,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768830282106,"pid":25940,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768830619819,"pid":23740,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768830619822,"pid":23740,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768830861937,"pid":3252,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768830861943,"pid":3252,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768831065666,"pid":21200,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768831065668,"pid":21200,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768831362623,"pid":19624,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768831362626,"pid":19624,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":50,"time":1768831767285,"pid":19624,"hostname":"sameeha","err":{"type":"Error","message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:218:20)","errno":-4077,"code":"ECONNRESET","syscall":"read"},"msg":"Redis Client Error: "}
+{"level":30,"time":1768832462223,"pid":3140,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832462228,"pid":3140,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832525981,"pid":4328,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832525983,"pid":4328,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832633715,"pid":18356,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832633719,"pid":18356,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832685256,"pid":25932,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832685257,"pid":25932,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832703910,"pid":23260,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832703913,"pid":23260,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832739523,"pid":19796,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832739528,"pid":19796,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768832822179,"pid":1496,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768832822182,"pid":1496,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768833891393,"pid":2828,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768833891395,"pid":2828,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768833913288,"pid":16596,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768833913292,"pid":16596,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768834473794,"pid":9220,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768834473797,"pid":9220,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768834874623,"pid":6252,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768834874627,"pid":6252,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768835134211,"pid":21836,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768835134215,"pid":21836,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768835449044,"pid":7844,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768835449047,"pid":7844,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":30,"time":1768835768571,"pid":21864,"hostname":"sameeha","msg":"Redis connected successfully"}
+{"level":30,"time":1768835768574,"pid":21864,"hostname":"sameeha","port":5000,"msg":"Server running"}
+{"level":50,"time":1768843406404,"pid":21864,"hostname":"sameeha","err":{"type":"Error","message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:218:20)","errno":-4077,"code":"ECONNRESET","syscall":"read"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768843406545,"pid":21864,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768843406757,"pid":21864,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768843406959,"pid":21864,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
+{"level":50,"time":1768843407353,"pid":21864,"hostname":"sameeha","err":{"type":"Error","message":"getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)","errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"redis-12846.crce179.ap-south-1-1.ec2.redns.redis-cloud.com"},"msg":"Redis Client Error: "}
