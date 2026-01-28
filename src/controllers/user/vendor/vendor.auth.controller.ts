@@ -192,7 +192,6 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       next(error)
     }
   }
-
  
 
 }

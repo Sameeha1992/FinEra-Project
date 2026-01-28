@@ -22,4 +22,12 @@ adminRouter.get("/accounts",(req:Request,res:Response,next:NextFunction)=>{
 adminRouter.patch("/accounts/:id/status",(req:Request,res:Response,next:NextFunction)=>{
     adminAccountController.updatedStatus(req,res,next)
 })
+
+adminRouter.post("/refresh-token",(req:Request,res:Response,next:NextFunction)=>{
+    authAdminController.refreshToken(req,res,next)
+})
+
+adminRouter.post("/logout",(req:Request,res:Response,next:NextFunction)=>{
+    authAdminController.logout(req,res,next)
+})
 export default adminRouter

@@ -4,4 +4,5 @@ export interface UserProfileResponseDTO{
     email:string,
     phone?:string,
     profileImage?:string,
+    status?:string
 }

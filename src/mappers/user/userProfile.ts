@@ -8,7 +8,7 @@ export class UserProfileMapper{
             name:user.name,
             email:user.email,
             phone:user.phone,
-            profileImage:user.profileImage
+            status:user.status
 
         }
     }

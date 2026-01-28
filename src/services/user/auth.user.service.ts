@@ -16,7 +16,7 @@ import { LoginDto, LoginResponseDto } from "../../dto/shared/login.dto";
 import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { MESSAGES } from "../../config/constants/message";
-import { IRedisService } from "../../interfaces/services/redis.interface";
+import { IRedisService } from "../../interfaces/helper/redis.interface";
 import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { Role } from "../../models/enums/enum";
 import { STATUS_CODES } from "../../config/constants/statusCode";
@@ -194,17 +194,33 @@ export class AuthUserService implements IAuthUserService {
 
   //Refresh Token:-
 
-  async refreshToken(refreshToken: string): Promise<string> {
+  async refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}> {
     const decoded = await this._jwtService.verifyToken(refreshToken, "refresh");
 
     if (!decoded) {
       throw new CustomError("Refresh token not valid");
     }
 
-    const userId = decoded._id;
-    const role = decoded.role;
+    const isBlacklisted = await this._redisService.isRefreshTokenBlacklisted(decoded.jti);
 
-    return this._jwtService.generateAccessToken(userId, role || Role.User);
+    if(isBlacklisted){
+      throw new CustomError("Refresh token revoked")
+    }
+
+    const ttlSeconds = decoded.exp - Math.floor(Date.now() /1000);
+
+    if(ttlSeconds >0){
+      await this._redisService.blacklistRefreshToken(decoded.jti,ttlSeconds);
+    }
+
+    const newAccessToken = this._jwtService.generateAccessToken(decoded._id,decoded.role)
+    const newRefreshToken = this._jwtService.generateRefreshToken(decoded._id,decoded.role)
+    
+
+    return {
+      accessToken:newAccessToken,
+      refreshToken:newRefreshToken
+    }
   }
 
   //Forget Password:-
@@ -301,4 +317,17 @@ user = await this._userRepository.create(userModel)
   return {accessToken,refreshToken,user:userResponse}
 
 }
+
+
+async logout(refreshToken:string):Promise<void>{
+  const payload = this._jwtService.verifyToken(refreshToken,"refresh")
+  if(!payload){
+    throw new CustomError("Invalid refresh Token");
+  }
+
+  const ttlSeconds = payload.exp - Math.floor(Date.now() /1000);
+
+  await this._redisService.blacklistRefreshToken(payload.jti,ttlSeconds)
+}
+
 }

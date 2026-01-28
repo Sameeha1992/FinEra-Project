@@ -83,7 +83,6 @@ export const MESSAGES = {
 
 
 
-
   // Miscellaneous / Generic
   SUCCESS: "Operation completed successfully.",
   FAILURE: "Operation failed. Please try again.",
@@ -96,5 +95,7 @@ export const MESSAGES = {
   ROUTES_NOT_FOUND:"Routes not found",
   IMAGE_UPLOAD_SUCCESS:"Image uplaod success",
   IMAGE_UPLAOD_FAILED:"Failed to uplaod images",
-  FILE_MISSING:"File missing"
+  FILE_MISSING:"File missing",
+  TOKEN_CREATED:"Token created",
+  LOGOUT_FAILED:"FAiled to logout"
 };

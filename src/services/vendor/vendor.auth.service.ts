@@ -6,7 +6,7 @@ import {
 import { IVendorAuthRepository } from "../../interfaces/repositories/vendor/vendor.auth";
 import { IVendorAuthService } from "../../interfaces/services/vendor/vendor.auth.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
-import { IRedisService } from "../../interfaces/services/redis.interface";
+import { IRedisService } from "../../interfaces/helper/redis.interface";
 import { inject, injectable } from "tsyringe";
 import { IPasswordService } from "../../interfaces/helper/passwordhashService.interface";
 import { vendorRegisterMapper } from "../../mappers/vendor/vendor.register.mapper";

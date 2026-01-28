@@ -13,7 +13,7 @@ export class UserProfileService{
 
     async getProfile(userId:string):Promise<UserProfileResponseDTO>{
      let user = await this._iUserRepository.findById(userId)
-     if(!user) throw new CustomError("User not found");
+     if(!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
      return UserProfileMapper.toResponse(user)
     }

@@ -18,9 +18,10 @@ export interface IAuthUserService {
     accessToken: string;
     refreshToken: string;
   }>;
-  refreshToken(refreshToken: string): Promise<string>;
+  refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}>;
   forgetPassword(email:string):Promise<string>;
   verifyforgetOtp(data:OtpVerifyForgetDto):Promise<void>;
   resetPassword(email:string,password:string):Promise<string>;
   googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>
+  logout(refreshToken:string):Promise<void>
 }

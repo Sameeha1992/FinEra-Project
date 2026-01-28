@@ -1,8 +1,9 @@
 import { CookieOptions } from "express";
-import { env } from "process";
+import { env } from "@/validations/envValidation";
 
-const AccessTokenExpiry = parseInt(env.ACCESS_TOKEN_EXPIRY ||"900000");
-const RefreshTokenExpiry = parseInt(env.REFRESH_TOKEN_EXPIRY || "2592000000")
+
+export const isProduction = env.NODE_ENV === "production"
+
 
 export const getCookieOptions = (): {
   accessToken: CookieOptions;
@@ -10,19 +11,19 @@ export const getCookieOptions = (): {
 } => {
   const baseOptions: CookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction,
   };
 
   return {
     accessToken: {
       ...baseOptions,
-      maxAge:AccessTokenExpiry  // 15 minutes
+      maxAge:env.ACCESS_TOKEN_COOKIE_MAX_AGE  // 15 minutes
     },
 
     refreshToken: {
       ...baseOptions,
-      maxAge:RefreshTokenExpiry  // 30 days
+      maxAge:env.REFRESH_TOKEN_COOKIE_MAX_AGE  // 30 days
     },
   };
 };

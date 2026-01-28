@@ -56,8 +56,8 @@ const UserSchema = new Schema<IUser>(
         vendorId:{type:String},
         status:{
             type:String,
-            enum:["pending","completed","verified","rejected"],
-            default:"pending"
+            enum:["verified","not_verified","blocked"],
+            default:"not_verified"
         },
 
         role:{type:String,enum:Object.values(Role),default:Role.User},

@@ -9,13 +9,15 @@ import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { Role } from "../../models/enums/enum";
 import { IUser } from "../../models/user/user.model";
 import { IPasswordService } from "../../interfaces/helper/passwordhashService.interface";
+import { IRedisService } from "@/interfaces/helper/redis.interface";
 
 @injectable()
 export class AdminAuthService implements IAdminAuthService {
   constructor(
     @inject("IJwtService") private _IJwtService: IJwtService,
     @inject("IAdminAuthRepo") private _IAdminAuthRepo: IAdminAuthRepo,
-    @inject("IPasswordService") private _IPasswordService: IPasswordService
+    @inject("IPasswordService") private _IPasswordService: IPasswordService,
+    @inject("IRedisService") private _IRedisService:IRedisService
   ) {}
 
   async login(
@@ -77,5 +79,16 @@ export class AdminAuthService implements IAdminAuthService {
     const role = decode.role;
 
     return this._IJwtService.generateAccessToken(adminId, role || Role.Admin);
+  }
+
+  async logout(refreshToken:string):Promise<void>{
+     const payload = this._IJwtService.verifyToken(refreshToken,"refresh")
+     if(!payload){
+      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN)
+     }
+       const ttlSeconds = payload.exp - Math.floor(Date.now() /1000);
+
+       await this._IRedisService.blacklistRefreshToken(payload.jti,ttlSeconds)
+
   }
 }

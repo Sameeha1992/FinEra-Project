@@ -52,16 +52,26 @@ router.post("/auth/google",(req:Request,res:Response,next:NextFunction)=>{
   authUserController.googlelogin(req,res,next)
 })
 
+
+router.post("/refresh-token",(req:Request,res:Response,next:NextFunction)=>{
+  authUserController.refreshToken(req,res,next)
+})
+
 router.get("/userProfile",authenticateUser,(req:Request,res:Response,next:NextFunction)=>{
   userProfileController.getProfile(req,res,next)
 })
 
-// router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
 
-  console.log("will come")
+router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
+
+//   console.log("will come")
 
 router.put("/profile/image",authenticateUser,uploadImageMiddleware.single("image"),(req:Request,res:Response,next:NextFunction)=>{
   userProfileController.updateProfileImage(req,res,next)
 
+})
+
+router.post("/logout",(req:Request,res:Response,next:NextFunction)=>{
+  authUserController.logout(req,res,next)
 })
 export default router;

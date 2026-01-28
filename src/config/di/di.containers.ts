@@ -11,7 +11,7 @@ import { IEmailService } from '../../interfaces/helper/email.sevice.interface'
 import { EmailService } from '../../services/helper/email.service'
 import { IJwtService } from '../../interfaces/helper/jwt.service.interface'
 import { JwtService } from '../../services/helper/jwt.service'
-import { IRedisService } from '../../interfaces/services/redis.interface'
+import { IRedisService } from '../../interfaces/helper/redis.interface'
 import { RedisService } from "../../services/helper/redis.service"
 import { IAdminAuthRepo } from '../../interfaces/repositories/admin/admin.auth.repo.interface'
 import { AdminAuthRepo } from '../../repositories/admin/admin.repo'
