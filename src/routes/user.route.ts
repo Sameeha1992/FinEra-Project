@@ -5,13 +5,15 @@ import { AuthUserController } from "../controllers/user/user/auth.user.controlle
 import { validateRequest } from "../middleware/validationRequest";
 import { registerUserSchema } from "../validations/user/userRegister.validation";
 import { UserProfileController } from "../controllers/user/user/user.profile.controller";
-import { authenticateUser } from "../middleware/authMiddleware";
+import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
+import { Role } from "@/models/enums/enum";
 
 const router = express.Router();
 
 const authUserController = container.resolve(AuthUserController);
 const userProfileController = container.resolve(UserProfileController);
+const authMiddleware = container.resolve(AuthMiddleware)
 
 router.post(
   "/generate-otp",
@@ -57,16 +59,14 @@ router.post("/refresh-token",(req:Request,res:Response,next:NextFunction)=>{
   authUserController.refreshToken(req,res,next)
 })
 
-router.get("/userProfile",authenticateUser,(req:Request,res:Response,next:NextFunction)=>{
-  userProfileController.getProfile(req,res,next)
-})
+router.get("/user-profile",authMiddleware.auntenticate,authMiddleware.checkBlocked,authMiddleware.allowRoles(Role.User),userProfileController.getProfile.bind(userProfileController))
 
 
 router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
 
 //   console.log("will come")
 
-router.put("/profile/image",authenticateUser,uploadImageMiddleware.single("image"),(req:Request,res:Response,next:NextFunction)=>{
+router.put("/profile/image",uploadImageMiddleware.single("image"),(req:Request,res:Response,next:NextFunction)=>{
   userProfileController.updateProfileImage(req,res,next)
 
 })

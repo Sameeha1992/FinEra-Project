@@ -97,5 +97,9 @@ export const MESSAGES = {
   IMAGE_UPLAOD_FAILED:"Failed to uplaod images",
   FILE_MISSING:"File missing",
   TOKEN_CREATED:"Token created",
-  LOGOUT_FAILED:"FAiled to logout"
+  LOGOUT_FAILED:"FAiled to logout",
+  SOMETHING_WENT_WRONG:"Somehing went wrong",
+  ACCESS_DENIED:"Access denied fror the role",
+  ACCOUNT_NOT_FOUND:"Account not found",
+  ACCOUNT_BLOCKED:"Account is blocked"
 };

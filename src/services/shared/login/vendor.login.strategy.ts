@@ -7,14 +7,14 @@ import { BaseLoginService } from "./baseLogin";
 import { IUserRepository } from "../../../interfaces/repositories/user/userRepository.interface";
 import { IPasswordService } from "../../../interfaces/helper/passwordhashService.interface";
 import { LoginResponseDto } from "../../../dto/shared/login.dto";
-import { IVendorAuthRepository } from "../../../interfaces/repositories/vendor/vendor.auth";
+import { IVendorRepository } from "../../../interfaces/repositories/vendor/vendor.auth";
 
 @injectable()
 export class VendorLoginService extends BaseLoginService {
   protected readonly role = Role.Vendor;
 
   constructor(
-@inject("IVendorAuthRepository") private vendorRepo: IVendorAuthRepository,   
+@inject("IVendorRepository") private vendorRepo: IVendorRepository,   
      @inject("IPasswordService") _IpasswordService: IPasswordService,
     @inject("IJwtService") _IjwtService: IJwtService
   ) {

@@ -81,14 +81,14 @@ export class AuthUserController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: isProduction,
+        sameSite: isProduction ? "none" : "lax",
         maxAge: env.REFRESH_TOKEN_COOKIE_MAX_AGE,
       });
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: isProduction,
+        sameSite: isProduction ? "none" :"lax",
         maxAge: env.ACCESS_TOKEN_COOKIE_MAX_AGE,
       });
 

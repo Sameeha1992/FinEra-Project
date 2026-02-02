@@ -8,6 +8,9 @@ import { LoginDto } from "../../../dto/shared/login.dto";
 import { getCookieOptions } from "../../../utils/setAuthCookies";
 import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
 import { CustomError } from "../../../middleware/errorMiddleware";
+import { clearAuthCookies } from "@/utils/clearAuthCookies";
+import { success } from "zod";
+import { Role } from "@/models/enums/enum";
 
 
 @injectable()
@@ -71,7 +74,9 @@ export class VendorAuthController {
   try {
     const credentials: LoginDto = req.body;
     const {vendor,accessToken,refreshToken} = await this._IvendorAuthService.vendorLogin(credentials);
-
+    console.log("vendor",vendor)
+    console.log("accesstoken",accessToken)
+    console.log(Role)
     
     const cookieOptions = getCookieOptions();
     res.cookie("accessToken",accessToken,cookieOptions.accessToken);
@@ -83,8 +88,7 @@ export class VendorAuthController {
       vendor
     })
   } catch (error) {
-    res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS})
-    next(error);
+    res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS});
   }
   
 }
@@ -126,7 +130,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       
     } catch (error) {
       logger.error({err:error},"Forget password failed");
-      next(error)
+      
     }
   }
 
@@ -193,5 +197,24 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
     }
   }
  
+  async logout(req:Request,res:Response,next:NextFunction){
+    try {
+      const refreshToken = req.cookies?.refreshToken;
+
+      if(!refreshToken){
+        return res.status(STATUS_CODES.BAD_REQUEST)
+        .json({message:MESSAGES.INVALID_REFRESH_TOKEN})
+      }
+
+      await this._IvendorAuthService.logout(refreshToken);
+      clearAuthCookies(res);
+
+      res.status(STATUS_CODES.SUCCESS)
+      .json({success:true,message:MESSAGES.LOGOUT_SUCCESS})
+      
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.LOGOUT_FAILED})
+    }
+  }
 
 }

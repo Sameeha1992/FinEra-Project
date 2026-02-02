@@ -1,5 +1,6 @@
 import mongoose,{Schema,Document} from "mongoose";
 import { Role } from "../enums/enum";
+import { boolean } from "zod";
 
 
 export interface IUser extends Document{
@@ -13,6 +14,7 @@ export interface IUser extends Document{
     job?:string;
     income?:number;
     gender?: "male"| "female" | "other";
+    isBlocked?:boolean,
     password?:string;
     adhaarNumber?:string;
     vendorId:string;
@@ -53,10 +55,11 @@ const UserSchema = new Schema<IUser>(
         additionalDoc:{type:String},
         isBlacklisted:{type:Boolean, default:false},
         message:{type:String},
+        isBlocked:{type:Boolean,default:false},
         vendorId:{type:String},
         status:{
             type:String,
-            enum:["verified","not_verified","blocked"],
+            enum:["verified","not_verified"],
             default:"not_verified"
         },
 

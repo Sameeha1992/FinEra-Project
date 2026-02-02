@@ -322,7 +322,7 @@ user = await this._userRepository.create(userModel)
 async logout(refreshToken:string):Promise<void>{
   const payload = this._jwtService.verifyToken(refreshToken,"refresh")
   if(!payload){
-    throw new CustomError("Invalid refresh Token");
+    throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
   }
 
   const ttlSeconds = payload.exp - Math.floor(Date.now() /1000);

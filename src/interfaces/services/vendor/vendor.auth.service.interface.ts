@@ -16,4 +16,5 @@ export interface IVendorAuthService {
   verifyVendorForgetOtp(data:OtpVerifyForgetDto):Promise<void>
   resetPassword(email:string,password:string):Promise<string>
   googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,vendor:LoginResponseDto}>
+  logout(refreshToken:string):Promise<void>
 }

@@ -31,7 +31,7 @@ export class AdminVendorMgtRepo
       if (search) {
         filter.$or = [
           { vendorName: { $regex: search, $options: "i" } },
-          { contact_email: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
           { registrationNumber: { $regex: search, $options: "i" } },
         ];
       }

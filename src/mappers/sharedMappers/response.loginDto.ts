@@ -19,7 +19,7 @@ export class VendorMapper {
   static VendorResponse(vendor: IVendor): LoginResponseDto {
     return {
       name: vendor.vendorName,
-      email: vendor.contact_email,
+      email: vendor.email,
       role: Role.Vendor,
       Id: vendor.vendorId ?? vendor._id.toString(),
     };

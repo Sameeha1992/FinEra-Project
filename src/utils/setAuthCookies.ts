@@ -12,7 +12,7 @@ export const getCookieOptions = (): {
   const baseOptions: CookieOptions = {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction,
+    sameSite: isProduction ? "none" :"lax",
   };
 
   return {

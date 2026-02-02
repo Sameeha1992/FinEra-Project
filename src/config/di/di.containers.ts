@@ -18,8 +18,8 @@ import { AdminAuthRepo } from '../../repositories/admin/admin.repo'
 import { IAdminAuthService } from '../../interfaces/services/admin/admin.auth.interface'
 import { AdminAuthService } from '../../services/admin/admin.auth.service'
 import { AdminAuthController } from '../../controllers/user/admin/auth.admin.controller'
-import { IVendorAuthRepository } from '../../interfaces/repositories/vendor/vendor.auth'
-import { vendorAuthRepository } from '../../repositories/vendor/vendor.auth.repo'
+import { IVendorRepository } from '../../interfaces/repositories/vendor/vendor.auth'
+import { VendorRepository} from '../../repositories/vendor/vendor.auth.repo'
 import { UserLoginService } from '../../services/shared/login/user.login.stratergy'
 import {IUserLoginService} from '../../interfaces/services/share/auth.user.interface'
 import { VendorAuthController } from '../../controllers/user/vendor/vendor.auth.controller'
@@ -34,6 +34,13 @@ import { IAdminVendorMgtService } from '@/interfaces/services/admin/admin.vendor
 import { AdminVendorMgtService } from '@/services/admin/admin.vendormgt'
 import { IStorageService } from '@/interfaces/helper/storageService.interface'
 import { StorageService } from '@/services/helper/storageService'
+import { IVendorProfileService } from '@/interfaces/services/vendor/vendor.profile.interface'
+import { VendorProfileService } from '@/services/vendor/vendor.profile'
+import { VendorProfileController } from '@/controllers/user/vendor/vendor.profile.controller'
+import { AuthMiddleware } from '@/middleware/authMiddleware'
+import { IAdminProfileService } from '@/interfaces/services/admin/admin.profile.interface'
+import { AdminProfileService } from '@/services/admin/admin.profile.service'
+import { AdminProfileController } from '@/controllers/user/admin/admin.profile.controller'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -46,7 +53,7 @@ container.registerSingleton(AuthUserController)
 
 
 
-container.registerSingleton<IVendorAuthRepository>('IVendorAuthRepository',vendorAuthRepository)
+container.registerSingleton<IVendorRepository>('IVendorRepository',VendorRepository)
 // container.registerSingleton<IVendorLoginService>('IVendorLoginService',VendorLoginService)
 container.registerSingleton<IVendorAuthService>('IVendorAuthService',VendorAuthService)
 container.registerSingleton(VendorAuthController)
@@ -67,5 +74,17 @@ container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IUserprofileService>('IUserProfileService',UserProfileService)
 container.registerSingleton(UserProfileController)
 
+
+//vendorProfile
+
+container.registerSingleton<IVendorProfileService>('IVendorProfileService',VendorProfileService);
+container.registerSingleton(VendorProfileController)
+
+//AdminProfile
+
+container.registerSingleton<IAdminProfileService>('IAdminProfileService',AdminProfileService);
+container.registerSingleton(AdminProfileController)
+
 container.registerSingleton<IStorageService>('IStorageService',StorageService)
+container.registerSingleton(AuthMiddleware)
 export {container}

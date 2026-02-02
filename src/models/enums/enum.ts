@@ -1,10 +1,14 @@
 export enum Status{
-    Pending = "pending",
-    Completed ="completed",
     Verified = "verified",
-    Rejected = "rejected"
+    Not_Verified = "notVerified",
+    
 }
 
+
+export enum AccountStatus{
+    Blocked ="blocked",
+    Unblocked ="unblocked"
+}
 
 
 export enum Role {

@@ -3,7 +3,7 @@ import {
   VendorRegisterDto,
   VendorResponseDto,
 } from "../../dto/vendorDto/vendor.auth.dto";
-import { IVendorAuthRepository } from "../../interfaces/repositories/vendor/vendor.auth";
+import { IVendorRepository } from "../../interfaces/repositories/vendor/vendor.auth";
 import { IVendorAuthService } from "../../interfaces/services/vendor/vendor.auth.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { IRedisService } from "../../interfaces/helper/redis.interface";
@@ -31,7 +31,7 @@ import { env } from "process";
 export class VendorAuthService implements IVendorAuthService {
   private readonly OTP_TTLSECONDS = 10 * 60;
   constructor(
-    @inject("IVendorAuthRepository") private _vendorRepository: IVendorAuthRepository,
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository,
     @inject("IRedisService") private _redisService: IRedisService,
     @inject("IPasswordService") private _IpasswordService: IPasswordService,
     @inject("IEmailService") private _emailService: IEmailService,
@@ -177,8 +177,8 @@ export class VendorAuthService implements IVendorAuthService {
 
     const loginResponse:LoginResponseDto = VendorMapper.VendorResponse(vendorData);
 
-    const accessToken = this._IJwtService.generateAccessToken(vendorData.vendorId,"vendor");
-    const refreshToken = this._IJwtService.generateRefreshToken(vendorData.vendorId,"vendor");
+    const accessToken = this._IJwtService.generateAccessToken(vendorData._id.toString(),"vendor");
+    const refreshToken = this._IJwtService.generateRefreshToken(vendorData._id.toString(),"vendor");
 
     return {vendor:loginResponse,accessToken,refreshToken}
 
@@ -190,7 +190,7 @@ export class VendorAuthService implements IVendorAuthService {
       throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN,STATUS_CODES.NOT_FOUND)
     }
 
-    const vendorId = decode._id;
+    const vendorId = decode.id;
     const role = decode.role;
 
     return this._IJwtService.generateAccessToken(vendorId,role||Role.Vendor
@@ -277,7 +277,7 @@ export class VendorAuthService implements IVendorAuthService {
 
     const vendorModel:Partial<IVendor>={
       vendorName:VendorData.name,
-      contact_email:VendorData.email,
+      email:VendorData.email,
       vendorId:VendorData.vendorId,
       role:Role.Vendor
 
@@ -292,6 +292,19 @@ export class VendorAuthService implements IVendorAuthService {
   const refreshToken = this._IJwtService.generateRefreshToken(vendor._id.toString(),"vendor")
 
   return {accessToken,refreshToken,vendor:vendorResponse}
+ }
+
+
+ async logout(refreshToken:string):Promise<void>{
+
+  const payload = this._IJwtService.verifyToken(refreshToken,"refresh")
+  if(!payload){
+    throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN)
+  }
+
+  const ttlSeconds = payload.exp - Math.floor(Date.now()/1000)
+
+  await this._redisService.blacklistRefreshToken(payload,ttlSeconds)
  }
 
 }
