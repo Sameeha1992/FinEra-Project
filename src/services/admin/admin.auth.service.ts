@@ -23,9 +23,9 @@ export class AdminAuthService implements IAdminAuthService {
   async login(
     credentials: LoginDto
   ): Promise<{
+    admin: LoginResponseDto;
     accessToken: string;
     refreshToken: string;
-    admin: LoginResponseDto;
   }> {
     const adminData: IUser | null = await this._IAdminAuthRepo.findByEmail(
       credentials.email
@@ -59,26 +59,45 @@ export class AdminAuthService implements IAdminAuthService {
 
     const accessToken = this._IJwtService.generateAccessToken(
       adminData._id,
-      Role.Admin
+      "admin"
     );
     const refreshToken = this._IJwtService.generateRefreshToken(
       adminData._id,
-      Role.Admin
+      "admin"
     );
 
     return { admin: adminLoginResponse, accessToken, refreshToken };
   }
 
-  async refreshToken(refreshToken: string): Promise<string> {
+  async refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}> {
     const decode = await this._IJwtService.verifyToken(refreshToken, "refresh");
 
     if (!decode) {
       throw new CustomError("Refresh token not valid");
     }
-    const adminId = decode._id;
-    const role = decode.role;
+    
 
-    return this._IJwtService.generateAccessToken(adminId, role || Role.Admin);
+    const isBlacklisted = await this._IRedisService.isRefreshTokenBlacklisted(decode.jti);
+
+    if(isBlacklisted){
+      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED)
+    }
+
+    const ttlSeconds = decode.exp - Math.floor(Date.now() /1000)
+
+    if(ttlSeconds >0){
+      await this._IRedisService.blacklistRefreshToken(decode.jti,ttlSeconds)
+    }
+
+
+    const newAccessToken = this._IJwtService.generateAccessToken(decode._id,decode.role);
+    const newRefreshToken = this._IJwtService.generateRefreshToken(decode._id,decode.role);
+
+
+    return {
+      accessToken:newAccessToken,
+      refreshToken:newRefreshToken
+    }
   }
 
   async logout(refreshToken:string):Promise<void>{

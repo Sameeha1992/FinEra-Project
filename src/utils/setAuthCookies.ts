@@ -6,7 +6,6 @@ export const isProduction = env.NODE_ENV === "production"
 
 
 export const getCookieOptions = (): {
-  accessToken: CookieOptions;
   refreshToken: CookieOptions;
 } => {
   const baseOptions: CookieOptions = {
@@ -16,11 +15,7 @@ export const getCookieOptions = (): {
   };
 
   return {
-    accessToken: {
-      ...baseOptions,
-      maxAge:env.ACCESS_TOKEN_COOKIE_MAX_AGE  // 15 minutes
-    },
-
+   
     refreshToken: {
       ...baseOptions,
       maxAge:env.REFRESH_TOKEN_COOKIE_MAX_AGE  // 30 days

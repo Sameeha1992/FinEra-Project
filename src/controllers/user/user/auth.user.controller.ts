@@ -12,6 +12,7 @@ import { getCookieOptions, isProduction } from "../../../utils/setAuthCookies";
 import { env } from "@/validations/envValidation";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { success } from "zod";
+import { Role } from "@/models/enums/enum";
 
 @injectable()
 export class AuthUserController {
@@ -85,16 +86,10 @@ export class AuthUserController {
         maxAge: env.REFRESH_TOKEN_COOKIE_MAX_AGE,
       });
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" :"lax",
-        maxAge: env.ACCESS_TOKEN_COOKIE_MAX_AGE,
-      });
-
       res.status(STATUS_CODES.SUCCESS).json({
         success: true,
         user,
+        accessToken,
         message: MESSAGES.LOGIN_SUCCESS,
       });
     } catch (error) {
@@ -123,9 +118,16 @@ export class AuthUserController {
         maxAge: env.REFRESH_TOKEN_COOKIE_MAX_AGE,
       });
 
+      res.cookie("role", Role.User, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        maxAge: env.ACCESS_TOKEN_COOKIE_MAX_AGE,
+      });
+
       res
         .status(STATUS_CODES.ACCEPTED)
-        .json({ message: MESSAGES.TOKEN_CREATED, accessToken: accessToken });
+        .json({ message: MESSAGES.TOKEN_CREATED, accessToken });
     } catch (error) {
       res
         .status(STATUS_CODES.BAD_REQUEST)
@@ -137,12 +139,10 @@ export class AuthUserController {
     try {
       const email = req.body.email;
       if (!email) {
-        return res
-          .status(STATUS_CODES.NOT_FOUND)
-          .json({
-            success: false,
-            message: "Email not required for forget password",
-          });
+        return res.status(STATUS_CODES.NOT_FOUND).json({
+          success: false,
+          message: "Email not required for forget password",
+        });
       }
 
       const result = await this._authUserService.forgetPassword(email);
@@ -170,12 +170,10 @@ export class AuthUserController {
       await this._authUserService.verifyforgetOtp(otpData);
 
       logger.info({ email }, "Forget password OTP verified successfully");
-      res
-        .status(STATUS_CODES.SUCCESS)
-        .json({
-          success: true,
-          message: "OTP verified you can now reset your password",
-        });
+      res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: "OTP verified you can now reset your password",
+      });
     } catch (error) {
       logger.error({ error }, "Forget password otp verification failed");
       next(error);
@@ -217,13 +215,13 @@ export class AuthUserController {
         await this._authUserService.googleLogin(token);
 
       const cookieOptions = getCookieOptions();
-      res.cookie("accessToken", accessToken, cookieOptions.accessToken);
       res.cookie("refreshToken", refreshToken, cookieOptions.refreshToken);
 
       res.status(STATUS_CODES.SUCCESS).json({
         success: true,
         message: "User logged through google",
         user,
+        accessToken,
       });
     } catch (error) {
       next(error);
@@ -247,7 +245,9 @@ export class AuthUserController {
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, message: MESSAGES.LOGOUT_SUCCESS });
     } catch (error) {
-      res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.LOGOUT_FAILED})
+      res
+        .status(STATUS_CODES.BAD_REQUEST)
+        .json({ success: false, message: MESSAGES.LOGOUT_FAILED });
     }
   }
 }

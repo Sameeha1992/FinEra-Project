@@ -61,12 +61,13 @@ export class AuthMiddleware {
     next: NextFunction,
   ) => {
     console.log("is authenticated")
-    const token = req.cookies?.accessToken;
-    if (!token) {
-      return res
-        .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.UNAUTHORIZED_ACCESS });
+    const authHeader = req.headers.authorization;
+
+    if(!authHeader || !authHeader.startsWith("Bearer ")){
+      return res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.UNAUTHORIZED_ACCESS})
     }
+   
+    const token = authHeader.split(" ")[1]
 
     try {
       const decode = this._jwtService.verifyToken(

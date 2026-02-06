@@ -101,5 +101,11 @@ export const MESSAGES = {
   SOMETHING_WENT_WRONG:"Somehing went wrong",
   ACCESS_DENIED:"Access denied fror the role",
   ACCOUNT_NOT_FOUND:"Account not found",
-  ACCOUNT_BLOCKED:"Account is blocked"
+  ACCOUNT_BLOCKED:"Account is blocked",
+  SIGNED_URL_GENERATION_FAILED:"Failed to generate signed url",
+  OTP_SENDING_FAILED:"Failed to send otp",
+  REFRESH_TOKEN_REVOKED:"Refresh token revoked",
+  ACCESS_TOKEN_REFRESHED:"Access token refreshed successfully",
+  FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
+  ACCESS_TOKEN_NOT_FOUND:"no access token found"
 };

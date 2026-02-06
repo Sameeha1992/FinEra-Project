@@ -12,14 +12,14 @@ export interface IUser extends Document{
     profileImage?:string;
     dob?:string;
     job?:string;
-    income?:number;
+    income?:string;
     gender?: "male"| "female" | "other";
     isBlocked?:boolean,
     password?:string;
     adhaarNumber?:string;
     vendorId:string;
     panNumber?:string;
-    cibilScore?: number;
+    cibilScore?: string;
     adhaarDoc?: string;
     panDoc?:string;
     cibilDoc?: string;
@@ -30,6 +30,7 @@ export interface IUser extends Document{
     createdAt?: Date;
     updatedAt?: Date;
     message?: string;
+    isProfileComplete?:boolean
 }
 
 
@@ -56,6 +57,7 @@ const UserSchema = new Schema<IUser>(
         isBlacklisted:{type:Boolean, default:false},
         message:{type:String},
         isBlocked:{type:Boolean,default:false},
+        isProfileComplete:{type:Boolean,default:false},
         vendorId:{type:String},
         status:{
             type:String,

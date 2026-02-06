@@ -9,3 +9,21 @@ export interface AuthenticateRequest extends Request{
     }
     file?:Express.Multer.File
 }
+
+
+
+
+
+
+export interface AuthenticateFileRequest extends Request{
+    user?:{
+        id:string;
+        role:Role;
+        email?:string
+    }
+     files?: {
+    adhaarDoc?: Express.Multer.File[];
+    panDoc?: Express.Multer.File[];
+    cibilDoc?: Express.Multer.File[];
+  };
+}

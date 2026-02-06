@@ -41,6 +41,7 @@ import { AuthMiddleware } from '@/middleware/authMiddleware'
 import { IAdminProfileService } from '@/interfaces/services/admin/admin.profile.interface'
 import { AdminProfileService } from '@/services/admin/admin.profile.service'
 import { AdminProfileController } from '@/controllers/user/admin/admin.profile.controller'
+import { uploadImageMiddleware } from '@/middleware/multer.middleware'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -86,5 +87,5 @@ container.registerSingleton<IAdminProfileService>('IAdminProfileService',AdminPr
 container.registerSingleton(AdminProfileController)
 
 container.registerSingleton<IStorageService>('IStorageService',StorageService)
-container.registerSingleton(AuthMiddleware)
+
 export {container}

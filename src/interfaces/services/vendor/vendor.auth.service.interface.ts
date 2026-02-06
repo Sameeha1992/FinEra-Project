@@ -11,7 +11,7 @@ export interface IVendorAuthService {
   generateOtp(email: string): Promise<IOtp>;
   verifyOtp(vendorData: OtpVerifyDto): Promise<boolean>;
   vendorLogin(credentials:LoginDto):Promise<{vendor:LoginResponseDto,accessToken:string,refreshToken:string}>
-  refreshToken(refreshToken:string):Promise<string>
+  refreshToken(refreshToken:string):Promise<{accessToken:string,refreshToken:string}>
   forgetVendorPassword(email:string):Promise<string>
   verifyVendorForgetOtp(data:OtpVerifyForgetDto):Promise<void>
   resetPassword(email:string,password:string):Promise<string>

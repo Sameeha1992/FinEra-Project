@@ -51,7 +51,7 @@ export class AuthUserService implements IAuthUserService {
     }
 
     if (!userData.password) {
-      throw new CustomError("Password is required");
+      throw new CustomError(MESSAGES.PASSWORD_REQUIRED);
     }
 
     const hashedPassword = await this._passwordService.hashPassword(
@@ -101,7 +101,7 @@ export class AuthUserService implements IAuthUserService {
     } catch (error: any) {
       logger.error({err:error,email},"Failed to generate OTP")
 
-      throw new Error("Failed to send OTP. Please try again.");
+      throw new CustomError(MESSAGES.OTP_SENDING_FAILED);
     }
   }
 
@@ -117,7 +117,7 @@ export class AuthUserService implements IAuthUserService {
 
       console.log("normalise email", normalizedEmail);
       if (!normalizedEmail) {
-        throw new Error("Invalid email format");
+        throw new CustomError(MESSAGES.INVALID_EMAIL_FORMAT);
       }
 
       if (!otp || otp.length !== 6) {
@@ -198,13 +198,13 @@ export class AuthUserService implements IAuthUserService {
     const decoded = await this._jwtService.verifyToken(refreshToken, "refresh");
 
     if (!decoded) {
-      throw new CustomError("Refresh token not valid");
+      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
     }
 
     const isBlacklisted = await this._redisService.isRefreshTokenBlacklisted(decoded.jti);
 
     if(isBlacklisted){
-      throw new CustomError("Refresh token revoked")
+      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED)
     }
 
     const ttlSeconds = decoded.exp - Math.floor(Date.now() /1000);

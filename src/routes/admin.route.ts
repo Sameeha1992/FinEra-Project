@@ -12,7 +12,6 @@ const adminRouter = express.Router();
 
 const authAdminController = container.resolve(AdminAuthController)
 const adminAccountController = container.resolve(AdminVendorMgtController)
-const adminProfileController = container.resolve(AdminProfileController);
 const authMiddleware = container.resolve(AuthMiddleware)
 
 adminRouter.post("/login",(req:Request,res:Response,next:NextFunction)=>{
@@ -36,5 +35,4 @@ adminRouter.post("/logout",(req:Request,res:Response,next:NextFunction)=>{
     authAdminController.logout(req,res,next)
 })
 
-adminRouter.get("/admin-profile",authMiddleware.auntenticate,authMiddleware.checkBlocked,authMiddleware.allowRoles(Role.Admin),adminProfileController.getProfile.bind(adminProfileController))
 export default adminRouter
