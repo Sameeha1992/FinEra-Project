@@ -55,6 +55,7 @@ export class UserProfileController {
       },
     );
 
+    console.log(result,"result of the profile")
     return res
       .status(STATUS_CODES.SUCCESS)
       .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });

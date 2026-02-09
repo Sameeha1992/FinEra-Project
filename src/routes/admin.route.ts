@@ -2,7 +2,6 @@ import { AdminVendorMgtController } from "@/controllers/user/admin/admin.vendor.
 import { AdminAuthController } from "../controllers/user/admin/auth.admin.controller";
 import express,{Request,Response,NextFunction } from "express";
 import { container } from "tsyringe";
-import { AdminProfileController } from "@/controllers/user/admin/admin.profile.controller";
 import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { Role } from "@/models/enums/enum";
 
@@ -20,11 +19,11 @@ adminRouter.post("/login",(req:Request,res:Response,next:NextFunction)=>{
 
 
 adminRouter.get("/accounts",(req:Request,res:Response,next:NextFunction)=>{
-    adminAccountController.getAccounts(req,res,next)
+    authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),adminAccountController.getAccounts(req,res,next)
 })
 
 adminRouter.patch("/accounts/:id/status",(req:Request,res:Response,next:NextFunction)=>{
-    adminAccountController.updatedStatus(req,res,next)
+    authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),adminAccountController.updatedStatus(req,res,next)
 })
 
 adminRouter.post("/refresh-token",(req:Request,res:Response,next:NextFunction)=>{

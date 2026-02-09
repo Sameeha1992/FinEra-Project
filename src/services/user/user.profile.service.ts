@@ -29,6 +29,8 @@ export class UserProfileService implements IUserprofileService {
     return UserProfileMapper.toResponse(user);
   }
 
+
+
   async completeProfile(
     userId: string,
     dto: UserCompleteProfileDto,
@@ -68,11 +70,12 @@ export class UserProfileService implements IUserprofileService {
     //   );
     // }
 
-    const updatedData = CompleteProfileMapper.toEntity(dto, fileUrls);
+    const updatedData = {...CompleteProfileMapper.toEntity(dto, fileUrls),isProfileComplete:true};
 
     const updateUser = await this._iUserRepository.updateById(
       userId,
       updatedData,
+    
     );
 
     if (!updateUser) {
@@ -120,9 +123,9 @@ export class UserProfileService implements IUserprofileService {
     const adhaarDocUrl = await getSignedUrl(user.adhaarDoc);
 
     const userCompleteData: UserCompleteUpdateDto = {
-      name:user.name,
-      email:user.email,
-      customerId:user.customerId,
+      name: user.name,
+      email: user.email,
+      customerId: user.customerId,
       phone: user.phone,
       status: (user.status as "VERIFIED" | "NOT_VERIFIED") || "NOT_VERIFIED",
       dob: user.dob,

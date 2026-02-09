@@ -34,6 +34,7 @@ export class CompleteProfileMapper {
       job: dto.job,
       income: dto.income,
       gender: dto.gender,
+      isProfileComplete:dto.isProfileComplete,
 
       adhaarNumber: dto.adhaarNumber,
       panNumber: dto.panNumber,
@@ -54,6 +55,7 @@ export class CompleteProfileMapper {
       email: user.email,
       phone: user.phone ?? "",
       status: user.status ?? "not_verified",
+      isCompleteProfile:user.isProfileComplete ?? false,
 
       dob: user.dob ?? "",
       job: user.job ?? "",
