@@ -1,5 +1,7 @@
-import { VendorProfileResponseDTO } from "@/dto/vendorDto/vendor.profile.dto";
+import { VendorCompleteProfileDto, VendorCompleteProfileResponseDto, VendorCompleteUpdateDto, VendorProfileResponseDTO } from "@/dto/vendorDto/vendor.profile.dto";
 
 export interface IVendorProfileService{
     getProfile(venodrId:string):Promise<VendorProfileResponseDTO>
+    completeProfile(vendorId:string,dto:VendorCompleteProfileDto,files:{registrationDoc?:Express.Multer.File,licenceDoc?:Express.Multer.File}):Promise<VendorCompleteProfileResponseDto>
+    getCompleteProfile(vendorid:string):Promise<VendorCompleteUpdateDto>
 }

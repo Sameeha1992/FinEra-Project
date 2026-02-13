@@ -25,5 +25,7 @@ export interface AuthenticateFileRequest extends Request{
     adhaarDoc?: Express.Multer.File[];
     panDoc?: Express.Multer.File[];
     cibilDoc?: Express.Multer.File[];
+    registrationDoc?:Express.Multer.File[];
+    licenceDoc?:Express.Multer.File[]
   };
 }

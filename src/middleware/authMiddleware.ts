@@ -82,6 +82,7 @@ export class AuthMiddleware {
         email: decode.email,
       };
       console.log("Token User",req.user)
+      
 
       next();
     } catch (error) {

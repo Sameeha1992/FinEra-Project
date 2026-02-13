@@ -1,9 +1,11 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import { IVendorProfileService } from "@/interfaces/services/vendor/vendor.profile.interface";
-import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
-import { Response,NextFunction } from "express";
+import { CustomError } from "@/middleware/errorMiddleware";
+import { AuthenticateFileRequest, AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
+import { Request,Response,NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
+import { success } from "zod";
 
 @injectable()
 export class VendorProfileController{
@@ -23,5 +25,45 @@ getVendorProfile = async (req:AuthenticateRequest,res:Response,next:NextFunction
         return next(error)
     }
 
+}
+
+completeProfile = async (req:Request,res:Response,next:NextFunction)=>{
+
+
+    const typedReq = req as AuthenticateFileRequest;
+
+    const vendorId = typedReq.user!.id;
+
+    const result = await this._ivendorProfileService.completeProfile(vendorId,typedReq.body,{registrationDoc:typedReq.files?.registrationDoc?.[0],licenceDoc:typedReq.files?.licenceDoc?.[0]});
+
+    console.log("Result of the vendor profile",result);
+
+    return res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PROFILE_UPDATED,data:result})
+}
+
+
+getCompleteProfile = async (req:AuthenticateRequest,res:Response,next:NextFunction)=>{
+
+    try {
+            console.log("🔥 GET COMPLETE PROFILE CONTROLLER HIT");
+
+        const userId = req.user?.id;
+            console.log("User ID:", userId);
+
+
+        if(!userId){
+            throw new CustomError(MESSAGES.USER_NOT_FOUND)
+        }
+
+        const profileData = await this._ivendorProfileService.getCompleteProfile(userId)
+        
+            console.log("Profile Data from Service:", profileData);
+
+        res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.FETCHED_USER_PROFILE_DATA_SUCCESSFULLY,data:profileData})
+    } catch (error) {
+            console.error("🔥 ERROR IN GET COMPLETE PROFILE:", error);
+
+        next(error)
+    }
 }
 }
