@@ -5,6 +5,7 @@ export interface UserProfileResponseDTO {
   phone?: string;
   profileImage?: string;
   status?: string;
+  isProfileComplete?:boolean
 }
 
 export interface UserCompleteProfileDto {

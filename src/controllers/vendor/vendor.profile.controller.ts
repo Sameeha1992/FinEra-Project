@@ -20,7 +20,7 @@ getVendorProfile = async (req:AuthenticateRequest,res:Response,next:NextFunction
         return res.status(STATUS_CODES.SUCCESS).json({success:true,data:profile})
         
     } catch (error) {
-        console.log(error,"this is the issue")
+       
         console.error("Something went wrong",error)
         return next(error)
     }
@@ -36,7 +36,6 @@ completeProfile = async (req:Request,res:Response,next:NextFunction)=>{
 
     const result = await this._ivendorProfileService.completeProfile(vendorId,typedReq.body,{registrationDoc:typedReq.files?.registrationDoc?.[0],licenceDoc:typedReq.files?.licenceDoc?.[0]});
 
-    console.log("Result of the vendor profile",result);
 
     return res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PROFILE_UPDATED,data:result})
 }
@@ -45,10 +44,8 @@ completeProfile = async (req:Request,res:Response,next:NextFunction)=>{
 getCompleteProfile = async (req:AuthenticateRequest,res:Response,next:NextFunction)=>{
 
     try {
-            console.log("🔥 GET COMPLETE PROFILE CONTROLLER HIT");
 
         const userId = req.user?.id;
-            console.log("User ID:", userId);
 
 
         if(!userId){
@@ -57,11 +54,10 @@ getCompleteProfile = async (req:AuthenticateRequest,res:Response,next:NextFuncti
 
         const profileData = await this._ivendorProfileService.getCompleteProfile(userId)
         
-            console.log("Profile Data from Service:", profileData);
 
         res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.FETCHED_USER_PROFILE_DATA_SUCCESSFULLY,data:profileData})
     } catch (error) {
-            console.error("🔥 ERROR IN GET COMPLETE PROFILE:", error);
+            console.error("ERROR IN GET COMPLETE PROFILE:", error);
 
         next(error)
     }

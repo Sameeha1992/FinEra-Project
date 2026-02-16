@@ -80,6 +80,7 @@ export class VendorProfileService implements IVendorProfileService{
             vendorId:user.vendorId,
             registrationNumber:user.registrationNumber,
             licenceNumber:user.licenceNumber,
+            isProfileComplete:user.isProfileComplete,
 
             documents:{
                 registrationDocUrl:regsitrationDocUrl || "",

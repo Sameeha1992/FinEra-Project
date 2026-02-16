@@ -1,5 +1,5 @@
-import { AdminVendorMgtController } from "@/controllers/user/admin/admin.vendor.mgt.controller";
-import { AdminAuthController } from "../controllers/user/admin/auth.admin.controller";
+import { AdminVendorMgtController } from "@/controllers/admin/admin.vendor.mgt.controller";
+import { AdminAuthController } from "../controllers/admin/auth.admin.controller";
 import express,{Request,Response,NextFunction } from "express";
 import { container } from "tsyringe";
 import { AuthMiddleware } from "@/middleware/authMiddleware";

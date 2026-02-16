@@ -1,16 +1,11 @@
-import { VendorProfileController } from "@/controllers/user/vendor/vendor.profile.controller";
-import { VendorAuthController } from "../controllers/user/vendor/vendor.auth.controller";
+
 import express, { Request, Response, NextFunction } from "express";
-import { container } from "tsyringe";
-import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { Role } from "@/models/enums/enum";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
+import { authMiddleware, authVendorController, loanProductController, vendorProfileController } from "@/controllers/resolvers/resolvers";
 
 const router = express.Router();
 
-const authVendorController = container.resolve(VendorAuthController);
-const vendorProfileController = container.resolve(VendorProfileController);
-const authMiddleware = container.resolve(AuthMiddleware);
 
 router.post(
   "/generate-otp",
@@ -72,6 +67,9 @@ router.post(
   },
 );
 
+
+router.patch("/change-password",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,authVendorController.changePassword.bind(authVendorController))
+
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authVendorController.logout(req, res, next);
 });
@@ -104,4 +102,7 @@ router.get(
   vendorProfileController.getCompleteProfile,
 );
 
+
+router.post("/loan-product",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.createLoanProduct.bind(loanProductController))
+router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getVendorLoans.bind(loanProductController))
 export default router;

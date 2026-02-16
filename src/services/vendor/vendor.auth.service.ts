@@ -394,4 +394,32 @@ export class VendorAuthService implements IVendorAuthService {
 
     await this._redisService.blacklistRefreshToken(payload, ttlSeconds);
   }
+
+
+  async changePassword(vendorId:string,currentPassword:string,newPassword:string):Promise<void>{
+
+    const vendor = await this._vendorRepository.findById(vendorId);
+    if(!vendor){
+      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    }
+
+    if(!vendor.password){
+      throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED);
+    }
+
+    const isMatch = await this._IpasswordService.comparePassword(currentPassword,vendor.password);
+    if(!isMatch){
+      throw new CustomError(MESSAGES.PASSWORD_MISMATCH)
+    }
+
+    const isSamePassword = await this._IpasswordService.comparePassword(newPassword,vendor.password);
+
+    if(isSamePassword){
+      throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT)
+    }
+
+    const hashedPassword = await this._IpasswordService.hashPassword(newPassword);
+
+    await this._vendorRepository.updateById(vendorId,{password:hashedPassword})
+  }
 }

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IAdminAuthService } from "../../../interfaces/services/admin/admin.auth.interface";
+import { IAdminAuthService } from "../../interfaces/services/admin/admin.auth.interface";
 import { Request, Response, NextFunction } from "express";
-import { LoginDto } from "../../../dto/shared/login.dto";
-import { STATUS_CODES } from "../../../config/constants/statusCode";
-import { MESSAGES } from "../../../config/constants/message";
+import { LoginDto } from "../../dto/shared/login.dto";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { MESSAGES } from "../../config/constants/message";
 import { env } from "@/validations/envValidation";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { isProduction } from "@/utils/setAuthCookies";

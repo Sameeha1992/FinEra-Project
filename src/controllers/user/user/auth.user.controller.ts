@@ -13,6 +13,7 @@ import { env } from "@/validations/envValidation";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { success } from "zod";
 import { Role } from "@/models/enums/enum";
+import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
 @injectable()
 export class AuthUserController {
@@ -248,6 +249,37 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: MESSAGES.LOGOUT_FAILED });
+    }
+  }
+
+  async changePassword(req: AuthenticateRequest, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+
+      const { currentPassword, newPassword } = req.body;
+
+
+      if (!userId) {
+        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS);
+      }
+
+      if (!currentPassword || !newPassword) {
+        throw new CustomError(MESSAGES.REQUIRED_FIELD_MISSING);
+      }
+
+      await this._authUserService.changePassword(
+        userId,
+        currentPassword,
+        newPassword,
+      );
+
+      res
+        .status(STATUS_CODES.SUCCESS)
+        .json({ success: true, message: MESSAGES.PASSWORD_CHANGE_SUCCESS });
+      logger.info(MESSAGES.PASSWORD_CHANGE_SUCCESS);
+    } catch (error) {
+      logger.error(MESSAGES.SOMETHING_WENT_WRONG);
+      next(error);
     }
   }
 }

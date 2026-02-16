@@ -8,7 +8,9 @@ export class UserProfileMapper{
             name:user.name,
             email:user.email,
             phone:user.phone,
-            status:user.status
+            status:user.status,
+            isProfileComplete:user.isProfileComplete
+            
 
         }
     }

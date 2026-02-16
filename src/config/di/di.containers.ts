@@ -17,12 +17,12 @@ import { IAdminAuthRepo } from '../../interfaces/repositories/admin/admin.auth.r
 import { AdminAuthRepo } from '../../repositories/admin/admin.repo'
 import { IAdminAuthService } from '../../interfaces/services/admin/admin.auth.interface'
 import { AdminAuthService } from '../../services/admin/admin.auth.service'
-import { AdminAuthController } from '../../controllers/user/admin/auth.admin.controller'
+import { AdminAuthController } from '../../controllers/admin/auth.admin.controller'
 import { IVendorRepository } from '../../interfaces/repositories/vendor/vendor.auth'
 import { VendorRepository} from '../../repositories/vendor/vendor.auth.repo'
 import { UserLoginService } from '../../services/shared/login/user.login.stratergy'
 import {IUserLoginService} from '../../interfaces/services/share/auth.user.interface'
-import { VendorAuthController } from '../../controllers/user/vendor/vendor.auth.controller'
+import { VendorAuthController } from '../../controllers/vendor/vendor.auth.controller'
 import { IVendorAuthService } from '../../interfaces/services/vendor/vendor.auth.service.interface'
 import { VendorAuthService } from '../../services/vendor/vendor.auth.service'
 import { IUserprofileService } from '../../interfaces/services/user/user.profile.interface'
@@ -36,11 +36,16 @@ import { IStorageService } from '@/interfaces/helper/storageService.interface'
 import { StorageService } from '@/services/helper/storageService'
 import { IVendorProfileService } from '@/interfaces/services/vendor/vendor.profile.interface'
 import { VendorProfileService } from '@/services/vendor/vendor.profile'
-import { VendorProfileController } from '@/controllers/user/vendor/vendor.profile.controller'
+import { VendorProfileController } from '@/controllers/vendor/vendor.profile.controller'
 import { AuthMiddleware } from '@/middleware/authMiddleware'
 import { IAdminProfileService } from '@/interfaces/services/admin/admin.profile.interface'
 import { AdminProfileService } from '@/services/admin/admin.profile.service'
 import { uploadImageMiddleware } from '@/middleware/multer.middleware'
+import { ILoanProductRepository } from '@/interfaces/repositories/loanProduct/loanProduct.repository'
+import { LoanProductRepository } from '@/repositories/loanProduct/loanProduct.repository'
+import { LoanProductService } from '@/services/loanProduct/loan.service'
+import { ILoanProductService } from '@/interfaces/services/loanProduct/loanProduct.service'
+import { LoanProductController } from '@/controllers/loanProduct/loanProduct.controller'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -85,5 +90,12 @@ container.registerSingleton(VendorProfileController)
 container.registerSingleton<IAdminProfileService>('IAdminProfileService',AdminProfileService);
 
 container.registerSingleton<IStorageService>('IStorageService',StorageService)
+
+
+container.registerSingleton<ILoanProductRepository>("ILoanProductRepository",LoanProductRepository)
+container.registerSingleton<ILoanProductService>('ILoanProductService',LoanProductService);
+
+container.registerSingleton(LoanProductController)
+
 
 export {container}

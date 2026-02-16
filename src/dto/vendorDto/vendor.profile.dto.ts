@@ -4,6 +4,7 @@ export interface VendorProfileResponseDTO {
   registrationNumber: string;
   email: string;
   status: string;
+  isProfileComplete:boolean;
 }
 
 export interface VendorCompleteProfileDto {
@@ -36,6 +37,7 @@ export interface VendorCompleteUpdateDto {
 
   registrationNumber?: string;
   licenceNumber?: string;
+  isProfileComplete?:boolean,
 
   documents?: VendorDocumentsDto;
 }

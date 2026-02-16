@@ -24,6 +24,7 @@ export class UserProfileService implements IUserprofileService {
 
   async getProfile(userId: string): Promise<UserProfileResponseDTO> {
     let user = await this._iUserRepository.findById(userId);
+    console.log(user,"isprofilecomplete undonnu check cheyyam")
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
     return UserProfileMapper.toResponse(user);

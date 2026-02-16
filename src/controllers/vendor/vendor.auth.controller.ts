@@ -1,17 +1,18 @@
-import { STATUS_CODES } from "../../../config/constants/statusCode";
-import { MESSAGES } from "../../../config/constants/message";
-import { IVendorAuthService } from "../../../interfaces/services/vendor/vendor.auth.service.interface";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { MESSAGES } from "../../config/constants/message";
+import { IVendorAuthService } from "../../interfaces/services/vendor/vendor.auth.service.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import logger from "../../../middleware/loggerMiddleware";
-import { LoginDto } from "../../../dto/shared/login.dto";
-import { getCookieOptions, isProduction } from "../../../utils/setAuthCookies";
-import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
-import { CustomError } from "../../../middleware/errorMiddleware";
+import logger from "../../middleware/loggerMiddleware";
+import { LoginDto } from "../../dto/shared/login.dto";
+import { getCookieOptions, isProduction } from "../../utils/setAuthCookies";
+import { OtpVerifyForgetDto } from "../../dto/user/auth/otp-generation.dto";
+import { CustomError } from "../../middleware/errorMiddleware";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { success } from "zod";
 import { Role } from "@/models/enums/enum";
 import { env } from "@/validations/envValidation";
+import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
 
 @injectable()
@@ -75,9 +76,6 @@ export class VendorAuthController {
   try {
     const credentials: LoginDto = req.body;
     const {vendor,accessToken,refreshToken} = await this._IvendorAuthService.vendorLogin(credentials);
-    console.log("vendor",vendor)
-    console.log("accesstoken",accessToken)
-    console.log(Role)
     
     const cookieOptions = getCookieOptions();
     res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
@@ -223,6 +221,31 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       
     } catch (error) {
       res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.LOGOUT_FAILED})
+    }
+  }
+
+  async changePassword(req:AuthenticateRequest,res:Response,next:NextFunction){
+    try {
+      const vendorId = req.user?.id;
+
+      const {currentPassword,newPassword} = req.body;
+
+      if(!vendorId){
+        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS)
+      }
+
+      if(!currentPassword || !newPassword){
+        throw new CustomError(MESSAGES.REQUIRED_FIELD_MISSING)
+      }
+
+      await this._IvendorAuthService.changePassword(vendorId,currentPassword,newPassword)
+      
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PASSWORD_CHANGE_SUCCESS});
+      logger.info(MESSAGES.PASSWORD_CHANGE_SUCCESS)
+    } catch (error) {
+      logger.error(MESSAGES.SOMETHING_WENT_WRONG);
+      next(error)
+      
     }
   }
 

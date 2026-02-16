@@ -17,4 +17,5 @@ export interface IVendorAuthService {
   resetPassword(email:string,password:string):Promise<string>
   googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,vendor:LoginResponseDto}>
   logout(refreshToken:string):Promise<void>
+  changePassword(vendorId:string,currentPassword:string,newPassword:string):Promise<void>
 }

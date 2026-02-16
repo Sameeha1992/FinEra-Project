@@ -8,7 +8,8 @@ export class vendorProfileMapper{
             vendorId:vendor.vendorId,
             registrationNumber:vendor.registrationNumber,
             email:vendor.email,
-            status:vendor.status
+            status:vendor.status,
+            isProfileComplete:vendor.isProfileComplete
 
         }
     }

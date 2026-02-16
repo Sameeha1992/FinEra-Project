@@ -8,12 +8,7 @@ import { MESSAGES } from "@/config/constants/message";
 export class StorageService implements IStorageService {
   private client: S3Client;
   constructor() {
-    console.log("S3 CONFIG DEBUG 👉", {
-      region: env.AWS_REGION_NAME,
-      bucket: env.AWS_BUCKET_NAME,
-      hasAccessKey: !!env.AWS_ACCESS_KEY,
-      hasSecretKey: !!env.AWS_SECRET_KEY,
-    });
+    
     // console.log(env.AWS_ACCESS_KEY, env.AWS_SECRET_KEY)
     this.client = new S3Client({
       region: env.AWS_REGION_NAME,
@@ -25,13 +20,7 @@ export class StorageService implements IStorageService {
   }
 
   async uploadImage(file: Express.Multer.File, key: string): Promise<string> {
-    console.log("UPLOAD INPUT DEBUG 👉", {
-      key,
-      fileExists: !!file,
-      bufferExists: !!file?.buffer,
-      mimeType: file?.mimetype,
-      size: file?.size,
-    });
+    
 
     try {
       const command = new PutObjectCommand({
@@ -41,12 +30,7 @@ export class StorageService implements IStorageService {
         ContentType: file.mimetype,
       });
 
-      console.log("S3 PARAMS DEBUG 👉", {
-        Bucket: env.AWS_BUCKET_NAME,
-        Key: key,
-        ContentType: file.mimetype,
-      });
-
+      
       await this.client.send(command);
       return `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION_NAME}.amazonaws.com/${key}`;
     } catch (error) {

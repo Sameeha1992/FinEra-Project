@@ -77,6 +77,8 @@ router.post(
   },
 );
 
+router.patch("/change-password",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,authUserController.changePassword.bind(authUserController))
+
 router.get(
   "/user-profile",
   authMiddleware.auntenticate,

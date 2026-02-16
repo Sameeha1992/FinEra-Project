@@ -35,7 +35,6 @@ export class UserProfileController {
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, data: profile });
     } catch (error) {
-      console.error("Something went wrong on profile", error);
       throw new CustomError(MESSAGES.SOMETHING_WENT_WRONG);
     }
   }
@@ -55,7 +54,6 @@ export class UserProfileController {
       },
     );
 
-    console.log(result,"result of the profile")
     return res
       .status(STATUS_CODES.SUCCESS)
       .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });
@@ -99,7 +97,6 @@ export class UserProfileController {
       }
 
       const userId = req.user!.id;
-      console.log(userId, "userId");
       const extension = req.file.mimetype.split("/")[1];
 
       const key = `profiles/${userId}.${extension}`;

@@ -330,4 +330,38 @@ async logout(refreshToken:string):Promise<void>{
   await this._redisService.blacklistRefreshToken(payload.jti,ttlSeconds)
 }
 
+
+
+async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+  
+  const user = await this._userRepository.findById(userId);
+  if(!user){
+    throw new CustomError(MESSAGES.USER_NOT_FOUND)
+  }
+
+  if(!user.password){
+    throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED)
+  }
+
+  const isMatch = await this._passwordService.comparePassword(currentPassword,user.password)
+
+  if(!isMatch){
+    throw new CustomError(MESSAGES.PASSWORD_MISMATCH)
+  }
+
+
+  const isSamePassword = await this._passwordService.comparePassword(newPassword,user.password)
+
+  if(isSamePassword){
+    throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT)
+  }
+
+  const hashedPassword = await this._passwordService.hashPassword(newPassword);
+
+
+  await this._userRepository.updateById(userId,{password:hashedPassword})
+
+
+}
+
 }

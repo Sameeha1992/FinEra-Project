@@ -37,6 +37,7 @@ export const MESSAGES = {
   PASSWORD_RESET_FAILED: "Failed to reset password.",
   PASSWORD_EXPIRED: "Your password has expired. Please set a new password.",
   PASSWORD_TOO_COMMON: "This password is too common. Please choose a stronger password.",
+  PASSWORD_MUST_BE_DIFFERENT:"Password must be different",
 
   // Payments & Transactions
   TRANSACTION_SUCCESS: "Transaction completed successfully.",
@@ -107,5 +108,12 @@ export const MESSAGES = {
   REFRESH_TOKEN_REVOKED:"Refresh token revoked",
   ACCESS_TOKEN_REFRESHED:"Access token refreshed successfully",
   FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
-  ACCESS_TOKEN_NOT_FOUND:"no access token found"
+  ACCESS_TOKEN_NOT_FOUND:"no access token found",
+
+  //Loan:-
+
+  MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:"minimum amount should not exceed ",
+  MINIMUM_TENURE_SHOULD_NOT_EXCEED_MAXIMUM:"Minimum tenure cannot exceed maximum tenure",
+  LOAN_ALREADY_EXISTS:"Loan already existed for the vendor",
+  NO_LOANS_FOUND:"No loans had been found"
 };
