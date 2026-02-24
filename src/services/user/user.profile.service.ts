@@ -5,6 +5,7 @@ import {
   UserCompleteProfileDto,
   UserCompleteUpdateDto,
   UserProfileResponseDTO,
+  UserUpdateCompleteProfile,
 } from "../../dto/user/profile.dto";
 import {
   CompleteProfileMapper,
@@ -24,13 +25,10 @@ export class UserProfileService implements IUserprofileService {
 
   async getProfile(userId: string): Promise<UserProfileResponseDTO> {
     let user = await this._iUserRepository.findById(userId);
-    console.log(user,"isprofilecomplete undonnu check cheyyam")
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
     return UserProfileMapper.toResponse(user);
   }
-
-
 
   async completeProfile(
     userId: string,
@@ -71,12 +69,14 @@ export class UserProfileService implements IUserprofileService {
     //   );
     // }
 
-    const updatedData = {...CompleteProfileMapper.toEntity(dto, fileUrls),isProfileComplete:true};
+    const updatedData = {
+      ...CompleteProfileMapper.toEntity(dto, fileUrls),
+      isProfileComplete: true,
+    };
 
     const updateUser = await this._iUserRepository.updateById(
       userId,
       updatedData,
-    
     );
 
     if (!updateUser) {
@@ -91,6 +91,7 @@ export class UserProfileService implements IUserprofileService {
     image: Express.Multer.File,
   ): Promise<UserProfileResponseDTO> {
     const user = await this._iUserRepository.findById(userId);
+
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
     let extensions = image.mimetype.split("/")[1];
@@ -141,6 +142,63 @@ export class UserProfileService implements IUserprofileService {
         panDocUrl: panDocUrl || "",
       },
     };
+
     return userCompleteData;
+  }
+
+  async updateCompleteProfile(
+    userId: string,
+    dto: UserUpdateCompleteProfile,
+    files?: { adhaarDoc?: Express.Multer.File; panDoc?: Express.Multer.File },
+  ): Promise<UserCompletedResponseDto> {
+    const user = await this._iUserRepository.findById(userId);
+    if (!user) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
+    }
+
+    if (user.isBlocked) {
+      throw new CustomError(MESSAGES.USER_BLOCKED);
+    }
+
+    if (user.status === "verified") {
+      const isTryingToUpdateSensitiveFields =
+        dto.adhaarNumber !== undefined ||
+        dto.panNumber !== undefined ||
+        files?.adhaarDoc ||
+        files?.panDoc;
+
+      if (isTryingToUpdateSensitiveFields) {
+        throw new CustomError(MESSAGES.VERIFIED_USER_KYC_UPDATE_RESTRICTED);
+      }
+    }
+
+    const updateData = Object.fromEntries(
+      Object.entries(dto).filter(([_, value]) => value !== undefined),
+    );
+
+   
+
+    
+
+    if (files?.adhaarDoc) {
+      const key = `documents/adhaar/${userId}`;
+      await this._IStorageService.uploadImage(files.adhaarDoc, key);
+      updateData.adhaarDoc = key;
+    }
+
+    if (files?.panDoc) {
+      const key = `documents/pan/${userId}`;
+      await this._IStorageService.uploadImage(files.panDoc, key);
+      updateData.adhaarDoc = key;
+    }
+    const updatedUser = await this._iUserRepository.updateById(
+      userId,
+      updateData,
+    );
+    if (!updatedUser) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
+    }
+
+    return CompleteProfileMapper.toResponse(updatedUser);
   }
 }

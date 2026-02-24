@@ -65,3 +65,21 @@ export interface UserCompleteUpdateDto {
   // Documents
   documents?: UserDocumentsDto;
 }
+
+
+export interface UserUpdateCompleteProfile{
+  name?:string;
+  phone?:string;
+
+  dob?:string;
+
+  gender?:"male"|"female"|"other"
+  job?:string;
+  income?:string;
+
+  adhaarNumber?:string;
+  panNumber?:string;
+  cibilScore?:string;
+
+  documents?:UserDocumentsDto
+}

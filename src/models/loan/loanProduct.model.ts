@@ -1,11 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { LoanStatus, LoanType } from "../enums/enum";
 
 export interface ILoanProduct extends Document {
   vendor: mongoose.Types.ObjectId;
   loanId: string;
   name: string;
   description: string;
-  status: "ACTIVE" | "INACTIVE";
+  status: LoanStatus;
+  loanType: LoanType;
 
   amount: {
     minimum: number;
@@ -19,6 +21,7 @@ export interface ILoanProduct extends Document {
 
   interestRate: number;
   duePenalty: number;
+  processingFee: number;
 
   features: string[];
   eligibility: {
@@ -26,14 +29,11 @@ export interface ILoanProduct extends Document {
     maxAge?: number;
     minSalary?: number;
     minCibilScore?: number;
-    otherCriteria?: string[];
+    
   };
   createdAt: Date;
   updatedAt: Date;
 }
-
-
-
 
 const LoanProductSchema = new Schema<ILoanProduct>(
   {
@@ -58,9 +58,16 @@ const LoanProductSchema = new Schema<ILoanProduct>(
 
     status: {
       type: String,
-      enum: ["ACTIVE", "INACTIVE"],
-      default: "ACTIVE",
+      enum: Object.values(LoanStatus),
+      default: LoanStatus.ACTIVE,
     },
+
+    loanType: {
+      type: String,
+      enum: Object.values(LoanType),
+      required: true,
+    },
+
     amount: {
       minimum: {
         type: Number,
@@ -87,6 +94,10 @@ const LoanProductSchema = new Schema<ILoanProduct>(
       type: Number,
       required: true,
     },
+    processingFee: {
+      type: Number,
+      required: true,
+    },
 
     duePenalty: {
       type: Number,
@@ -98,15 +109,14 @@ const LoanProductSchema = new Schema<ILoanProduct>(
       default: [],
     },
     eligibility: {
-  type: {
-    minAge: { type: Number },
-    maxAge: { type: Number },
-    minSalary: { type: Number },
-    minCibilScore: { type: Number },
-    otherCriteria: { type: [String], default: [] }, 
-  },
-  default: {},
-},
+      type: {
+        minAge: { type: Number },
+        maxAge: { type: Number },
+        minSalary: { type: Number },
+        minCibilScore: { type: Number },
+      },
+      default: {},
+    },
   },
   {
     timestamps: true,
@@ -114,6 +124,5 @@ const LoanProductSchema = new Schema<ILoanProduct>(
 );
 
 LoanProductSchema.index({ vendor: 1, name: 1 }, { unique: true });
-
 
 export default mongoose.model<ILoanProduct>("LoanProduct", LoanProductSchema);

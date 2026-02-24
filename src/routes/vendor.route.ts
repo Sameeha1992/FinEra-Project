@@ -102,7 +102,15 @@ router.get(
   vendorProfileController.getCompleteProfile,
 );
 
+router.put("/vendor-profile",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,uploadImageMiddleware.fields([
+    { name: "registrationDoc", maxCount: 1 },
+    { name: "licenceDoc", maxCount: 1 },
+  ]),vendorProfileController.updateCompleteVendorProfile.bind(vendorProfileController))
+
 
 router.post("/loan-product",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.createLoanProduct.bind(loanProductController))
-router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getVendorLoans.bind(loanProductController))
+router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getVendorLoans.bind(loanProductController));
+router.get(`/loans/:loanId`,authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanById.bind(loanProductController))
+router.put("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.updateLoanByVendor.bind(loanProductController))
+router.get("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanDetails.bind(loanProductController))
 export default router;

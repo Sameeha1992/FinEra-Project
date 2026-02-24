@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const userRegistrationType = z.object({
-    fullName:z.string(),
+    name:z.string(),
     email:z.string().email(),
     phone:z.string().min(12),
     password:z.string().min(8),

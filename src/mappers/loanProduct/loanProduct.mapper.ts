@@ -31,8 +31,11 @@ export class LoanProductMapper {
 
       interestRate: dto.interestRate,
       duePenalty: dto.duePenalty,
+      processingFee:dto.processingFee,
+      
 
-      status: dto.status as "ACTIVE" | "INACTIVE",
+      status: dto.status,
+      loanType:dto.loanType,
 
       features: dto.features ?? [],
       eligibility: {
@@ -40,7 +43,6 @@ export class LoanProductMapper {
         maxAge: dto.eligibility?.maxAge,
         minSalary: dto.eligibility?.minSalary,
         minCibilScore: dto.eligibility?.minCibilScore,
-        otherCriteria: dto.eligibility?.otherCriteria ?? [],
       },
     };
   }
@@ -51,6 +53,7 @@ export class LoanProductMapper {
 
       name: entity.name,
       description: entity.description,
+      processingFee:entity.processingFee,
 
       amount: entity.amount,
       tenure: entity.tenure,
@@ -59,6 +62,7 @@ export class LoanProductMapper {
       duePenalty: entity.duePenalty,
 
       status: entity.status,
+      loanType:entity.loanType,
 
       features: entity.features,
       eligibility: {
@@ -66,7 +70,6 @@ export class LoanProductMapper {
         maxAge: entity.eligibility?.maxAge,
         minSalary: entity.eligibility?.minSalary,
         minCibilScore: entity.eligibility?.minCibilScore,
-        otherCriteria: entity.eligibility?.otherCriteria ?? [],
       },
     };
   }

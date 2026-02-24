@@ -9,6 +9,7 @@ import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 import { Role } from "@/models/enums/enum";
 import multer from "multer";
+import { loanProductController } from "@/controllers/resolvers/resolvers";
 
 const router = express.Router();
 
@@ -77,7 +78,13 @@ router.post(
   },
 );
 
-router.patch("/change-password",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,authUserController.changePassword.bind(authUserController))
+router.patch(
+  "/change-password",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  authUserController.changePassword.bind(authUserController),
+);
 
 router.get(
   "/user-profile",
@@ -107,6 +114,19 @@ router.get(
   authMiddleware.checkBlocked,
   userProfileController.getCompleteProfile.bind(userProfileController),
 );
+
+router.put(
+  "/user-profile",
+  authMiddleware.auntenticate,
+  authMiddleware.checkBlocked,
+  authMiddleware.allowRoles(Role.User),
+  uploadImageMiddleware.fields([
+    { name: "adhaarDoc", maxCount: 1 },
+    { name: "panDoc", maxCount: 1 },
+  ]),
+  userProfileController.updateCompleteProfile.bind(userProfileController),
+);
+
 // router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
 
 //   console.log("will come")
@@ -119,4 +139,6 @@ router.get(
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authUserController.logout(req, res, next);
 });
+
+router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,loanProductController.getActiveLoansForUser.bind(loanProductController))
 export default router;

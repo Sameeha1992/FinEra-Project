@@ -1,10 +1,11 @@
 import { MESSAGES } from "@/config/constants/message";
-import { VendorCompleteProfileDto, VendorCompleteProfileResponseDto, VendorCompleteUpdateDto, VendorProfileResponseDTO } from "@/dto/vendorDto/vendor.profile.dto";
+import { VendorCompleteProfileDto, VendorCompleteProfileResponseDto, VendorCompleteUpdateDto, VendorProfileResponseDTO, VendorUpdateProfileDto } from "@/dto/vendorDto/vendor.profile.dto";
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { IVendorProfileService } from "@/interfaces/services/vendor/vendor.profile.interface";
 import { CompleteVendorProfileMapper, vendorProfileMapper } from "@/mappers/vendor/vendor.profile.mapper";
 import { CustomError } from "@/middleware/errorMiddleware";
+import { Status } from "@/models/enums/enum";
 import { inject, injectable } from "tsyringe";
 
 
@@ -72,7 +73,7 @@ export class VendorProfileService implements IVendorProfileService{
         }
 
         const regsitrationDocUrl = await getSignedUrl(user.registrationDoc);
-        const licenceDocUrl = await getSignedUrl(user.licence_Doc);
+        const licenceDocUrl = await getSignedUrl(user.licenceDoc);
 
         const vendorCompleteData:VendorCompleteUpdateDto = {
             name:user.vendorName,
@@ -91,4 +92,48 @@ export class VendorProfileService implements IVendorProfileService{
 
         return vendorCompleteData
     }
+
+
+
+    async updateCompleteProfile(vendorid:string,dto:VendorUpdateProfileDto,files?:{registrationDoc?: Express.Multer.File,licenceDoc?: Express.Multer.File;}):Promise<VendorCompleteProfileResponseDto>{
+
+        const vendor = await this._vendorRepository.findById(vendorid);
+        if(!vendor){
+            throw new CustomError(MESSAGES.USER_NOT_FOUND)
+        }
+
+        if(vendor.isBlocked){
+            throw new CustomError(MESSAGES.USER_BLOCKED)
+        }
+
+        if(vendor.status === Status.Verified){
+            const isTryingToUpdateSensitiveFields = dto.registrationNumber !==undefined || dto.licenceNumber !==undefined || files?.registrationDoc || files?.licenceDoc;
+
+            if(isTryingToUpdateSensitiveFields){
+                throw new CustomError(MESSAGES.VERIFIED_USER_KYC_UPDATE_RESTRICTED)
+            }
+        }
+
+        const updateData = CompleteVendorProfileMapper.toUpdateEntity(dto)
+
+    if(files?.registrationDoc){
+        const key = `documents/register/${vendorid}`;
+      await this._IStorageService.uploadImage(files.registrationDoc, key);
+      updateData.registrationDoc = key;
+    }
+
+     if(files?.licenceDoc){
+        const key = `documents/licence/${vendorid}`;
+      await this._IStorageService.uploadImage(files.licenceDoc, key);
+      updateData.licenceDoc = key;
+    }
+
+    const updatedUser = await this._vendorRepository.updateById(vendorid,updateData);
+
+    if(!updatedUser){
+        throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    }
+       
+    return CompleteVendorProfileMapper.toResponse(updatedUser)
+}
 }

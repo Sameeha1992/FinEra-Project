@@ -63,7 +63,6 @@ export class AuthMiddleware {
     console.log("is authenticated")
     const authHeader = req.headers.authorization;
 
-    console.log(authHeader,"adminside")
     if(!authHeader || !authHeader.startsWith("Bearer ")){
       return res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.UNAUTHORIZED_ACCESS})
     }

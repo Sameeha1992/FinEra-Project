@@ -7,9 +7,9 @@ export interface ILoan extends Document {
   loanProduct: mongoose.Types.ObjectId;
 
   amount: number;
-  interestRate: number;   // copied from product
-  duePenalty: number;     // copied from product
-  tenure: number;         // months
+  interestRate: number;  
+  duePenalty: number;   
+  tenure: number;        
 
   status: "PENDING" | "APPROVED" | "REJECTED" | "CLOSED";
 

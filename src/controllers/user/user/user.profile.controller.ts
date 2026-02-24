@@ -9,6 +9,7 @@ import { STATUS_CODES } from "../../../config/constants/statusCode";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { MESSAGES } from "@/config/constants/message";
 import { success } from "zod";
+import { UserUpdateCompleteProfile } from "@/dto/user/profile.dto";
 
 @injectable()
 export class UserProfileController {
@@ -114,6 +115,31 @@ export class UserProfileController {
       });
     } catch (error) {
       next(error);
+    }
+  }
+
+  async updateCompleteProfile(req:Request,res:Response,next:NextFunction){
+    try {
+      const typedReq = req as AuthenticateFileRequest
+      const userId = typedReq.user?.id;
+
+      if(!userId){
+        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS)
+      }
+
+      const dto: UserUpdateCompleteProfile = req.body;
+      console.log("dto of the update",dto)
+
+      const files = {
+        adhaarDoc:typedReq.files?.adhaarDoc?.[0],
+         panDoc: typedReq.files?.panDoc?.[0]
+      };
+
+      const updatedProfile = await this._userProfileService.updateCompleteProfile(userId,dto,files)
+      console.log("this is the backend controller",updatedProfile)
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PROFILE_UPDATED,data:updatedProfile})
+    } catch (error) {
+      next(error)
     }
   }
 }

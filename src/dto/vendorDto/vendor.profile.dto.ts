@@ -1,6 +1,6 @@
 export interface VendorProfileResponseDTO {
   vendorId: string;
-  name: string;
+  vendorName: string;
   registrationNumber: string;
   email: string;
   status: string;
@@ -11,7 +11,7 @@ export interface VendorCompleteProfileDto {
   registrationNumber: string;
   licenceNumber: string;
   registrationDoc: Express.Multer.File;
-  licence_Doc: Express.Multer.File;
+  licenceDoc: Express.Multer.File;
   isProfileComplete: boolean;
 }
 
@@ -22,7 +22,7 @@ export interface VendorCompleteProfileResponseDto {
   registrationNumber: string;
   licenceNumber: string;
   registrationDoc: string;
-  licence_Doc: string;
+  licenceDoc: string;
 }
 
 export interface VendorDocumentsDto {
@@ -40,4 +40,13 @@ export interface VendorCompleteUpdateDto {
   isProfileComplete?:boolean,
 
   documents?: VendorDocumentsDto;
+}
+
+export interface VendorUpdateProfileDto {
+  name?:string;
+  vendorId?:string;
+  email?:string;
+  registrationNumber: string;
+  licenceNumber: string;
+  isProfileComplete: boolean;
 }

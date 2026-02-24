@@ -1,3 +1,4 @@
+import { LoanStatus, LoanType } from "@/models/enums/enum";
 import  {Types, ObjectId } from "mongoose";
 
 export interface EligibilityDto {
@@ -5,13 +6,13 @@ export interface EligibilityDto {
   maxAge?: number;
   minSalary?: number;
   minCibilScore?: number;
-  otherCriteria?: string[];
 }
 
 export interface ILoanProductDto {
   name: string;
   description: string;
-  status: string;
+  status: LoanStatus;
+  loanType:LoanType;
   amount: {
     minimum: number;
     maximum: number;
@@ -23,6 +24,7 @@ export interface ILoanProductDto {
 
   interestRate: number;
   duePenalty: number;
+  processingFee:number;
 
   features?: string[];
   eligibility?: EligibilityDto;
@@ -47,8 +49,10 @@ export interface ILoanProductEntityDto {
 
   interestRate: number;
   duePenalty: number;
+  processingFee:number
 
-  status: "ACTIVE" | "INACTIVE";
+  status:LoanStatus
+  loanType:LoanType
 
   features: string[];
   eligibility: EligibilityDto;
@@ -72,8 +76,10 @@ export interface ILoanProductResponseDto {
 
   interestRate: number;
   duePenalty: number;
+  processingFee:number;
 
-  status: string;
+  status: LoanStatus;
+  loanType:LoanType;
 
   features: string[];
   eligibility: EligibilityDto;
@@ -86,7 +92,8 @@ export interface LoanItemDto{
   amount:string,
   tenure:string,
   interestRate:string,
-  status:"ACTIVE"|"INACTIVE"
+  loanType:LoanType,
+  status:LoanStatus
 }
 
 export interface LoanListingDto{
@@ -96,14 +103,23 @@ export interface LoanListingDto{
  limit:number
 } 
 
-export interface UpdateLoanDto{
-  loanName?: string;
-  interestRate?: number;
-  processingFee?: number;
-  minimumAmount?: number;
-  maximumAmount?: number;
-  tenure?: number;
+
+export interface UpdateLoanDto {
+  loanId:string,
+  name?: string;
   description?: string;
-  eligibility?: string;
-  status?: "ACTIVE" | "INACTIVE";
+  interestRate?: number;
+  duePenalty?: number;
+  amount?: {
+    minimum: number;
+    maximum: number;
+  };
+  tenure?: {
+    minimum: number;
+    maximum: number;
+  };
+  eligibility?: EligibilityDto;
+  status?: LoanStatus;
+  loanType:LoanType;
+  features?: string[];
 }

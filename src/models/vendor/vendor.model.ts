@@ -10,7 +10,7 @@ export interface IVendor extends Document{
     registrationNumber:string,
     registrationDoc?:string,
     licenceNumber?:string,
-    licence_Doc?:string,
+    licenceDoc?:string,
     status:Status,
     isProfileComplete:boolean,
     role:Role,
@@ -34,7 +34,7 @@ const vendorSchema = new Schema<IVendor>(
         licenceNumber:{type:String},
         isProfileComplete:{type:Boolean,default:false},
         isBlocked:{type:Boolean,default:false},
-        licence_Doc:{type:String},
+        licenceDoc:{type:String},
          status:{
             type:String,
             enum:Object.values(Status),
