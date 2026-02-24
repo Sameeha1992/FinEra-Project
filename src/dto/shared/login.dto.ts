@@ -12,6 +12,8 @@ export interface LoginResponseDto{
     email:string,
     role:Role.User|Role.Admin|Role.Vendor,
     Id:string
+    status?:string
+    isProfileComplete?:boolean
 
     
 

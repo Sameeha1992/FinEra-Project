@@ -3,6 +3,7 @@ import { container } from "tsyringe";
 import { LoginDto } from "../../../dto/shared/login.dto";
 import { UserLoginService } from "../../../services/shared/login/user.login.stratergy";
 import { env } from "@/validations/envValidation";
+import { isProduction } from "@/utils/setAuthCookies";
 
 const userLoginService = container.resolve(UserLoginService);
 
@@ -19,16 +20,16 @@ export const vendorLogin = async (
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: env.NODE_ENV === "production", // true in production (HTTPS)
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
+      secure: isProduction, // true in production (HTTPS)
+      sameSite: isProduction,
+      maxAge: env.ACCESS_TOKEN_COOKIE_MAX_AGE,
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      secure: isProduction,
+      sameSite: isProduction,
+      maxAge:env.REFRESH_TOKEN_COOKIE_MAX_AGE,
     });
 
     res.json({

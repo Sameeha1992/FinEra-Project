@@ -8,5 +8,7 @@ export interface IAdminAuthService {
     refreshToken: string;
     admin: LoginResponseDto;
   }>;
-  refreshToken(resfreshToken: string): Promise<string>;
+  refreshToken(resfreshToken: string): Promise<{accessToken:string,refreshToken:string}>;
+
+  logout(refreshToken:string):Promise<void>
 }

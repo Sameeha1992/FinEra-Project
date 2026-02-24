@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { positive, z } from "zod";
 import { Errors } from "@/config/constants/envError";
 
 const envSchema = z.object({
@@ -33,6 +33,12 @@ const envSchema = z.object({
     .number({ message: Errors.ENV_REFRESH_TOKEN_EXPIRATION_TIME_ERROR })
     .positive(),
 
+    REFRESH_TOKEN_COOKIE_MAX_AGE:z.coerce
+    .number({message:Errors.ENV_REFRESH_TOKEN_EXPIRATION_TIME_ERROR})
+    .positive(),
+
+    ACCESS_TOKEN_COOKIE_MAX_AGE:z.coerce.number({message:Errors.ENV_ACCESS_TOKEN_MAX_AGE_MISSING})
+    .positive(),
   // Email
   EMAIL_USER: z
     .string({ message: Errors.ENV_EMAIL_ERROR })

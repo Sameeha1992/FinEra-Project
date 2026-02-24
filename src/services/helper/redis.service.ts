@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IRedisService } from "../../interfaces/services/redis.interface";
+import { IRedisService } from "../../interfaces/helper/redis.interface";
 import { redisClient } from "../../config/redis/redis.connect";
 
 @injectable()
@@ -39,14 +39,13 @@ export class RedisService implements IRedisService {
     return result === "true";
   }
 
-  async blacklistAccessToken(token: string, expiresAt: number): Promise<void> {
-    const key = `blacklist:${token}`;
-    await redisClient.set(key, "blacklisted", { EX: expiresAt });
+  async blacklistRefreshToken(jiti: string, ttlSeconds: number): Promise<void> {
+    const key = `blacklist:${jiti}`;
+    await redisClient.set(key, "1", { EX: ttlSeconds });
   }
 
-  async isAccessTokenBlacklisted(token: string): Promise<boolean> {
-    const key = `blacklist:${token}`;
-    const result = await this.get(key);
-    return result === "blacklisted";
+  async isRefreshTokenBlacklisted(jiti: string): Promise<boolean> {
+    const key = `blacklist:${jiti}`;
+    return (await this.get(key))==="1"
   }
 }

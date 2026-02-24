@@ -10,7 +10,7 @@ export class VendorMgtMapper{
              return{
             id:entity._id.toString(),
             name:entity.vendorName,
-            email:entity.contact_email,
+            email:entity.email,
             registrationNumber:entity.registrationNumber,
             status:entity.status,
             role:"vendor"

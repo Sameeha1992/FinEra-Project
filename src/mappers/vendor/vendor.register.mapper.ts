@@ -7,7 +7,7 @@ export class vendorRegisterMapper{
         return {
            
            name:vendor.vendorName,
-           email:vendor.contact_email,
+           email:vendor.email,
            registerNumber:vendor.registrationNumber,
            role:Role.Vendor,
            createdAt:vendor.createdAt.toISOString()
@@ -20,11 +20,11 @@ export class vendorRegisterMapper{
         return {
             vendorId: `VEND-${randomUUID().slice(0, 8).toUpperCase()}`,   // AUTO
             vendorName:dto.name,
-            contact_email:dto.email,
+            email:dto.email,
             registrationNumber:dto.registerNumber,
             role:Role.Vendor,
             password:passwordHash,
-            status:Status.Pending
+            status:Status.Not_Verified
 
             
         }

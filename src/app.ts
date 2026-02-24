@@ -9,6 +9,7 @@ import bodyParser from 'body-parser'
 import cookieParser from "cookie-parser"
 
 import './config/di/di.containers'
+import './config/di/loan.container'
 
 import "@/validations/envValidation"
 import {env} from "@/validations/envValidation"

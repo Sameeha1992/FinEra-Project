@@ -9,7 +9,7 @@ export interface IRedisService {
 
   isUserVerified(email: string,type:'user'|'vendor'): Promise<boolean>;
 
-  blacklistAccessToken(token: string, expiresAt: number): Promise<void>;
+  blacklistRefreshToken(jiti: string, ttlSeconds: number): Promise<void>;
 
-  isAccessTokenBlacklisted(token: string): Promise<boolean>;
+  isRefreshTokenBlacklisted(jiti: string): Promise<boolean>;
 }

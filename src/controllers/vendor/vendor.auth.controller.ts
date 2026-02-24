@@ -1,13 +1,18 @@
-import { STATUS_CODES } from "../../../config/constants/statusCode";
-import { MESSAGES } from "../../../config/constants/message";
-import { IVendorAuthService } from "../../../interfaces/services/vendor/vendor.auth.service.interface";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { MESSAGES } from "../../config/constants/message";
+import { IVendorAuthService } from "../../interfaces/services/vendor/vendor.auth.service.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import logger from "../../../middleware/loggerMiddleware";
-import { LoginDto } from "../../../dto/shared/login.dto";
-import { getCookieOptions } from "../../../utils/setAuthCookies";
-import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
-import { CustomError } from "../../../middleware/errorMiddleware";
+import logger from "../../middleware/loggerMiddleware";
+import { LoginDto } from "../../dto/shared/login.dto";
+import { getCookieOptions, isProduction } from "../../utils/setAuthCookies";
+import { OtpVerifyForgetDto } from "../../dto/user/auth/otp-generation.dto";
+import { CustomError } from "../../middleware/errorMiddleware";
+import { clearAuthCookies } from "@/utils/clearAuthCookies";
+import { success } from "zod";
+import { Role } from "@/models/enums/enum";
+import { env } from "@/validations/envValidation";
+import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
 
 @injectable()
@@ -71,44 +76,51 @@ export class VendorAuthController {
   try {
     const credentials: LoginDto = req.body;
     const {vendor,accessToken,refreshToken} = await this._IvendorAuthService.vendorLogin(credentials);
-
     
     const cookieOptions = getCookieOptions();
-    res.cookie("accessToken",accessToken,cookieOptions.accessToken);
     res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
 
     res.status(STATUS_CODES.SUCCESS).json({
       success:true,
       message:"Vendor Login Successful",
+      accessToken,
       vendor
     })
   } catch (error) {
-    res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS})
-    next(error);
+    res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS});
   }
   
 }
-
-async refreshToken(req:Request,res:Response,next:NextFunction){
-
+async refreshToken(req: Request, res: Response, next: NextFunction) {
   try {
-    const refreshToken:string = req.cookies.refreshToken;
-    if(!refreshToken){
-      res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.INVALID_REFRESH_TOKEN})
-      return 
-    }
-
-    const accessToken:string = await this._IvendorAuthService.refreshToken(refreshToken);
-
-
-    res.status(STATUS_CODES.ACCEPTED).json({success:true,message:"new token created with refresh token",accessToken:accessToken})
-    
-  } catch (error) {
-      res
+    const refreshToken: string = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res
         .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: MESSAGES.INVALID_ACCESS_TOKEN,error});
+        .json({ success: false, message: MESSAGES.INVALID_REFRESH_TOKEN });
     }
+
+    // Get only access token
+    const {accessToken,refreshToken:newRefreshToken} = await this._IvendorAuthService.refreshToken(refreshToken);
+
+     res.cookie("refreshToken",newRefreshToken,{
+      httpOnly:true,
+      secure:isProduction,
+      sameSite:isProduction,
+      maxAge:env.REFRESH_TOKEN_COOKIE_MAX_AGE
+     })
+   
+
+    res.status(STATUS_CODES.ACCEPTED).json({
+      success: true,
+      message: MESSAGES.ACCESS_TOKEN_REFRESHED,
+      accessToken
+    });
+  } catch (error) {
+    next(error);
+  }
 }
+
 
 async forgetPassword(req:Request,res:Response,next:NextFunction){
     try {
@@ -126,7 +138,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       
     } catch (error) {
       logger.error({err:error},"Forget password failed");
-      next(error)
+      
     }
   }
 
@@ -168,7 +180,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       
     } catch (error) {
       console.error("Reset password error:",error);
-      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({message:error || "Something went wrong in reset password"})
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({message:error || MESSAGES.PASSWORD_RESET_FAILED})
       
     }
   }
@@ -184,15 +196,57 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       const {accessToken,refreshToken,vendor} = await this._IvendorAuthService.googleLogin(token)
 
       const cookieOptions = getCookieOptions();
-      res.cookie("accessToken",accessToken,cookieOptions.accessToken);
       res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
 
-      res.status(STATUS_CODES.SUCCESS).json({success:true,message:"Vendor google login success",vendor})
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.LOGIN_SUCCESS,vendor})
     } catch (error) {
       next(error)
     }
   }
-
  
+  async logout(req:Request,res:Response,next:NextFunction){
+    try {
+      const refreshToken = req.cookies?.refreshToken;
+
+      if(!refreshToken){
+        return res.status(STATUS_CODES.BAD_REQUEST)
+        .json({message:MESSAGES.INVALID_REFRESH_TOKEN})
+      }
+
+      await this._IvendorAuthService.logout(refreshToken);
+      clearAuthCookies(res);
+
+      res.status(STATUS_CODES.SUCCESS)
+      .json({success:true,message:MESSAGES.LOGOUT_SUCCESS})
+      
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.LOGOUT_FAILED})
+    }
+  }
+
+  async changePassword(req:AuthenticateRequest,res:Response,next:NextFunction){
+    try {
+      const vendorId = req.user?.id;
+
+      const {currentPassword,newPassword} = req.body;
+
+      if(!vendorId){
+        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS)
+      }
+
+      if(!currentPassword || !newPassword){
+        throw new CustomError(MESSAGES.REQUIRED_FIELD_MISSING)
+      }
+
+      await this._IvendorAuthService.changePassword(vendorId,currentPassword,newPassword)
+      
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PASSWORD_CHANGE_SUCCESS});
+      logger.info(MESSAGES.PASSWORD_CHANGE_SUCCESS)
+    } catch (error) {
+      logger.error(MESSAGES.SOMETHING_WENT_WRONG);
+      next(error)
+      
+    }
+  }
 
 }

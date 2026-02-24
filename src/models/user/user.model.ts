@@ -1,5 +1,6 @@
 import mongoose,{Schema,Document} from "mongoose";
 import { Role } from "../enums/enum";
+import { boolean } from "zod";
 
 
 export interface IUser extends Document{
@@ -8,15 +9,17 @@ export interface IUser extends Document{
     name:string;
     email:string;
     phone?:string;
+    profileImage?:string;
     dob?:string;
     job?:string;
-    income?:number;
+    income?:string;
     gender?: "male"| "female" | "other";
+    isBlocked?:boolean,
     password?:string;
     adhaarNumber?:string;
     vendorId:string;
     panNumber?:string;
-    cibilScore?: number;
+    cibilScore?: string;
     adhaarDoc?: string;
     panDoc?:string;
     cibilDoc?: string;
@@ -27,6 +30,7 @@ export interface IUser extends Document{
     createdAt?: Date;
     updatedAt?: Date;
     message?: string;
+    isProfileComplete?:boolean
 }
 
 
@@ -38,6 +42,7 @@ const UserSchema = new Schema<IUser>(
         email:{type: String,required:true,unique:true},
         phone:{type: Number},
         dob:{type:String},
+        profileImage:{type:String,default:null},
         job:{type:String},
         income:{type:Number},
         gender:{type:String, enum:["male","female","other"]},
@@ -51,11 +56,13 @@ const UserSchema = new Schema<IUser>(
         additionalDoc:{type:String},
         isBlacklisted:{type:Boolean, default:false},
         message:{type:String},
+        isBlocked:{type:Boolean,default:false},
+        isProfileComplete:{type:Boolean,default:false},
         vendorId:{type:String},
         status:{
             type:String,
-            enum:["pending","completed","verified","rejected"],
-            default:"pending"
+            enum:["verified","not_verified"],
+            default:"not_verified"
         },
 
         role:{type:String,enum:Object.values(Role),default:Role.User},

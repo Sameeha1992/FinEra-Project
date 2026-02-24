@@ -1,18 +1,20 @@
 import mongoose, { Schema,Document } from "mongoose"
-import { Role, Status } from "../enums/enum"
+import { AccountStatus, Role, Status } from "../enums/enum"
 
 export interface IVendor extends Document{
     _id:mongoose.Types.ObjectId,
     vendorId:string,
     vendorName:string,
-    contact_email:string,
+    email:string,
     password:string,
     registrationNumber:string,
-    registrationCertificate?:string,
+    registrationDoc?:string,
     licenceNumber?:string,
-    licence_Doc?:string,
+    licenceDoc?:string,
     status:Status,
+    isProfileComplete:boolean,
     role:Role,
+    isBlocked:boolean,
     createdAt:Date,
     updatedAt:Date,
     uploadedAt?:Date,
@@ -25,16 +27,18 @@ const vendorSchema = new Schema<IVendor>(
     {
         vendorId:{type:String,required:true,unique:true},
         vendorName:{type:String,required:true,unique:true},
-        contact_email:{type:String,required:true,unique:true},
+        email:{type:String,required:true,unique:true},
         password:{type:String,required:true},
         registrationNumber:{type:String,required:true,unique:true},
-        registrationCertificate:{type:String},
+        registrationDoc:{type:String},
         licenceNumber:{type:String},
-        licence_Doc:{type:String},
+        isProfileComplete:{type:Boolean,default:false},
+        isBlocked:{type:Boolean,default:false},
+        licenceDoc:{type:String},
          status:{
             type:String,
             enum:Object.values(Status),
-            default:Status.Pending
+            default:Status.Not_Verified
         },
         role:{type:String,enum:Object.values(Role),default:Role.Vendor},
         uploadedAt:{type:Date}

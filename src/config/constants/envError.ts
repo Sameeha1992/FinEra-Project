@@ -8,6 +8,8 @@ export enum Errors {
   ENV_REFRESH_TOKEN_ERROR = "Refresh token secret key not provided in environment variables",
   ENV_REFRESH_TOKEN_EXPIRATION_TIME_ERROR = "Refresh token expiration time should be given in seconds",
   ENV_ACCESS_TOKEN_EXPIRATION_TIME_ERROR = "Access token expiration time should be given in seconds",
+  ENV_REFRESH_TOKEN_MAX_AGE_MISSING="Missing the refresh token max age",
+  ENV_ACCESS_TOKEN_MAX_AGE_MISSING="Access token max age is missing",
   ENV_EMAIL_ERROR = "Email in the environment variables should be valid",
   ENV_EMAIL_PASSWORD_ERROR = "Provide password in environment variables",
   ENV_REDIS_URL_ERROR = "Provide a valid redis server url in environment variables",

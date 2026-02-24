@@ -12,6 +12,7 @@ export const MESSAGES = {
   LOGOUT_SUCCESS: "Logged out successfully.",
   SESSION_EXPIRED: "Session has expired. Please log in again.",
   MULTIPLE_LOGIN_NOT_ALLOWED: "You are already logged in from another device.",
+  USER_BLOCKED:"User is blocked",
 
   // Registration & Profile
   REGISTRATION_SUCCESS: "Registration successful.",
@@ -37,6 +38,7 @@ export const MESSAGES = {
   PASSWORD_RESET_FAILED: "Failed to reset password.",
   PASSWORD_EXPIRED: "Your password has expired. Please set a new password.",
   PASSWORD_TOO_COMMON: "This password is too common. Please choose a stronger password.",
+  PASSWORD_MUST_BE_DIFFERENT:"Password must be different",
 
   // Payments & Transactions
   TRANSACTION_SUCCESS: "Transaction completed successfully.",
@@ -83,7 +85,6 @@ export const MESSAGES = {
 
 
 
-
   // Miscellaneous / Generic
   SUCCESS: "Operation completed successfully.",
   FAILURE: "Operation failed. Please try again.",
@@ -93,5 +94,34 @@ export const MESSAGES = {
   UPDATED: "Updated successfully.",
   DELETED: "Deleted successfully.",
   INTERNAL_SERVER_ERROR:"Internal Server Error",
-  ROUTES_NOT_FOUND:"Routes not found"
+  ROUTES_NOT_FOUND:"Routes not found",
+  IMAGE_UPLOAD_SUCCESS:"Image uplaod success",
+  IMAGE_UPLAOD_FAILED:"Failed to uplaod images",
+  FILE_MISSING:"File missing",
+  TOKEN_CREATED:"Token created",
+  LOGOUT_FAILED:"FAiled to logout",
+  SOMETHING_WENT_WRONG:"Somehing went wrong",
+  ACCESS_DENIED:"Access denied fror the role",
+  ACCOUNT_NOT_FOUND:"Account not found",
+  ACCOUNT_BLOCKED:"Account is blocked",
+  SIGNED_URL_GENERATION_FAILED:"Failed to generate signed url",
+  OTP_SENDING_FAILED:"Failed to send otp",
+  REFRESH_TOKEN_REVOKED:"Refresh token revoked",
+  ACCESS_TOKEN_REFRESHED:"Access token refreshed successfully",
+  FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
+  ACCESS_TOKEN_NOT_FOUND:"no access token found",
+  VERIFIED_USER_KYC_UPDATE_RESTRICTED :"KYC details (Aadhaar and PAN) cannot be modified after user verification.",
+  //Loan:-
+
+  MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:"minimum amount should not exceed ",
+  MINIMUM_TENURE_SHOULD_NOT_EXCEED_MAXIMUM:"Minimum tenure cannot exceed maximum tenure",
+  LOAN_ALREADY_EXISTS:"Loan already existed for the vendor",
+  NO_LOANS_FOUND:"No loans had been found",
+  LOAN_ID_REQUIRED:"Loan Id is required",
+  LOAN_UPDATED_SUCCESSFULLY:"Loan updated successfully",
+  LOAN_TYPE_REQUIRED:"Loan type is required",
+  LOAN_DETAILS_FETCHED:"Loan details fetched successfully",
+  LOANTYPE_REQUIRED:"Loan type is required",
+  ACTIVE_LOANS_FETCHED_SUCCESSFULLY:"Active loans fetched successfully",
+  SALARY_IS_REQUIRED:"Salary is required",
 };

@@ -1,11 +1,59 @@
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
-import { S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand,PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { env } from "@/validations/envValidation";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { CustomError } from "@/middleware/errorMiddleware";
+import { MESSAGES } from "@/config/constants/message";
 
-//  export class StorageService implements IStorageService{
-//     private client:S3Client
-//     constructor(){
-//         this.client = new S3Client({
-//          region:
-//         })
-//     }
-//  }
+export class StorageService implements IStorageService {
+  private client: S3Client;
+  constructor() {
+    
+    // console.log(env.AWS_ACCESS_KEY, env.AWS_SECRET_KEY)
+    this.client = new S3Client({
+      region: env.AWS_REGION_NAME,
+      credentials: {
+        accessKeyId: env.AWS_ACCESS_KEY,
+        secretAccessKey: env.AWS_SECRET_KEY,
+      },
+    });
+  }
+
+  async uploadImage(file: Express.Multer.File, key: string): Promise<string> {
+    
+
+    try {
+      const command = new PutObjectCommand({
+        Bucket: env.AWS_BUCKET_NAME,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      });
+
+      
+      await this.client.send(command);
+      return `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION_NAME}.amazonaws.com/${key}`;
+    } catch (error) {
+      console.error("🔥 S3 REAL ERROR 👉", error);
+
+      throw new CustomError(MESSAGES.IMAGE_UPLAOD_FAILED);
+    }
+  }
+
+  async generateSignedUrl(key: string, expiresInSeconds: number=3600): Promise<string> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket:env.AWS_BUCKET_NAME,
+        Key:key
+      });
+
+      const signedUrl = await getSignedUrl(this.client,command,{
+        expiresIn:expiresInSeconds
+      });
+      return signedUrl
+    } catch (error) {
+      console.error("Failed to generate signed URL",error);
+      throw new CustomError(MESSAGES.SIGNED_URL_GENERATION_FAILED)
+    }
+  }
+}
