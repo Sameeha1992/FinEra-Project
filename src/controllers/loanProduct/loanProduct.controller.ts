@@ -149,6 +149,7 @@ async getActiveLoansForUser(req: Request, res: Response, next: NextFunction) {
       search as string | undefined
     );
 
+    console.log("data of the list",result)
     res.status(STATUS_CODES.SUCCESS).json({
       success: true,
       message: MESSAGES.ACTIVE_LOANS_FETCHED_SUCCESSFULLY,

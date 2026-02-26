@@ -17,9 +17,8 @@ export enum Role {
 export enum LoanType {
   HOME = "HOME",
   PERSONAL = "PERSONAL",
-  AGRICULTURAL = "AGRICULTURAL",
   GOLD = "GOLD",
-  EDUCATION = "EDUCATION",
+  BUSINESS ="BUSINESS"
 }
 
 export enum LoanStatus{

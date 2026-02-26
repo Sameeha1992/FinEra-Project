@@ -9,7 +9,10 @@ import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 import { Role } from "@/models/enums/enum";
 import multer from "multer";
-import { loanProductController } from "@/controllers/resolvers/resolvers";
+import {
+  loanApplicationController,
+  loanProductController,
+} from "@/controllers/resolvers/resolvers";
 
 const router = express.Router();
 
@@ -140,5 +143,27 @@ router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authUserController.logout(req, res, next);
 });
 
-router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,loanProductController.getActiveLoansForUser.bind(loanProductController))
+router.get(
+  "/loans",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  loanProductController.getActiveLoansForUser.bind(loanProductController),
+);
+
+router.post(
+  "/create-loan-application",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  uploadImageMiddleware.fields([
+    { name: "goldImage", maxCount: 1 },
+    { name: "propertyDoc", maxCount: 1 },
+    { name: "registerationDoc", maxCount: 1 },
+    { name: "salarySlipDoc", maxCount: 1 },
+  ]),
+  loanApplicationController.createLoanApplication.bind(
+    loanApplicationController,
+  ),
+);
 export default router;

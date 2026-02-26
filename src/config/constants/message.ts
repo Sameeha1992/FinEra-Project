@@ -124,4 +124,10 @@ export const MESSAGES = {
   LOANTYPE_REQUIRED:"Loan type is required",
   ACTIVE_LOANS_FETCHED_SUCCESSFULLY:"Active loans fetched successfully",
   SALARY_IS_REQUIRED:"Salary is required",
+  LOAN_APPLICATION_SUBMITTED_SUCCESSFULLY:"Loan application submitted successfully",
+
+  PERSONAL_LOAN_DETAILS_REQUIRED:"Personal loan details required",
+  GOLD_LOAN_DETAILS_REQUIRED:"Gold loan details required",
+  HOME_LOAN_DETAILS_REQUIRED:"Home loan details required",
+  BUSINESS_LOAN_DETAILS_REQUIRED:"Business loan details required"
 };

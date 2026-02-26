@@ -46,6 +46,14 @@ import { LoanProductRepository } from '@/repositories/loanProduct/loanProduct.re
 import { LoanProductService } from '@/services/loanProduct/loan.service'
 import { ILoanProductService } from '@/interfaces/services/loanProduct/loanProduct.service'
 import { LoanProductController } from '@/controllers/loanProduct/loanProduct.controller'
+// import { ILoanApplicationRepository } from '@/interfaces/repositories/loanApplication/loan.application.interface'
+import { LoanApplicationRepository } from '@/repositories/loanApplications/loan.application'
+import { ILoanApplicationService } from '@/interfaces/services/loanApplication/loan.application.service.interface'
+import { ILoanApplicationRepository } from '@/interfaces/repositories/loanApplication/loan.application.interface'
+import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
+import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
+// import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
+// import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
 container.registerSingleton<IUserRepository>('IUserRepository',UserRepository)
 container.registerSingleton<IPasswordService>('IPasswordService',PasswordService)
@@ -91,6 +99,7 @@ container.registerSingleton<IAdminProfileService>('IAdminProfileService',AdminPr
 
 container.registerSingleton<IStorageService>('IStorageService',StorageService)
 
+//Loan Products:-
 
 container.registerSingleton<ILoanProductRepository>("ILoanProductRepository",LoanProductRepository)
 container.registerSingleton<ILoanProductService>('ILoanProductService',LoanProductService);
@@ -98,4 +107,9 @@ container.registerSingleton<ILoanProductService>('ILoanProductService',LoanProdu
 container.registerSingleton(LoanProductController)
 
 
+//LoanApplications User:-
+
+container.registerSingleton<ILoanApplicationRepository>("ILoanApplicationRepository",LoanApplicationRepository);
+container.registerSingleton<ILoanApplicationService>("ILoanApplicationService",LoanApplicationService)
+container.registerSingleton(LoanApplicationController)
 export {container}
