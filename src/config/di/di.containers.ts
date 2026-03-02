@@ -39,7 +39,6 @@ import { VendorProfileService } from '@/services/vendor/vendor.profile'
 import { VendorProfileController } from '@/controllers/vendor/vendor.profile.controller'
 import { AuthMiddleware } from '@/middleware/authMiddleware'
 import { IAdminProfileService } from '@/interfaces/services/admin/admin.profile.interface'
-import { AdminProfileService } from '@/services/admin/admin.profile.service'
 import { uploadImageMiddleware } from '@/middleware/multer.middleware'
 import { ILoanProductRepository } from '@/interfaces/repositories/loanProduct/loanProduct.repository'
 import { LoanProductRepository } from '@/repositories/loanProduct/loanProduct.repository'
@@ -52,6 +51,11 @@ import { ILoanApplicationService } from '@/interfaces/services/loanApplication/l
 import { ILoanApplicationRepository } from '@/interfaces/repositories/loanApplication/loan.application.interface'
 import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
+import { IVendorVerifcationRepository } from '@/interfaces/repositories/admin/vendor.verification.repo.interface'
+import { VendorVerifcationRepository } from '@/repositories/admin/vendor.verification.rep'
+import { IVendorVerificationService } from '@/interfaces/services/admin/vendor.verification.service.interface'
+import { VendorVerificationService } from '@/services/admin/vendor.verification.service'
+import { VendorVerificationController } from '@/controllers/admin/vendor.verification.controller'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -95,7 +99,6 @@ container.registerSingleton(VendorProfileController)
 
 //AdminProfile
 
-container.registerSingleton<IAdminProfileService>('IAdminProfileService',AdminProfileService);
 
 container.registerSingleton<IStorageService>('IStorageService',StorageService)
 
@@ -112,4 +115,10 @@ container.registerSingleton(LoanProductController)
 container.registerSingleton<ILoanApplicationRepository>("ILoanApplicationRepository",LoanApplicationRepository);
 container.registerSingleton<ILoanApplicationService>("ILoanApplicationService",LoanApplicationService)
 container.registerSingleton(LoanApplicationController)
+
+//VendorVerification-AdminSide:-
+
+container.registerSingleton<IVendorVerifcationRepository>("IVendorVerifcationRepository",VendorVerifcationRepository);
+container.registerSingleton<IVendorVerificationService>("IVendorVerificationService",VendorVerificationService);
+container.registerSingleton(VendorVerificationController)
 export {container}

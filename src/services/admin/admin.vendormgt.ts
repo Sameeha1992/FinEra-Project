@@ -6,6 +6,7 @@ import {
   PaginationQuery,
 } from "@/interfaces/shared/pagination.interface";
 import { VendorMgtMapper } from "@/mappers/admin/vendor.mgt.mapper";
+import { AccountStatus } from "@/models/enums/enum";
 import { IUser } from "@/models/user/user.model";
 import { IVendor } from "@/models/vendor/vendor.model";
 import { inject, injectable } from "tsyringe";
@@ -31,8 +32,8 @@ export class AdminVendorMgtService implements IAdminVendorMgtService {
   }
 
 
-  async updateStatus(id: string, role: "vendor" | "user", status: "active" | "blocked"): Promise<IVendor | IUser | null> {
-    const updatedRecord = await this._IAdminVendorMgtRepo.updateStatus(id,role,status);
+  async updateStatus(id: string, role: "vendor" | "user", accountStatus: AccountStatus): Promise<IVendor | IUser | null> {
+    const updatedRecord = await this._IAdminVendorMgtRepo.updateStatus(id,role,accountStatus);
     return updatedRecord
   }
 }

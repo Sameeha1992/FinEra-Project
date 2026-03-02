@@ -1,5 +1,5 @@
 import mongoose,{Schema,Document} from "mongoose";
-import { Role } from "../enums/enum";
+import { AccountStatus, Role } from "../enums/enum";
 import { boolean } from "zod";
 
 
@@ -26,6 +26,7 @@ export interface IUser extends Document{
     additionalDoc?:string;
     isBlacklisted?: boolean;
     status?: string;
+    accountStatus?:AccountStatus;
     role?:Role.User|Role.Vendor|Role.Admin;
     createdAt?: Date;
     updatedAt?: Date;
@@ -57,6 +58,7 @@ const UserSchema = new Schema<IUser>(
         isBlacklisted:{type:Boolean, default:false},
         message:{type:String},
         isBlocked:{type:Boolean,default:false},
+        accountStatus:{type:String,default:AccountStatus.Unblocked},
         isProfileComplete:{type:Boolean,default:false},
         vendorId:{type:String},
         status:{

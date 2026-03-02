@@ -3,18 +3,33 @@ import { STATUS_CODES } from "@/config/constants/statusCode";
 import { LoanListingResult } from "@/dto/loanProduct/loanListingUser";
 import { ILoanProductDto, ILoanProductEntityDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProductRepository } from "@/interfaces/repositories/loanProduct/loanProduct.repository";
+import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { ILoanProductService } from "@/interfaces/services/loanProduct/loanProduct.service";
 import { LoanProductMapper } from "@/mappers/loanProduct/loanProduct.mapper";
 import { CustomError } from "@/middleware/errorMiddleware";
-import { LoanType } from "@/models/enums/enum";
+import { AccountStatus, LoanType, Status } from "@/models/enums/enum";
 import { PopulatedLoanProduct } from "@/types/populate.loan.type";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
 export class LoanProductService implements ILoanProductService{
-    constructor(@inject("ILoanProductRepository") private _loanRepository:ILoanProductRepository){}
+    constructor(@inject("ILoanProductRepository") private _loanRepository:ILoanProductRepository,
+               @inject("IVendorRepository") private _vendorRepository: IVendorRepository){}
     async createLoanProduct(data: ILoanProductDto, vendorId: string): Promise<ILoanProductResponseDto> {
+
+        const vendor = await this._vendorRepository.findById(vendorId);
+
+        if(!vendor){
+            throw new CustomError(MESSAGES.VENDOR_NOT_FOUND,STATUS_CODES.NOT_FOUND)
+        }
+
+        if(vendor.status !== Status.Verified){
+            throw new CustomError(MESSAGES.VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN,STATUS_CODES.FORBIDDEN)
+        }
         
+        if(vendor.accountStatus == AccountStatus.Blocked){
+             throw new CustomError(MESSAGES.ACCOUNT_BLOCKED,STATUS_CODES.FORBIDDEN)
+        }
         if(data.amount.minimum > data.amount.maximum){
             throw new CustomError(MESSAGES.MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT)
         }

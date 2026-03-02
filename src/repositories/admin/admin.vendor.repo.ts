@@ -7,6 +7,7 @@ import {
   PaginationQuery,
 } from "@/interfaces/shared/pagination.interface";
 import { IUser, UserModel } from "@/models/user/user.model";
+import { AccountStatus, Status } from "@/models/enums/enum";
 
 type RoleModel = "vendor" | "user";
 
@@ -43,7 +44,7 @@ export class AdminVendorMgtRepo
           .sort({ createdAt: -1 }),
         VendorModel.countDocuments(filter),
       ]);
-
+      
       return { data, total, page, limit };
     }
 
@@ -63,24 +64,27 @@ export class AdminVendorMgtRepo
       UserModel.countDocuments(filter),
     ]);
 
+
     return { data, total, page, limit };
   }
 
 
-  async updateStatus(id: string, role: "vendor" | "user", status: "active" | "blocked"): Promise<IVendor | IUser | null> {
+  async updateStatus(id: string, role: "vendor" | "user", accountStatus: AccountStatus): Promise<IVendor | IUser | null> {
       
      if (role === "vendor") {
       return await VendorModel.findByIdAndUpdate(
         id,
-        { status },
+        { accountStatus },
         { new: true }
       );
     } else {
       return await UserModel.findByIdAndUpdate(
         id,
-        { status },
+        { accountStatus },
         { new: true }
       );
     }
   }
+
+  
 }

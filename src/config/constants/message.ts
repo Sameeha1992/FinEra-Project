@@ -13,7 +13,7 @@ export const MESSAGES = {
   SESSION_EXPIRED: "Session has expired. Please log in again.",
   MULTIPLE_LOGIN_NOT_ALLOWED: "You are already logged in from another device.",
   USER_BLOCKED:"User is blocked",
-
+  VENDOR_NOT_FOUND:"Vendor not found",
   // Registration & Profile
   REGISTRATION_SUCCESS: "Registration successful.",
   REGISTRATION_FAILED: "Registration failed. Please try again.",
@@ -111,6 +111,10 @@ export const MESSAGES = {
   FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
   ACCESS_TOKEN_NOT_FOUND:"no access token found",
   VERIFIED_USER_KYC_UPDATE_RESTRICTED :"KYC details (Aadhaar and PAN) cannot be modified after user verification.",
+  VENDORS_FETCHED_SUCCESSFULLY:"Vendor list fetched successfully",
+  INVALID_STATUS:"Invalid status value",
+  VENDOR_STATUS_UPDATED:"Vendor status updated successfully",
+  VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN:"Only verified vendors can create loan products",
   //Loan:-
 
   MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:"minimum amount should not exceed ",

@@ -27,7 +27,7 @@ async findOne(query:any):Promise<T|null>{
 }
 
 async find(query: any): Promise<T[]> {
-    return await this.model.find()
+    return await this.model.find(query)
 }
  async updateById(id:string,updateData:Partial<T>):Promise<T | null>{
     return await this.model.findByIdAndUpdate(id,updateData,{new:true})

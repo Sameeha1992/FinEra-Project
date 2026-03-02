@@ -1,6 +1,7 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import { IAdminVendorMgtService } from "@/interfaces/services/admin/admin.vendormgt.interface";
+import { AccountStatus } from "@/models/enums/enum";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 
@@ -55,9 +56,9 @@ export class AdminVendorMgtController {
   async updatedStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { role, status } = req.body;
+      const { role, accountStatus } = req.body;
 
-      if (!id || !role || !status) {
+      if (!id || !role || !accountStatus) {
         return res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ success: false, message: "Missing required parameter" });
@@ -66,7 +67,7 @@ export class AdminVendorMgtController {
       const updated = await this._IAdminVendorService.updateStatus(
         id,
         role,
-        status
+        accountStatus
       );
       if (!updated) {
         return res
@@ -79,7 +80,7 @@ export class AdminVendorMgtController {
         .json({
           success: true,
           message: `Account ${
-            status === "active" ? "unblocked" : "blocked"
+            accountStatus === "active" ? AccountStatus.Unblocked : AccountStatus.Blocked
           } successfully`,
           data: updated,
         });

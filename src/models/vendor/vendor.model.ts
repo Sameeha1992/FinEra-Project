@@ -1,5 +1,5 @@
 import mongoose, { Schema,Document } from "mongoose"
-import { AccountStatus, Role, Status } from "../enums/enum"
+import { AccountStatus, Role, Status, verificationStatus } from "../enums/enum"
 
 export interface IVendor extends Document{
     _id:mongoose.Types.ObjectId,
@@ -13,8 +13,9 @@ export interface IVendor extends Document{
     licenceDoc?:string,
     status:Status,
     isProfileComplete:boolean,
-    role:Role,
     isBlocked:boolean,
+    role:Role,
+    accountStatus:AccountStatus,
     createdAt:Date,
     updatedAt:Date,
     uploadedAt?:Date,
@@ -34,6 +35,8 @@ const vendorSchema = new Schema<IVendor>(
         licenceNumber:{type:String},
         isProfileComplete:{type:Boolean,default:false},
         isBlocked:{type:Boolean,default:false},
+        
+        accountStatus:{type:String,default:AccountStatus.Unblocked},
         licenceDoc:{type:String},
          status:{
             type:String,

@@ -1,6 +1,7 @@
 export enum Status {
   Verified = "verified",
   Not_Verified = "notVerified",
+  Rejected ="rejected"
 }
 
 export enum AccountStatus {
@@ -24,4 +25,10 @@ export enum LoanType {
 export enum LoanStatus{
     ACTIVE = "ACTIVE",
     INACTIVE="INACTIVE"
+}
+
+export enum verificationStatus{
+  Verified = "verified",
+  NotVerified = "notVerified",
+  Rejected = "rejected"
 }

@@ -1,5 +1,5 @@
 import { ILoanProductDto, ILoanProductEntityDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
-import { LoanType } from "@/models/enums/enum";
+import { LoanType, Status } from "@/models/enums/enum";
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
 import { PopulatedLoanProduct } from "@/types/populate.loan.type";
 

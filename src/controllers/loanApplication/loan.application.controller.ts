@@ -21,6 +21,10 @@ export class LoanApplicationController {
     next: NextFunction,
   ) {
     try {
+         console.log("✅ Request user:", req.user); // Check authenticated user
+      console.log("✅ Raw body:", req.body);      // Check incoming body
+      console.log("✅ Uploaded files:", req.files); // Check uploaded files
+
       if (req.body.businessDetails) {
       req.body.businessDetails = JSON.parse(req.body.businessDetails);
     }

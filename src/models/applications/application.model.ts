@@ -17,20 +17,24 @@ export interface ILoanApplication extends Document {
     employerName?: string;
     yearsOfExperience?: number;
     purpose?: string;
+    salarySlipUrl?: string,
   };
 
   goldDetails?: {
     goldWeight?: number;
+    goldImageUrl?: string
   };
 
   homeDetails?: {
     propertyValue?: number;
     propertyLocation?: string;
+    propertyDocUrl?: string, 
   };
 
   businessDetails?: {
     businessName?: string;
     annualRevenue?: number;
+    registrationDocUrl?: string,
   };
 
   status: "PENDING" | "APPROVED" | "REJECTED";
@@ -80,20 +84,24 @@ const loanApplicationSchema = new Schema(
       employerName: String,
       yearsOfExperience: Number,
       purpose: String,
+      salarySlipUrl:String,
     },
 
     goldDetails: {
       goldWeight: Number,
+      goldImageUrl: String,
     },
 
     homeDetails: {
       propertyValue: Number,
       propertyLocation: String,
+      propertyDocUrl:String
     },
 
     businessDetails: {
       businessName: String,
       annualRevenue: Number,
+      registrationDocUrl:String
     },
 
     status: {

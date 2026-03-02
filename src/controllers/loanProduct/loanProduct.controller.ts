@@ -62,16 +62,12 @@ export class LoanProductController{
 
             const vendorId = req.user?.id;
 
-            console.log("this is the loan edit update loan id",loanId)
-            console.log("this is the vendorId",vendorId)
             if(!vendorId){
                 throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS,STATUS_CODES.UNAUTHORIZED)
             }
 
             const updateData:UpdateLoanDto = req.body;
-            console.log("data from the frontend",updateData)
              const updatedLoan = await this._iloanProductService.updateLoanByVendor(loanId,vendorId,updateData);
-             console.log("this is the updated data in service",updatedLoan)
 
              return res.status(STATUS_CODES.ACCEPTED).json({success:true,message:MESSAGES.LOAN_UPDATED_SUCCESSFULLY,data:updatedLoan})
         } catch (error) {
@@ -112,7 +108,6 @@ export class LoanProductController{
 
             const loanDetails = await this._iloanProductService.getLoanDetails(loanId,vendorId)
 
-            console.log("loan details",loanDetails)
             return res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.LOAN_DETAILS_FETCHED,data:loanDetails})
         } catch (error) {
             next(error)
@@ -122,7 +117,6 @@ async getActiveLoansForUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { loanType, userSalary, page = "1", limit = "10", search } = req.query;
 
-    console.log("Controller: req.query =>", req.query);
 
     // Loan type required
     if (!loanType) {
