@@ -1,3 +1,4 @@
+import { LoanDetailForUserDto } from "@/dto/loanProduct/loanListingUser";
 import { ILoanProductDto, ILoanProductEntityDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
 import { LoanType, Status } from "@/models/enums/enum";
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
@@ -12,4 +13,5 @@ export interface ILoanProductService{
     getLoanDetails(loanId:string,vendorId:string):Promise<ILoanProductDto>
 
     getActiveLoansForUser(loanType:LoanType,userSalary:number,page:number,limit:number,search?:string):Promise<{loans:PopulatedLoanProduct[];total:number;page:number,limit:number}>
+    getLoanDetailsForUsers(loanId:string):Promise<LoanDetailForUserDto>
 }

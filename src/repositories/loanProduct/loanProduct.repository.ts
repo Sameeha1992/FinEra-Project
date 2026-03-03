@@ -15,6 +15,7 @@ import { STATUS_CODES } from "@/config/constants/statusCode";
 import loanModel from "@/models/loan/loan.model";
 import { LoanStatus, LoanType } from "@/models/enums/enum";
 import { LoanListingResult } from "@/dto/loanProduct/loanListingUser";
+import { IVendor } from "@/models/vendor/vendor.model";
 @injectable()
 export class LoanProductRepository
   extends BaseRepository<ILoanProduct>
@@ -156,5 +157,22 @@ export class LoanProductRepository
     page,
     limit,
   };
+}
+
+
+
+async getLoanDetailForUsers(
+  _id: string
+): Promise<(ILoanProduct & { vendor: IVendor }) | null> {
+
+  const loan = await loanProduct
+    .findById({ _id, status: LoanStatus.ACTIVE })
+    .populate<{ vendor: IVendor }>("vendor", "vendorName")
+    .lean();
+
+      console.log("📦 DB Result:", loan);
+
+
+  return loan as (ILoanProduct & { vendor: IVendor }) | null;
 }
 }

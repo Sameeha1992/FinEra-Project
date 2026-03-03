@@ -153,4 +153,19 @@ async getActiveLoansForUser(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+async getLoanDetailsForUser(req:Request,res:Response,next:NextFunction){
+    try {
+        const {loanId} = req.params;
+         
+
+        const loan = await this._iloanProductService.getLoanDetailsForUsers(loanId);
+
+        res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.LOAN_DETAILS_FETCHED,data:loan})
+        
+    } catch (error) {
+        next(error)
+    }
+}
+
 }

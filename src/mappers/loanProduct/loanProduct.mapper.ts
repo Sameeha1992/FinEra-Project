@@ -1,9 +1,11 @@
+import { LoanDetailForUserDto } from "@/dto/loanProduct/loanListingUser";
 import {
   ILoanProductDto,
   ILoanProductEntityDto,
   ILoanProductResponseDto,
 } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
+import { IVendor } from "@/models/vendor/vendor.model";
 import mongoose, { HydratedDocument } from "mongoose";
 
 export class LoanProductMapper {
@@ -72,5 +74,42 @@ export class LoanProductMapper {
         minCibilScore: entity.eligibility?.minCibilScore,
       },
     };
+  }
+}
+
+export class LoanDetalUserMapper{
+  static toResponse(entity:ILoanProduct & {vendor:IVendor}):LoanDetailForUserDto{
+  return {
+    loanId:entity.loanId,
+    vendor:{
+      id:entity.vendor._id.toString(),
+      vendorName:entity.vendor.vendorName
+    },
+
+     name: entity.name,
+      description: entity.description,
+      status: entity.status,
+
+      amount: {
+        minimum: entity.amount.minimum,
+        maximum: entity.amount.maximum,
+      },
+
+      tenure: {
+        minimum: entity.tenure.minimum,
+        maximum: entity.tenure.maximum,
+      },
+
+      interestRate: entity.interestRate,
+      duePenalty: entity.duePenalty,
+
+      eligibility: {
+        minAge: entity.eligibility?.minAge,
+        maxAge: entity.eligibility?.maxAge,
+        minSalary: entity.eligibility?.minSalary,
+        minCibilScore: entity.eligibility?.minCibilScore,
+      },
+
+  }
   }
 }

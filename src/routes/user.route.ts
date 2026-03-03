@@ -150,22 +150,32 @@ router.get(
   authMiddleware.checkBlocked,
   loanProductController.getActiveLoansForUser.bind(loanProductController),
 );
-  console.log("coming")
+
+router.get(
+  "/loans/:loanId",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  loanProductController.getLoanDetailsForUser.bind(loanProductController),
+);
+
+console.log("coming");
 
 router.post(
   "/create-loan-application",
   authMiddleware.auntenticate,
   authMiddleware.allowRoles(Role.User),
   authMiddleware.checkBlocked,
-  
+
   uploadImageMiddleware.fields([
     { name: "goldImage", maxCount: 1 },
     { name: "propertyDoc", maxCount: 1 },
     { name: "registerationDoc", maxCount: 1 },
     { name: "salarySlipDoc", maxCount: 1 },
-  ]),(req, res, next) => {
-    console.log("🔥 req.body:", req.body);
-    console.log("🔥 req.files:", req.files);
+  ]),
+  (req, res, next) => {
+    console.log("req.body:", req.body);
+    console.log("req.files:", req.files);
     next();
   },
   loanApplicationController.createLoanApplication.bind(

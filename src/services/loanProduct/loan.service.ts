@@ -1,11 +1,11 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
-import { LoanListingResult } from "@/dto/loanProduct/loanListingUser";
+import { LoanDetailForUserDto, LoanListingResult } from "@/dto/loanProduct/loanListingUser";
 import { ILoanProductDto, ILoanProductEntityDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProductRepository } from "@/interfaces/repositories/loanProduct/loanProduct.repository";
 import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { ILoanProductService } from "@/interfaces/services/loanProduct/loanProduct.service";
-import { LoanProductMapper } from "@/mappers/loanProduct/loanProduct.mapper";
+import { LoanDetalUserMapper, LoanProductMapper } from "@/mappers/loanProduct/loanProduct.mapper";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { AccountStatus, LoanType, Status } from "@/models/enums/enum";
 import { PopulatedLoanProduct } from "@/types/populate.loan.type";
@@ -167,5 +167,23 @@ console.log("Service: page", page, "limit", limit, "search", search);
       page: result.page,
       limit: result.limit,
     };
+  }
+
+
+  async getLoanDetailsForUsers(loanId:string):Promise<LoanDetailForUserDto>{
+
+    if(!loanId){
+        throw new CustomError(MESSAGES.LOAN_ID_REQUIRED,STATUS_CODES.BAD_REQUEST);
+    }
+
+    const loan = await this._loanRepository.getLoanDetailForUsers(loanId);
+
+    if(!loan){
+        throw new CustomError(MESSAGES.NO_LOANS_FOUND,STATUS_CODES.NOT_FOUND)
+
+    }
+
+    return LoanDetalUserMapper.toResponse(loan)
+
   }
 }
