@@ -1,11 +1,13 @@
+import { LoanType } from "@/models/enums/enum";
 import { Types } from "mongoose";
 
 export interface CreateLoanApplicationDTO {
   userId: string;
   vendorId: string;
   loanProductId: string;
+  
 
-  loanType: "PERSONAL" | "GOLD" | "HOME" | "BUSINESS";
+  loanType: LoanType;
 
   phoneNumber: string;
   employmentType: string;

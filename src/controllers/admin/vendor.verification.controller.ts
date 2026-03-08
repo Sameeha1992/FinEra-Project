@@ -49,7 +49,7 @@ export class VendorVerificationController {
   async updateVendorStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { vendorId } = req.params;
-      const { status } = req.body;
+      const { status,rejectionReason } = req.body;
 
       if (!Object.values(Status).includes(status)) {
         res
@@ -62,6 +62,7 @@ export class VendorVerificationController {
         await this._IvendorVerificationService.updateVendorStatus(
           vendorId,
           status,
+          rejectionReason
         );
 
       res

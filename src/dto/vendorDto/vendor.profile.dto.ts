@@ -1,3 +1,5 @@
+import { Status } from "@/models/enums/enum";
+
 export interface VendorProfileResponseDTO {
   vendorId: string;
   vendorName: string;
@@ -34,6 +36,8 @@ export interface VendorCompleteUpdateDto {
   name: string;
   email: string;
   vendorId?: string;
+  status?:Status;
+  rejectionReason?:string;
 
   registrationNumber?: string;
   licenceNumber?: string;

@@ -82,9 +82,9 @@ export class VendorVerificationService implements IVendorVerificationService {
     return vendorDto
   }
 
-  async updateVendorStatus(vendorId: string, status: Status): Promise<UpdateVendorStatusDto> {
+  async updateVendorStatus(vendorId: string, status: Status,rejectionReason:string): Promise<UpdateVendorStatusDto> {
     
-    const vendor = await this._IvendorVerificationRepo.updateVendorStatus(vendorId,status);
+    const vendor = await this._IvendorVerificationRepo.updateVendorStatus(vendorId,status,rejectionReason);
     if(!vendor){
       throw new CustomError(MESSAGES.USER_NOT_FOUND)
     }

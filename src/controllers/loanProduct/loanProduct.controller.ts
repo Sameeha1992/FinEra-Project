@@ -41,14 +41,14 @@ export class LoanProductController{
                 throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS,STATUS_CODES.UNAUTHORIZED)
             }
 
-            console.log("Vendor ID:", vendorId); // ✅ Debug
+            console.log("Vendor ID:", vendorId);
 
             const search = (req.query.search as string) || "";
             const page = parseInt((req.query.page as string) || "1",10);
             const limit = parseInt((req.query.limit as string) || "10",10);
 
             const loans= await this._iloanProductService.getLoansByVendor(vendorId,search,page,limit);
-            console.log("Loans returned from service:", loans); // ✅ Debug
+            console.log("Loans returned from service:", loans); 
             res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.SUCCESS,data:loans})
             
         } catch (error) {
@@ -127,13 +127,10 @@ async getActiveLoansForUser(req: Request, res: Response, next: NextFunction) {
       return;
     }
 
-    // Salary OPTIONAL
+    
     const parsedSalary = userSalary !== undefined ? Number(userSalary) : 0;
 
-    console.log("Controller: loanType =>", loanType);
-    console.log("Controller: parsedSalary =>", parsedSalary);
-    console.log("Controller: page =>", page, "limit =>", limit);
-    console.log("Controller: search =>", search);
+    
 
     const result = await this._iloanProductService.getActiveLoansForUser(
       loanType as LoanType,

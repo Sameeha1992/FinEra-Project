@@ -56,6 +56,11 @@ import { VendorVerifcationRepository } from '@/repositories/admin/vendor.verific
 import { IVendorVerificationService } from '@/interfaces/services/admin/vendor.verification.service.interface'
 import { VendorVerificationService } from '@/services/admin/vendor.verification.service'
 import { VendorVerificationController } from '@/controllers/admin/vendor.verification.controller'
+import { IUserVerificationRepo } from '@/interfaces/repositories/vendor/user.verification.interface'
+import { UserVerificationRepo } from '@/repositories/vendor/user.verification.repo'
+import { IUserVerificationService } from '@/interfaces/services/vendor/user.verification.interface'
+import { UserVerificationService } from '@/services/vendor/user.verification.service'
+import { UserVerificationController } from '@/controllers/vendor/user.verification.controller'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -121,4 +126,10 @@ container.registerSingleton(LoanApplicationController)
 container.registerSingleton<IVendorVerifcationRepository>("IVendorVerifcationRepository",VendorVerifcationRepository);
 container.registerSingleton<IVendorVerificationService>("IVendorVerificationService",VendorVerificationService);
 container.registerSingleton(VendorVerificationController)
+
+//User verification - Vendor Side:-
+
+container.registerSingleton<IUserVerificationRepo>("IUserVerificationRepo",UserVerificationRepo);
+container.registerSingleton<IUserVerificationService>("IUserVerificationService",UserVerificationService);
+container.registerSingleton(UserVerificationController)
 export {container}

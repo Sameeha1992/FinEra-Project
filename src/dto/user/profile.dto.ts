@@ -1,3 +1,5 @@
+import { Status } from "@/models/enums/enum";
+
 export interface UserProfileResponseDTO {
   customerId: string;
   name: string;
@@ -27,7 +29,7 @@ export interface UserCompletedResponseDto {
   customerId: string;
   email: string;
   phone: string;
-  status: string;
+  status: Status;
   dob: string;
   job: string;
   income: string;
@@ -51,7 +53,7 @@ export interface UserCompleteUpdateDto {
   email: string;
   customerId?: string;
   phone?: string;
-  status: "VERIFIED" | "NOT_VERIFIED";
+  status: Status
   dob?: string;
   job?: string;
   income?: string;

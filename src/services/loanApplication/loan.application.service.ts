@@ -16,15 +16,20 @@ constructor(@inject("ILoanApplicationRepository") private _iLoanApplicationRepo:
 
 async createLoanApplication(dto: CreateLoanApplicationDTO,files?:{goldImage?:Express.Multer.File[];propertyDoc?:Express.Multer.File[];registerationDoc?:Express.Multer.File[];salarySlipDoc?:Express.Multer.File[]}): Promise<{ success: boolean; message: string; }> {
 
+
+    const hasActiveLoan = await this._iLoanApplicationRepo.existingActiveLoans(dto.userId,dto.loanType)
+    if(hasActiveLoan){
+        throw new CustomError(MESSAGES.ACTIVE_LOANS_EXISTS)
+    }
    //Upload Gold image:-
 
     if(files?.goldImage?.[0]){
         const key = `loan-applications/gold/${uuid()}`;
-        const imageUrl = await this._IStorageService.uploadImage(files.goldImage[0],key);
+        await this._IStorageService.uploadImage(files.goldImage[0],key);
 
         dto.goldDetails ={
             ...dto.goldDetails,
-            goldImageUrl:imageUrl,
+            goldImageUrl:key,
         }
     }
 
@@ -32,11 +37,11 @@ async createLoanApplication(dto: CreateLoanApplicationDTO,files?:{goldImage?:Exp
 
     if(files?.propertyDoc?.[0]){
         const key =`loan-applications/home/${uuid()}`;
-        const docUrl = await this._IStorageService.uploadImage(files.propertyDoc[0],key);
+        await this._IStorageService.uploadImage(files.propertyDoc[0],key);
 
         dto.homeDetails ={
             ...dto.homeDetails,
-            propertyDocUrl:docUrl
+            propertyDocUrl:key
         }
     }
 
@@ -44,10 +49,10 @@ async createLoanApplication(dto: CreateLoanApplicationDTO,files?:{goldImage?:Exp
 
     if(files?.registerationDoc?.[0]){
         const key =`loan-applications/business/${uuid()}`;
-        const regUrl = await this._IStorageService.uploadImage(files.registerationDoc[0],key);
+        await this._IStorageService.uploadImage(files.registerationDoc[0],key);
         dto.businessDetails={
             ...dto.businessDetails,
-            registrationDocUrl:regUrl
+            registrationDocUrl:key
         }
     }
 
@@ -56,10 +61,10 @@ async createLoanApplication(dto: CreateLoanApplicationDTO,files?:{goldImage?:Exp
     
     if(files?.salarySlipDoc?.[0]){
         const key =`loan-applications/personal/${uuid()}`;
-        const salUrl = await this._IStorageService.uploadImage(files.salarySlipDoc[0],key);
+        await this._IStorageService.uploadImage(files.salarySlipDoc[0],key);
         dto.personalDetails={
             ...dto.personalDetails,
-            salarySlipUrl:salUrl
+            salarySlipUrl:key
         }
     }
     
@@ -78,8 +83,10 @@ async createLoanApplication(dto: CreateLoanApplicationDTO,files?:{goldImage?:Exp
             if(!dto.homeDetails) throw new CustomError(MESSAGES.HOME_LOAN_DETAILS_REQUIRED)            
     }
 
+    const applicationNumber = `APP-${uuid().slice(0,8).toUpperCase()}`
     const loanData:Partial<ILoanApplication>={
         ...dto,
+        applicationNumber:applicationNumber,
         userId:new Types.ObjectId(dto.userId),
         vendorId:new Types.ObjectId(dto.vendorId),
         loanProductId:new Types.ObjectId(dto.loanProductId)

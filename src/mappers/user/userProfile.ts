@@ -1,4 +1,5 @@
 import { UserCompletedResponseDto, UserCompleteProfileDto, UserProfileResponseDTO } from "@/dto/user/profile.dto";
+import { Status } from "@/models/enums/enum";
 import { IUser } from "@/models/user/user.model";
 
 export class UserProfileMapper{
@@ -56,7 +57,7 @@ export class CompleteProfileMapper {
       customerId: user.customerId,
       email: user.email,
       phone: user.phone ?? "",
-      status: user.status ?? "not_verified",
+      status: user.status ?? Status.Not_Verified,
       isCompleteProfile:user.isProfileComplete ?? false,
 
       dob: user.dob ?? "",

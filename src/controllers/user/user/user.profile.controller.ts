@@ -74,6 +74,7 @@ export class UserProfileController {
 
       const profileData =
         await this._userProfileService.getCompleteProfile(userId);
+        console.log("data for tyhe complete profile",profileData)
 
       res
         .status(STATUS_CODES.SUCCESS)

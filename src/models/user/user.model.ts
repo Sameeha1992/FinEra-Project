@@ -1,5 +1,5 @@
 import mongoose,{Schema,Document} from "mongoose";
-import { AccountStatus, Role } from "../enums/enum";
+import { AccountStatus, Role, Status } from "../enums/enum";
 import { boolean } from "zod";
 
 
@@ -25,7 +25,7 @@ export interface IUser extends Document{
     cibilDoc?: string;
     additionalDoc?:string;
     isBlacklisted?: boolean;
-    status?: string;
+    status?: Status;
     accountStatus?:AccountStatus;
     role?:Role.User|Role.Vendor|Role.Admin;
     createdAt?: Date;
@@ -63,8 +63,7 @@ const UserSchema = new Schema<IUser>(
         vendorId:{type:String},
         status:{
             type:String,
-            enum:["verified","not_verified"],
-            default:"not_verified"
+            default:Status.Not_Verified
         },
 
         role:{type:String,enum:Object.values(Role),default:Role.User},

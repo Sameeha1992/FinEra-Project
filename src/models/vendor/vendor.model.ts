@@ -12,6 +12,7 @@ export interface IVendor extends Document{
     licenceNumber?:string,
     licenceDoc?:string,
     status:Status,
+    rejectionReason?:string,
     isProfileComplete:boolean,
     isBlocked:boolean,
     role:Role,
@@ -43,6 +44,7 @@ const vendorSchema = new Schema<IVendor>(
             enum:Object.values(Status),
             default:Status.Not_Verified
         },
+        rejectionReason:{type:String},
         role:{type:String,enum:Object.values(Role),default:Role.Vendor},
         uploadedAt:{type:Date}
 

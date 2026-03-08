@@ -35,7 +35,7 @@ export class LoanProductRepository
     vendorId: string,
     search: string = "",
     page: number = 1,
-    limit: number = 10,
+    limit: number = 1,
   ): Promise<LoanListingDto> {
     if (!vendorId) {
       throw new CustomError(
@@ -100,6 +100,9 @@ export class LoanProductRepository
   ): Promise<ILoanProduct | null> {
     return loanProduct.findOne({ loanId, vendor: vendorId });
   }
+
+
+  // User side loan 
 
   async getActiveLoansForUsers(
     loanType: LoanType,
@@ -170,7 +173,7 @@ async getLoanDetailForUsers(
     .populate<{ vendor: IVendor }>("vendor", "vendorName")
     .lean();
 
-      console.log("📦 DB Result:", loan);
+     
 
 
   return loan as (ILoanProduct & { vendor: IVendor }) | null;

@@ -28,7 +28,14 @@ export class VendorVerifcationRepository extends BaseRepository<IVendor> impleme
      return await this.findOne({vendorId})
    }
 
-   async updateVendorStatus(vendorId: string, status: Status): Promise<IVendor | null> {
-     return await VendorModel.findOneAndUpdate({vendorId},{status},{new:true})
+   async updateVendorStatus(vendorId: string, status: Status,rejectionReason:string): Promise<IVendor | null> {
+
+    const updateData:Partial<IVendor> = {status};
+    if(status === Status.Rejected){
+      updateData.rejectionReason = rejectionReason
+    }else{
+      updateData.rejectionReason = undefined;
+    }
+     return await VendorModel.findOneAndUpdate({vendorId},updateData,{new:true})
    }
 }

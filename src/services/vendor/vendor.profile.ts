@@ -82,6 +82,8 @@ export class VendorProfileService implements IVendorProfileService{
             registrationNumber:user.registrationNumber,
             licenceNumber:user.licenceNumber,
             isProfileComplete:user.isProfileComplete,
+            status:user.status,
+            rejectionReason:user.rejectionReason,
 
             documents:{
                 registrationDocUrl:regsitrationDocUrl || "",

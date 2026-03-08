@@ -4,6 +4,9 @@ export interface ILoanApplication extends Document {
   userId: Types.ObjectId;
   vendorId:Types.ObjectId;
   loanProductId: Types.ObjectId;
+  applicationNumber:string;
+  rejectionReason:string;
+  verifiedAt:Date;
 
   loanType: "PERSONAL" | "GOLD" | "HOME" | "BUSINESS";
 
@@ -64,8 +67,20 @@ const loanApplicationSchema = new Schema(
 
     loanProductId: {
       type: Schema.Types.ObjectId,
-      ref: "Loan",
+      ref: "LoanProduct",
       required: true,
+    },
+
+    applicationNumber:{
+      type:String,
+      unique:true
+    },
+
+    rejectionReason:{
+      type:String,
+    },
+    verifiedAt:{
+      type:Date
     },
 
     loanType: {

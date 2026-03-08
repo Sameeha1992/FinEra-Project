@@ -15,6 +15,7 @@ import { CustomError } from "../../middleware/errorMiddleware";
 import { MESSAGES } from "@/config/constants/message";
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { IUserprofileService } from "@/interfaces/services/user/user.profile.interface";
+import { Status } from "@/models/enums/enum";
 
 @injectable()
 export class UserProfileService implements IUserprofileService {
@@ -129,7 +130,7 @@ export class UserProfileService implements IUserprofileService {
       email: user.email,
       customerId: user.customerId,
       phone: user.phone,
-      status: (user.status as "VERIFIED" | "NOT_VERIFIED") || "NOT_VERIFIED",
+      status: user.status || Status.Not_Verified,
       dob: user.dob,
       job: user.job,
       income: user.income,
@@ -160,7 +161,7 @@ export class UserProfileService implements IUserprofileService {
       throw new CustomError(MESSAGES.USER_BLOCKED);
     }
 
-    if (user.status === "verified") {
+    if (user.status === Status.Verified) {
       const isTryingToUpdateSensitiveFields =
         dto.adhaarNumber !== undefined ||
         dto.panNumber !== undefined ||

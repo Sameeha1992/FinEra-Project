@@ -2,7 +2,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { Role } from "@/models/enums/enum";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
-import { authMiddleware, authVendorController, loanProductController, vendorProfileController } from "@/controllers/resolvers/resolvers";
+import { authMiddleware, authVendorController, loanProductController, userVerificationController, vendorProfileController } from "@/controllers/resolvers/resolvers";
 
 const router = express.Router();
 
@@ -113,4 +113,9 @@ router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.V
 router.get(`/loans/:loanId`,authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanById.bind(loanProductController))
 router.put("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.updateLoanByVendor.bind(loanProductController))
 router.get("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanDetails.bind(loanProductController))
+
+//Applications of the user:-
+
+router.get("/applications",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getUserApplicationList.bind(userVerificationController))
+router.get("/applications/:id",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getApplicationDetail.bind(userVerificationController))
 export default router;

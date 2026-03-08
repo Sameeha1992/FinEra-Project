@@ -77,7 +77,7 @@ export const MESSAGES = {
   REQUIRED_FIELD_MISSING: "Required field is missing.",
   INVALID_INPUT: "Invalid input provided.",
   RESOURCE_NOT_FOUND: "Requested resource not found.",
-
+ INVALID_REQUEST:"Invalid request",
   //TOKEN ISSUES
 
   INVALID_REFRESH_TOKEN:"Invalid refreshtoken",
@@ -109,6 +109,7 @@ export const MESSAGES = {
   REFRESH_TOKEN_REVOKED:"Refresh token revoked",
   ACCESS_TOKEN_REFRESHED:"Access token refreshed successfully",
   FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
+  USER_FETCHED_SUCCESSFULLY:"User fetched successfully",
   ACCESS_TOKEN_NOT_FOUND:"no access token found",
   VERIFIED_USER_KYC_UPDATE_RESTRICTED :"KYC details (Aadhaar and PAN) cannot be modified after user verification.",
   VENDORS_FETCHED_SUCCESSFULLY:"Vendor list fetched successfully",
@@ -129,9 +130,10 @@ export const MESSAGES = {
   ACTIVE_LOANS_FETCHED_SUCCESSFULLY:"Active loans fetched successfully",
   SALARY_IS_REQUIRED:"Salary is required",
   LOAN_APPLICATION_SUBMITTED_SUCCESSFULLY:"Loan application submitted successfully",
-
+  LOAN_APPLICATION_NOT_FOUND:"Loan application not found",
   PERSONAL_LOAN_DETAILS_REQUIRED:"Personal loan details required",
   GOLD_LOAN_DETAILS_REQUIRED:"Gold loan details required",
   HOME_LOAN_DETAILS_REQUIRED:"Home loan details required",
-  BUSINESS_LOAN_DETAILS_REQUIRED:"Business loan details required"
+  BUSINESS_LOAN_DETAILS_REQUIRED:"Business loan details required",
+  ACTIVE_LOANS_EXISTS:"Active loans exists"
 };
