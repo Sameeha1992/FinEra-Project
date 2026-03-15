@@ -14,5 +14,6 @@ export class LoanApplicationRepository extends BaseRepository<ILoanApplication> 
         const loan = await LoanApplication.findOne({userId,loanType,status:{$in:["PENDING","APPROVED"]}})
         return !!loan
       }
+
     
 }

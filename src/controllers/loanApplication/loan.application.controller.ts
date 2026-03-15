@@ -1,3 +1,4 @@
+import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import { CreateLoanApplicationDTO } from "@/dto/loanApplication/loanApplication.dto";
 import { ILoanApplicationService } from "@/interfaces/services/loanApplication/loan.application.service.interface";
@@ -21,9 +22,7 @@ export class LoanApplicationController {
     next: NextFunction,
   ) {
     try {
-         console.log("✅ Request user:", req.user); // Check authenticated user
-      console.log("✅ Raw body:", req.body);      // Check incoming body
-      console.log("✅ Uploaded files:", req.files); // Check uploaded files
+         
 
       if (req.body.businessDetails) {
       req.body.businessDetails = JSON.parse(req.body.businessDetails);
@@ -66,6 +65,26 @@ export class LoanApplicationController {
         return next(new CustomError(error.issues[0].message, 400));
       }
       next(error);
+    }
+  }
+
+  async reapplyrejectedLoan(req:Request,res:Response,next:NextFunction){
+    try {
+      const applicationId = req.params.applicationId;
+      const dto = req.body;
+      const files = req.files as {
+        goldImage?: Express.Multer.File[];
+        propertyDoc?: Express.Multer.File[];
+        registerationDoc?: Express.Multer.File[];
+        salarySlipDoc?: Express.Multer.File[];
+      };
+
+      const result = await this._iLoanApplicationService.reapplyRejectedLoan(applicationId,dto,files);
+
+      return res.status(STATUS_CODES.SUCCESS).json({success:true,messages:MESSAGES.LOAN_APPLICATION_UPDATED_SUCCESSFULLY,data:result})
+
+    } catch (error) {
+      next(error)
     }
   }
 }

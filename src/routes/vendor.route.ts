@@ -118,4 +118,7 @@ router.get("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRole
 
 router.get("/applications",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getUserApplicationList.bind(userVerificationController))
 router.get("/applications/:id",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getApplicationDetail.bind(userVerificationController))
+router.patch("/applications/:id/approve",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.approveLoan.bind(userVerificationController))
+router.patch("/applications/:id/reject",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.rejectLoan.bind(userVerificationController))
+
 export default router;

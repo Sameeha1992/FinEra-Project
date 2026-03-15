@@ -62,8 +62,8 @@ export class UserVerificationController {
     try {
       const vendorId = req.user?.id;
       const applicationId = req.params.id;
-      console.log("vendorId for applucation",vendorId);
-      console.log("applicationid",applicationId)
+      console.log("vendorId for applucation", vendorId);
+      console.log("applicationid", applicationId);
 
       if (!vendorId || !applicationId) {
         return res
@@ -77,21 +77,88 @@ export class UserVerificationController {
           vendorId,
         );
 
-            console.log("Application from service:", application); // 👈 ADD THIS
-
+      console.log("Application from service:", application); // 👈 ADD THIS
 
       if (!application) {
-        return res
-          .status(STATUS_CODES.BAD_REQUEST)
-          .json({
-            success: false,
-            message: MESSAGES.LOAN_APPLICATION_NOT_FOUND,
-          });
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          success: false,
+          message: MESSAGES.LOAN_APPLICATION_NOT_FOUND,
+        });
       }
 
       return res
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, data: application });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async approveLoan(
+    req: AuthenticateRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const vendorId = req.user?.id;
+      const applicationId = req.params.id;
+
+      if (!vendorId || !applicationId) {
+        return res
+          .status(STATUS_CODES.BAD_REQUEST)
+          .json({ success: false, message: MESSAGES.INVALID_REQUEST });
+      }
+
+      const result = await this._IUserVerificationService.approveLoan(
+        applicationId,
+        vendorId,
+      );
+
+      return res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: result.message,
+        data:result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async rejectLoan(
+    req: AuthenticateRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const vendorId = req.user?.id;
+      const applicationId = req.params.id;
+      const { rejectionReason } = req.body;
+
+      if (!vendorId || !applicationId) {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          success: false,
+          message: MESSAGES.INVALID_REQUEST,
+        });
+      }
+
+      if (!rejectionReason || !rejectionReason.trim()) {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          success: false,
+          message: "Rejection reason is required",
+        });
+      }
+
+      const result = await this._IUserVerificationService.rejectedLoan(
+        applicationId,
+        vendorId,
+        rejectionReason,
+      );
+
+      return res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: result.message,
+        data:result
+      });
     } catch (error) {
       next(error);
     }

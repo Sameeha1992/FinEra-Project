@@ -1,15 +1,17 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ILoan extends Document {
+ _id: mongoose.Types.ObjectId; 
   loanId: string;
+  applicationId: mongoose.Types.ObjectId;
 
   user: mongoose.Types.ObjectId;
   loanProduct: mongoose.Types.ObjectId;
 
   amount: number;
-  interestRate: number;  
-  duePenalty: number;   
-  tenure: number;        
+  interestRate: number;
+  duePenalty: number;
+  tenure: number;
 
   status: "PENDING" | "APPROVED" | "REJECTED" | "CLOSED";
 
@@ -34,6 +36,12 @@ const LoanSchema = new Schema<ILoan>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    applicationId: {
+      type: Schema.Types.ObjectId,
+      ref: "LoanApplication",
+      required: true,
+      unique: true,
     },
 
     loanProduct: {
@@ -81,7 +89,7 @@ const LoanSchema = new Schema<ILoan>(
       type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model<ILoan>("Loan", LoanSchema);

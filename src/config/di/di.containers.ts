@@ -61,6 +61,20 @@ import { UserVerificationRepo } from '@/repositories/vendor/user.verification.re
 import { IUserVerificationService } from '@/interfaces/services/vendor/user.verification.interface'
 import { UserVerificationService } from '@/services/vendor/user.verification.service'
 import { UserVerificationController } from '@/controllers/vendor/user.verification.controller'
+import { IUserApplicationsRepository } from '@/interfaces/repositories/user/userLoanApplication/user.applications.service.interface'
+import { UserApplicationsRepository } from '@/repositories/user/userApplications/user.applications.repository'
+import { IUserApplicationsService } from '@/interfaces/services/user/user.application.service.interface'
+import { UserApplicationService } from '@/services/user/user.application.service'
+import { UserApplicationController } from '@/controllers/user/user/userApplication/user.application.controller'
+import { ILoanRepository } from '@/interfaces/repositories/loan/loan.repository.interface'
+import { LoanRepository } from '@/repositories/loan/loan.repository'
+import { IEMIRepository } from '@/interfaces/repositories/emi/emi.repository.interface'
+import { EmiRepository } from '@/repositories/emi/emi.repository'
+import { IEmiService } from '@/interfaces/services/emi/emi.servive.interface'
+import { EmiService } from '@/services/emi/emi.service'
+import { EmiController } from '@/controllers/emi/emi.controller'
+import { IStripeService } from '@/interfaces/helper/stripe.service.interface'
+import { StripeService } from '@/services/helper/stripe.service'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -132,4 +146,24 @@ container.registerSingleton(VendorVerificationController)
 container.registerSingleton<IUserVerificationRepo>("IUserVerificationRepo",UserVerificationRepo);
 container.registerSingleton<IUserVerificationService>("IUserVerificationService",UserVerificationService);
 container.registerSingleton(UserVerificationController)
+
+//User Applications Checking:- UserSide:-
+
+container.registerSingleton<IUserApplicationsRepository>("IUserApplicationsRepository",UserApplicationsRepository);
+container.registerSingleton<IUserApplicationsService>("IUserApplicationsService",UserApplicationService)
+container.registerSingleton(UserApplicationController);
+
+//Creating loan:-
+
+container.registerSingleton<ILoanRepository>("ILoanRepository",LoanRepository);
+
+//Creating EMI for loan:-
+
+container.registerSingleton<IEMIRepository>("IEMIRepository",EmiRepository)
+container.registerSingleton<IEmiService>("IEmiService",EmiService);
+container.registerSingleton(EmiController);
+
+//Stripe intergration:-
+
+container.registerSingleton<IStripeService>("IStripeService",StripeService)
 export {container}

@@ -12,6 +12,8 @@ import multer from "multer";
 import {
   loanApplicationController,
   loanProductController,
+  userApplicationController,
+  userEmiController,
 } from "@/controllers/resolvers/resolvers";
 
 const router = express.Router();
@@ -182,4 +184,24 @@ router.post(
     loanApplicationController,
   ),
 );
+
+router.put(
+  "/loans/:applicationId/reapply",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  uploadImageMiddleware.fields([
+    { name: "goldImage", maxCount: 1 },
+    { name: "propertyDoc", maxCount: 1 },
+    { name: "registerationDoc", maxCount: 1 },
+    { name: "salarySlipDoc", maxCount: 1 },
+  ]),
+  loanApplicationController.reapplyrejectedLoan.bind(loanApplicationController),
+);
+
+
+router.get("/applications", authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getuserApplicationList.bind(userApplicationController));
+
+router.get("/applications/:applicationId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getUserApplicationDetails.bind(userApplicationController));
+router.get("/loan/:loanId/emis",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmisByLoanId.bind(userEmiController))
 export default router;

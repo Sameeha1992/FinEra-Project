@@ -93,7 +93,7 @@ export class LoanProductService implements ILoanProductService{
 
         console.log(updateData,"updated sdavgsujhwfjhv")
         if(!updatedLoan){
-            throw new CustomError(MESSAGES.NO_LOANS_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new CustomError(MESSAGES.LOAN_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
 
         return LoanProductMapper.toResponse(updatedLoan)
@@ -111,7 +111,7 @@ export class LoanProductService implements ILoanProductService{
         const loan = await this._loanRepository.findByLoanIdAndVendor(loanId,vendorId);
 
         if(!loan){
-            throw new CustomError(MESSAGES.NO_LOANS_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new CustomError(MESSAGES.LOAN_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
 
         return LoanProductMapper.toResponse(loan)
@@ -130,7 +130,7 @@ export class LoanProductService implements ILoanProductService{
         const loan = await this._loanRepository.findByLoanIdAndVendor(loanId,vendorId);
 
         if(!loan){
-            throw new CustomError(MESSAGES.NO_LOANS_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new CustomError(MESSAGES.LOAN_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
 
         return LoanProductMapper.toResponse(loan)
@@ -179,7 +179,7 @@ console.log("Service: page", page, "limit", limit, "search", search);
     const loan = await this._loanRepository.getLoanDetailForUsers(loanId);
 
     if(!loan){
-        throw new CustomError(MESSAGES.NO_LOANS_FOUND,STATUS_CODES.NOT_FOUND)
+        throw new CustomError(MESSAGES.LOAN_NOT_FOUND,STATUS_CODES.NOT_FOUND)
 
     }
 

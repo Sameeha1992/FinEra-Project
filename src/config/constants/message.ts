@@ -69,6 +69,9 @@ export const MESSAGES = {
   OTP_VERIFIED: "OTP verified successfully.",
   OTP_VERIFICATION_FAILED:"otp verification failed",
   OTP_EXPIRED: "OTP has expired. Please request a new one.",
+  STRIPE_CHECKOUT_SESSION_URL_NOT_GENERATED: "Stripe checkout session URL not generated",
+
+
   
   // Validation & Requests
   SERVER_ERROR: "An unexpected error occurred.",
@@ -116,12 +119,14 @@ export const MESSAGES = {
   INVALID_STATUS:"Invalid status value",
   VENDOR_STATUS_UPDATED:"Vendor status updated successfully",
   VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN:"Only verified vendors can create loan products",
+  ONLY_PENDING_APPLICATIONS_CAN_BE_APPROVED:"Only pending applications can be aspproved",
+  APPLICATION_DETAILS_FETCHED_SUCCESSFULLY:"Application details fetched successfully",
   //Loan:-
 
   MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:"minimum amount should not exceed ",
   MINIMUM_TENURE_SHOULD_NOT_EXCEED_MAXIMUM:"Minimum tenure cannot exceed maximum tenure",
   LOAN_ALREADY_EXISTS:"Loan already existed for the vendor",
-  NO_LOANS_FOUND:"No loans had been found",
+  LOAN_NOT_FOUND:"No loans had been found",
   LOAN_ID_REQUIRED:"Loan Id is required",
   LOAN_UPDATED_SUCCESSFULLY:"Loan updated successfully",
   LOAN_TYPE_REQUIRED:"Loan type is required",
@@ -135,5 +140,20 @@ export const MESSAGES = {
   GOLD_LOAN_DETAILS_REQUIRED:"Gold loan details required",
   HOME_LOAN_DETAILS_REQUIRED:"Home loan details required",
   BUSINESS_LOAN_DETAILS_REQUIRED:"Business loan details required",
-  ACTIVE_LOANS_EXISTS:"Active loans exists"
+  ACTIVE_LOANS_EXISTS:"Active loans exists",
+  REJECTED_LOANS_SHOULD_REAPPLIED:"Only rejected loans can be reapplied.",
+  LOAN_REAPPLY_ERROR: "Loan cannot be reapplied or is not rejected.",
+  LOAN_REAPPLY_SUCCESS: "Loan reapplied successfully and is now pending.",
+  LOAN_APPLICATION_UPDATED_SUCCESSFULLY:"Loan application updated successfully",
+  LOAN_APPROVED_SUCCESSFULLY:"Loan approved succeessfully",
+  LOAN_REJECTED_SUCCESSFULLY:"Loan rejected successfully",
+  REJECTION_REASON_REQUIRED:"Rejection reason is required",
+  ONLY_PENDING_APPLICATIONS_CAN_BE_REJECTED: "Only pending applications are allowed to be rejected",
+  LOAN_PRODUCT_NOT_FOUND: "Loan product not found",
+
+
+  //EMI related:-
+
+  EMI_NOT_FOUND: "EMI details not found",
+  EMI_LIST_FETCHED_SUCCESSFULLY: "EMI list fetched successfully",
 };

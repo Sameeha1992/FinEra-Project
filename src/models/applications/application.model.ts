@@ -5,10 +5,10 @@ export interface ILoanApplication extends Document {
   vendorId:Types.ObjectId;
   loanProductId: Types.ObjectId;
   applicationNumber:string;
-  rejectionReason:string;
-  verifiedAt:Date;
+  rejectionReason?:string;
+  verifiedAt?:Date;
 
-  loanType: "PERSONAL" | "GOLD" | "HOME" | "BUSINESS";
+  loanType: LoanType;
 
   phoneNumber: string;
   employmentType: string;
@@ -50,6 +50,7 @@ export interface ILoanApplication extends Document {
 
 
 import mongoose, { Schema } from "mongoose";
+import { LoanType } from "../enums/enum";
 
 const loanApplicationSchema = new Schema(
   {

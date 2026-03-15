@@ -1,5 +1,5 @@
 import {
-    VendorApplicationDetailsDTO,
+  VendorApplicationDetailsDTO,
   VendorApplicationListItemDTO,
   VendorApplicationQueryDTO,
 } from "@/dto/vendorDto/user.verification.list.dto";
@@ -12,5 +12,11 @@ export interface IUserVerificationService {
     totalPages: number;
   }>;
 
-  getApplicationDetail(applicationId:string,vendorId:string):Promise<VendorApplicationDetailsDTO>
+  getApplicationDetail(
+    applicationId: string,
+    vendorId: string,
+  ): Promise<VendorApplicationDetailsDTO>;
+
+  approveLoan(applicationId:string,vendorId:string):Promise<{success:boolean,message:string}>
+  rejectedLoan(applicationId:string,vendorId:string,rejectionReason:string):Promise<{success:boolean,message:string}>
 }

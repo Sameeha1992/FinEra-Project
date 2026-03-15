@@ -7,9 +7,7 @@ import { IBaseRepository } from "../baseRepository.interface";
 import { ILoanApplication } from "@/models/applications/application.model";
 
 export interface IUserVerificationRepo extends IBaseRepository<ILoanApplication> {
-  getUserApplicationList(
-    query: VendorApplicationQueryDTO,
-  ): Promise<{
+  getUserApplicationList(query: VendorApplicationQueryDTO): Promise<{
     data: VendorApplicationListItemDTO[];
     total: number;
     page: number;
@@ -19,4 +17,15 @@ export interface IUserVerificationRepo extends IBaseRepository<ILoanApplication>
     applicationId: string,
     vendorId: string,
   ): Promise<VendorApplicationDetailsDTO | null>;
+
+  rejectLoan(
+    applicationId: string,
+    vendorId: string,
+    rejectionReason: string,
+  ): Promise<ILoanApplication | null>;
+
+  approveLoan(
+    applicationId: string,
+    vendorId: string,
+  ): Promise<ILoanApplication | null>;
 }

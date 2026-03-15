@@ -52,7 +52,7 @@ export class LoanProductRepository
     const total = await loanProduct.countDocuments(query);
 
     if (total === 0) {
-      throw new CustomError(MESSAGES.NO_LOANS_FOUND, STATUS_CODES.NOT_FOUND);
+      throw new CustomError(MESSAGES.LOAN_NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
 
     const loans = await loanProduct
