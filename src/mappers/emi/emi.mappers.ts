@@ -4,6 +4,7 @@ import { IEmi } from "@/models/emi/emi.model";
 export class EmiMapper{
     static toListingDto(emi:IEmi):EmiListingLoans{
         return{
+            emiId:emi.id.toString(),
             loan:emi.loan.toString(),
             emiNumber:emi.emiNumber,
             amount:emi.amount,

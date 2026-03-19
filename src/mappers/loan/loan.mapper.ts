@@ -11,7 +11,9 @@ interface LoanApplicationData{
 
 interface LoanProductData{
     interestRate:number,
-    duePenalty:number
+    duePenalty:number,
+    processingFee:number,
+    isProcessingFeePaid:boolean
 }
 
 export class CreateLoanMappers{

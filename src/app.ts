@@ -5,6 +5,7 @@ import morgan from "morgan"
 import userRouter from "../src/routes/user.route"
 import adminRouter from "../src/routes/admin.route"
 import vendorRouter from "../src/routes/vendor.route"
+import webhookRouter from "@/routes/webhook.route"
 import bodyParser from 'body-parser'
 import cookieParser from "cookie-parser"
 
@@ -66,6 +67,7 @@ export default class App{
         allowedHeaders:["Content-Type","Authorization"]
       })
     );
+    this.app.use("/api/payment",webhookRouter)
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended:true}));
@@ -78,7 +80,7 @@ export default class App{
   private setupRoutes():void{
   this.app.use("/api/user",userRouter);
   this.app.use("/api/admin",adminRouter);
-  this.app.use("/api/vendor",vendorRouter)
+  this.app.use("/api/vendor",vendorRouter);
   } 
 
   private setupErrorHandling():void{

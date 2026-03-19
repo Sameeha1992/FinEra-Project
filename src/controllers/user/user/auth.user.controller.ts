@@ -205,6 +205,8 @@ export class AuthUserController {
     try {
       const token = req.body.token;
 
+      console.log("tokewn nkjhjkb",token)
+
       if (!token) {
         throw new CustomError(
           "Google token required",
@@ -225,6 +227,7 @@ export class AuthUserController {
         accessToken,
       });
     } catch (error) {
+      console.log("google auth issue",error)
       next(error);
     }
   }

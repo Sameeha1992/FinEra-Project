@@ -9,8 +9,8 @@ import App from "./app";
 import { connectRedis } from "./config/redis/redis.connect";
 import logger from "./middleware/loggerMiddleware";
 import {env} from "@/validations/envValidation"
-
-const appInstance = new App()
+const appInstance = new App();
+import { startCronJobs } from "./crone";
 
 // const startServer = async ()=>{
 //     try {
@@ -48,6 +48,8 @@ export class ServerApp {
     public async start():Promise<void>{
         try {
             await this.connectServices();
+
+            startCronJobs();
             this.server.listen(env.PORT,()=>{
                 logger.info({port:env.PORT},"Server running")
             })

@@ -6,13 +6,16 @@ import {
   VendorApplicationDetailsDTO,
 } from "@/dto/vendorDto/user.verification.list.dto";
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
-import { IEMIRepository } from "@/interfaces/repositories/emi/emi.repository.interface";
+import { IEmiRepository } from "@/interfaces/repositories/emi/emi.repository.interface";
 import { ILoanRepository } from "@/interfaces/repositories/loan/loan.repository.interface";
 import { ILoanProductRepository } from "@/interfaces/repositories/loanProduct/loanProduct.repository";
 import { IUserVerificationRepo } from "@/interfaces/repositories/vendor/user.verification.interface";
+import { IEmiService } from "@/interfaces/services/emi/emi.servive.interface";
+import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
 import { IUserVerificationService } from "@/interfaces/services/vendor/user.verification.interface";
 import { CreateLoanMappers } from "@/mappers/loan/loan.mapper";
 import { CustomError } from "@/middleware/errorMiddleware";
+import { NotificationType } from "@/models/enums/enum";
 import mongoose from "mongoose";
 import { inject, injectable } from "tsyringe";
 
@@ -25,7 +28,10 @@ export class UserVerificationService implements IUserVerificationService {
     @inject("ILoanProductRepository")
     private _iLoanProductRepository: ILoanProductRepository,
     @inject("ILoanRepository") private _iLoanRepository: ILoanRepository,
-    @inject("IEMIRepository") private _iEmiRepository: IEMIRepository,
+    @inject("IEmiRepository") private _iEmiRepository: IEmiRepository,
+    @inject("IEmiService") private _iEmiService: IEmiService,
+    @inject("INotificationService")
+    private readonly _iNotificationService: INotificationService,
   ) {}
   async getUserApplicationList(query: VendorApplicationQueryDTO): Promise<{
     data: VendorApplicationListItemDTO[];
@@ -186,42 +192,46 @@ export class UserVerificationService implements IUserVerificationService {
       throw new CustomError(MESSAGES.LOAN_PRODUCT_NOT_FOUND);
     }
 
+    const processingFee = Math.ceil(application.loanAmount * 0.01);
+    const netLoanAmount = application.loanAmount - processingFee;
+
     const loanData = CreateLoanMappers.toEntity(
       {
         user: application.userId,
         loanProduct: application.loanProductId,
-        loanAmount: application.loanAmount,
+        loanAmount: netLoanAmount,
         loanTenure: application.loanTenure,
-        applicationId:application._id as mongoose.Types.ObjectId
+        applicationId: application._id as mongoose.Types.ObjectId,
       },
       {
         interestRate: loanProduct.interestRate,
         duePenalty: loanProduct.duePenalty,
+        processingFee,
+        isProcessingFeePaid: false,
       },
     );
 
+    loanData.startDate = new Date();
     const createdLoan = await this._iLoanRepository.create(loanData);
 
-    const emiAmount = Math.ceil(
-      application.loanAmount / application.loanTenure,
-    );
-
-    const emiData: CreateEmiDTO[] = [];
-    for (let i = 1; i <= application.loanTenure; i++) {
-      const dueDate = new Date();
-      dueDate.setMonth(dueDate.getMonth() + i);
-
-      emiData.push({
-        loan: createdLoan._id as mongoose.Types.ObjectId,
-        emiNumber: i,
-        amount: emiAmount,
-        dueDate,
-        status: "PENDING",
-        penalty: 0,
-      });
-    }
+    const emiData = await this._iEmiService.generateEmiSchedule({
+      loanId: createdLoan._id as mongoose.Types.ObjectId,
+      loanAmount: netLoanAmount,
+      tenure: application.loanTenure,
+      interestRate: loanProduct.interestRate,
+      startDate: createdLoan.startDate ?? new Date(),
+    });
 
     await this._iEmiRepository.createManyEmi(emiData);
+
+    await this._iNotificationService.createNotification({
+      userId: application.userId.toString(),
+      loanId: createdLoan._id.toString(),
+      title: "Loan Approved",
+      message: `Your application has been approved.Loan amount ₹${netLoanAmount} has been created successfully.`,
+      type: NotificationType.LOAN_APPROVED,
+    });
+
     const updatedApplication = await this.getApplicationDetail(
       applicationId,
       vendorId,
@@ -233,6 +243,7 @@ export class UserVerificationService implements IUserVerificationService {
       data: updatedApplication,
     };
   }
+
   async rejectedLoan(
     applicationId: string,
     vendorId: string,
@@ -268,6 +279,10 @@ export class UserVerificationService implements IUserVerificationService {
       vendorId,
       rejectionReason,
     );
+
+    await this._iNotificationService.createNotification({userId:application.user.toString(), title: "Loan Rejected",
+    message: `Your loan application has been rejected. Reason: ${rejectionReason}`,
+    type: NotificationType.LOAN_REJECTED})
 
     if (!rejectedLoan) {
       throw new CustomError(MESSAGES.LOAN_APPLICATION_NOT_FOUND);

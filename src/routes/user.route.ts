@@ -10,11 +10,14 @@ import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 import { Role } from "@/models/enums/enum";
 import multer from "multer";
 import {
+  emiPaymentController,
   loanApplicationController,
   loanProductController,
   userApplicationController,
   userEmiController,
+  userNotificationController,
 } from "@/controllers/resolvers/resolvers";
+import { EmiController } from "@/controllers/emi/emi.controller";
 
 const router = express.Router();
 
@@ -203,5 +206,50 @@ router.put(
 router.get("/applications", authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getuserApplicationList.bind(userApplicationController));
 
 router.get("/applications/:applicationId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getUserApplicationDetails.bind(userApplicationController));
-router.get("/loan/:loanId/emis",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmisByLoanId.bind(userEmiController))
+router.get("/loan/:loanId/emis",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmisByLoanId.bind(userEmiController));
+router.post(
+  "/emis/pay",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+   emiPaymentController.createEmiPaymentSession.bind(emiPaymentController)
+);
+
+router.get("/emi/:emiId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmiDetails.bind(userEmiController))
+
+//Notification user:
+
+
+router.get(
+  "/notifications",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userNotificationController.getNotifications.bind(userNotificationController),
+);
+
+router.patch(
+  "/notifications/:notificationId/read",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userNotificationController.markAsRead.bind(userNotificationController),
+);
+
+router.patch(
+  "/notifications/read-all",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userNotificationController.markAllAsRead.bind(userNotificationController),
+);
+
+router.get(
+  "/notifications/unread-count",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userNotificationController.getUnreadCount.bind(userNotificationController),
+);
+
 export default router;

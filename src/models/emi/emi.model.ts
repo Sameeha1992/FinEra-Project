@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { EmiStatus } from "../enums/enum";
 
 export interface IEmi extends Document {
+  _id:mongoose.Types.ObjectId;
   loan: mongoose.Types.ObjectId;
 
   emiNumber: number;
@@ -9,11 +11,15 @@ export interface IEmi extends Document {
 
   dueDate: Date;
 
-  status: "PENDING" | "PAID";
+  status: EmiStatus;
 
   penalty?: number;
 
   paidAt?: Date;
+
+  lastPenaltyAppliedAt?: Date;
+  
+highRiskNotified?: boolean;
 
   createdAt: Date;
   updatedAt: Date;
@@ -44,8 +50,8 @@ const EmiSchema = new Schema<IEmi>(
 
     status: {
       type: String,
-      enum: ["PENDING", "PAID"],
-      default: "PENDING",
+      enum:Object.values(EmiStatus),
+      default: EmiStatus.UPCOMING,
     },
 
     penalty: {

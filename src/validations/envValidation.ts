@@ -71,6 +71,14 @@ const envSchema = z.object({
     .regex(/^sk_(test|live)_/, {
       message: Errors.ENV_STRIPE_SECRET_KEY_INVALID,
     }),
+
+
+    STRIPE_WEBHOOK_SECRET: z
+  .string({ message: Errors.ENV_STRIPE_WEBHOOK_SECRET_ERROR })
+  .min(1)
+  .regex(/^whsec_/, {
+    message: Errors.ENV_STRIPE_WEBHOOK_SECRET_INVALID,
+  }),
 });
 
 const parsed = envSchema.safeParse(process.env);

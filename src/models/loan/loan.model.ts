@@ -11,6 +11,8 @@ export interface ILoan extends Document {
   amount: number;
   interestRate: number;
   duePenalty: number;
+  processingFee:number;
+  isProcessingFeePaid:boolean
   tenure: number;
 
   status: "PENDING" | "APPROVED" | "REJECTED" | "CLOSED";

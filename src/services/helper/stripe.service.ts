@@ -3,6 +3,8 @@ import stripe from "@/config/stripe";
 import { CreateCheckoutSessionInput } from "@/dto/shared/stripe.types";
 import { IStripeService } from "@/interfaces/helper/stripe.service.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
+import { env } from "@/validations/envValidation";
+import Stripe from "stripe";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -24,7 +26,7 @@ export class StripeService implements IStripeService{
                             name:`EMI ${data.emiNumber}`,
 
                         },
-                        unit_amount:data.amount * 100,
+                        unit_amount:Math.round(data.amount * 100),
                     },
                 },
             ],
@@ -42,4 +44,12 @@ export class StripeService implements IStripeService{
          }
          return session.url;
      }
+
+     async constructWebhookEvent(payload: Buffer, signature: string): Promise<Stripe.Event> {
+    return stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      env.STRIPE_WEBHOOK_SECRET,
+    );
+  }
 }

@@ -7,6 +7,8 @@ import { LoanApplicationController } from "../loanApplication/loan.application.c
 import { UserVerificationController } from "../vendor/user.verification.controller";
 import { UserApplicationController } from "../user/user/userApplication/user.application.controller";
 import { EmiController } from "../emi/emi.controller";
+import { EmiPaymentController } from "../emi/emi.payment.controller";
+import { UserNotificationController } from "../user/user/notification/user.notification.controller";
 
 export const authVendorController = container.resolve(VendorAuthController);
 export const vendorProfileController = container.resolve(VendorProfileController);
@@ -17,4 +19,8 @@ export const authMiddleware = container.resolve(AuthMiddleware);
 //User:
 export const userVerificationController = container.resolve(UserVerificationController)
 export const userApplicationController = container.resolve(UserApplicationController)
-export const userEmiController = container.resolve(EmiController)
+export const userEmiController = container.resolve(EmiController);
+export const emiPaymentController = container.resolve(EmiPaymentController)
+//Notification:-
+
+export const userNotificationController = container.resolve(UserNotificationController)

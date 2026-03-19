@@ -32,3 +32,22 @@ export enum verificationStatus{
   NotVerified = "notVerified",
   Rejected = "rejected"
 }
+
+
+export enum EmiStatus {
+  PENDING = "PENDING",
+  PAID = "PAID",
+  UPCOMING = "UPCOMING",
+  OVERDUE = "OVERDUE",
+  HIGH_RISK = "HIGH RISK"
+}
+
+
+export enum NotificationType {
+  EMI_DUE_SOON = "EMI_DUE_SOON",
+  EMI_DUE_TODAY = "EMI_DUE_TODAY",
+  EMI_OVERDUE = "EMI_OVERDUE",
+  PAYMENT_SUCCESS = "PAYMENT_SUCCESS",
+  LOAN_APPROVED = "Loan application approved successfully",
+  LOAN_REJECTED = "Loan application is rejected",
+}

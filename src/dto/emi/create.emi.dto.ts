@@ -1,3 +1,4 @@
+import { EmiStatus } from "@/models/enums/enum";
 import mongoose from "mongoose";
 
 export interface CreateEmiDTO {
@@ -5,18 +6,19 @@ export interface CreateEmiDTO {
   emiNumber: number;
   amount: number;
   dueDate: Date;
-  status: "PENDING" | "PAID";
+  status: EmiStatus;
   penalty?: number;
   paidAt?: Date;
 }
 
 
 export interface EmiListingLoans{
+  emiId:string,
   loan:string,
   emiNumber:number,
   amount:number,
   dueDate:Date,
-  status:"PENDING" | "PAID",
+  status:EmiStatus,
   penalty?:number,
   paidAt?:Date
 

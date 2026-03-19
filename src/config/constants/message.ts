@@ -156,4 +156,21 @@ export const MESSAGES = {
 
   EMI_NOT_FOUND: "EMI details not found",
   EMI_LIST_FETCHED_SUCCESSFULLY: "EMI list fetched successfully",
+  EMI_ALREADY_PAID:"Emi had already paid",
+  EMI_NOT_YET_PAYABLE:"Emi is not yet paid",
+  EMI_PAYMENT_SUCCESSFUL:"Emi successfully paid",
+STRIPE_CHECKOUT_SESSION_CREATED:"Stripe checkout session created",
+STRIPE_SIGNATURE_MISSING:"Stripe signature is missing",
+ONLY_PAID_EMI_DETAILS_CAN_BE_VIEWED: "Only paid EMI details can be viewed",
+EMI_DETAIL_FETCHED_SUCCESSFULLY:"Emi details fetched successfully",
+WEBHOOK_RECIEVED:"Webhook had recieved",
+
+
+//Notification:-
+
+NOTIFICATION_NOT_FOUND:"notifications not found",
+NOTIFICATIONS_FETCHED_SUCCESSFULLY:"Notifications had fetched successfully",
+NOTIFICATION_MARKED_AS_READ:"Notification marked as read",
+ALL_NOTIFICATIONS_MARKED_AS_READ:"All notifications has been marked as read",
+UNREAD_COUNT_FETCHED_SUCCESSFULLY:"unread count fetched successfully"
 };

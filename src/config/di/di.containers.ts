@@ -68,13 +68,23 @@ import { UserApplicationService } from '@/services/user/user.application.service
 import { UserApplicationController } from '@/controllers/user/user/userApplication/user.application.controller'
 import { ILoanRepository } from '@/interfaces/repositories/loan/loan.repository.interface'
 import { LoanRepository } from '@/repositories/loan/loan.repository'
-import { IEMIRepository } from '@/interfaces/repositories/emi/emi.repository.interface'
+import { IEmiRepository } from '@/interfaces/repositories/emi/emi.repository.interface'
 import { EmiRepository } from '@/repositories/emi/emi.repository'
 import { IEmiService } from '@/interfaces/services/emi/emi.servive.interface'
 import { EmiService } from '@/services/emi/emi.service'
 import { EmiController } from '@/controllers/emi/emi.controller'
 import { IStripeService } from '@/interfaces/helper/stripe.service.interface'
 import { StripeService } from '@/services/helper/stripe.service'
+import { IEmiPaymentService } from '@/interfaces/services/emi/emi.payment.interface'
+import { EmiPaymentSerive } from '@/services/emi/emi.payment.service'
+import { EmiPaymentController } from '@/controllers/emi/emi.payment.controller'
+import { INotificationRepository } from '@/interfaces/repositories/notification/user.notification.repository.interface'
+import { NotificationRepository } from '@/repositories/notification/notification.repository '
+import { INotificationService } from '@/interfaces/services/notifications/notification.service.interface'
+import { NotificationService } from '@/services/helper/notification.service'
+import { UserNotificationController } from '@/controllers/user/user/notification/user.notification.controller'
+import { IEmiNotificationCronService } from '@/interfaces/helper/emi.notification.crone.service'
+import { EmiNotificationCronService } from '@/services/helper/emi.notification.crone'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -159,11 +169,28 @@ container.registerSingleton<ILoanRepository>("ILoanRepository",LoanRepository);
 
 //Creating EMI for loan:-
 
-container.registerSingleton<IEMIRepository>("IEMIRepository",EmiRepository)
+container.registerSingleton<IEmiRepository>("IEmiRepository",EmiRepository)
 container.registerSingleton<IEmiService>("IEmiService",EmiService);
 container.registerSingleton(EmiController);
 
 //Stripe intergration:-
 
-container.registerSingleton<IStripeService>("IStripeService",StripeService)
+container.registerSingleton<IStripeService>("IStripeService",StripeService);
+
+//Emi payment:-
+
+container.registerSingleton<IEmiPaymentService>("IEmiPaymentService",EmiPaymentSerive);
+container.registerSingleton(EmiPaymentController);
+
+
+//Notification:-
+
+container.registerSingleton<INotificationRepository>("INotificationRepository",NotificationRepository);
+container.registerSingleton<INotificationService>("INotificationService",NotificationService);
+container.registerSingleton(UserNotificationController)
+
+// Cron Emi Notification:-
+
+container.registerSingleton<IEmiNotificationCronService>("IEmiNotificationCronService",EmiNotificationCronService)
+
 export {container}

@@ -30,7 +30,7 @@ const vendorSchema = new Schema<IVendor>(
         vendorId:{type:String,required:true,unique:true},
         vendorName:{type:String,required:true,unique:true},
         email:{type:String,required:true,unique:true},
-        password:{type:String,required:true},
+        password:{type:String,required:false},
         registrationNumber:{type:String,required:true,unique:true},
         registrationDoc:{type:String},
         licenceNumber:{type:String},

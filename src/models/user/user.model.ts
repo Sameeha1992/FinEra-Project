@@ -47,7 +47,7 @@ const UserSchema = new Schema<IUser>(
         job:{type:String},
         income:{type:Number},
         gender:{type:String, enum:["male","female","other"]},
-        password:{type:String,required:true},
+        password:{type:String,required:false},
         adhaarNumber:{type:String},
         panNumber:{type:String},
         cibilScore:{type:Number},
