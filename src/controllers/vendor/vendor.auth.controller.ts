@@ -25,6 +25,7 @@ export class VendorAuthController {
   async registerVendor(req: Request, res: Response, next: NextFunction) {
     try {
       const vendorData = req.body;
+      console.log("vendor data",vendorData)
       const createVendor = await this._IvendorAuthService.vendorRegister(
         vendorData
       );

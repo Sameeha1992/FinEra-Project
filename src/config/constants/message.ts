@@ -21,7 +21,7 @@ export const MESSAGES = {
   PROFILE_UPDATE_FAILED: "Failed to update profile.",
   EMAIL_ALREADY_USED: "This email is already registered.",
   INVALID_EMAIL_FORMAT: "Please enter a valid email address.",
-
+  PROFILE_NOT_COMPLETED:"Please complete your profile",
   // Password & Security
   PASSWORD_REQUIRED: "Password is required.",
   PASSWORD_MISMATCH: "Incorrect password.",

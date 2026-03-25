@@ -7,7 +7,7 @@ export const startCronJobs = (): void => {
     "IEmiNotificationCronService"
   );
 
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     console.log("Running EMI notification cron...");
     await emiNotificationCronService.run();
   });

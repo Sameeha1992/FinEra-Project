@@ -23,6 +23,7 @@ export class LoanProductController{
             }
             
             const data:ILoanProductDto = req.body;
+            
             console.log("backend data",data)
 
             const response = await this._iloanProductService.createLoanProduct(data,vendorId.toString());

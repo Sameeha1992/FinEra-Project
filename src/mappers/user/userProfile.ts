@@ -58,7 +58,7 @@ export class CompleteProfileMapper {
       email: user.email,
       phone: user.phone ?? "",
       status: user.status ?? Status.Not_Verified,
-      isCompleteProfile:user.isProfileComplete ?? false,
+      isProfileComplete:user.isProfileComplete ?? false,
 
       dob: user.dob ?? "",
       job: user.job ?? "",

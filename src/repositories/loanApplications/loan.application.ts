@@ -10,8 +10,8 @@ export class LoanApplicationRepository extends BaseRepository<ILoanApplication> 
         super(LoanApplication)
       }
 
-      async existingActiveLoans(userId:string,loanType:LoanType):Promise<boolean>{
-        const loan = await LoanApplication.findOne({userId,loanType,status:{$in:["PENDING","APPROVED"]}})
+      async existingActiveLoans(userId:string,vendorId:string,loanType:LoanType):Promise<boolean>{
+        const loan = await LoanApplication.findOne({userId,loanType,vendorId,status:{$in:["PENDING","APPROVED"]}})
         return !!loan
       }
 

@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { container } from "../config/di/di.containers";
 import { AuthUserController } from "../controllers/user/user/auth.user.controller";
 import { validateRequest } from "../middleware/validationRequest";
-import { registerUserSchema } from "../validations/user/userRegister.validation";
+import { registerUserSchema } from "../validations/user/auth/userRegister.validation";
 import { UserProfileController } from "../controllers/user/user/user.profile.controller";
 import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
@@ -18,6 +18,9 @@ import {
   userNotificationController,
 } from "@/controllers/resolvers/resolvers";
 import { EmiController } from "@/controllers/emi/emi.controller";
+import { loginUserSchema } from "@/validations/user/auth/user.login.validation";
+import { completeProfileSchema } from "@/validations/user/auth/complete.profile.validation";
+import { createEmiPaymentSessionSchema } from "@/validations/emi/emi.payment.validation";
 
 const router = express.Router();
 
@@ -42,20 +45,19 @@ router.post(
 router.post(
   "/register",
   validateRequest(registerUserSchema),
-  (req: Request, res: Response, next: NextFunction) => {
-    authUserController.register(req, res, next);
-  },
+  authUserController.register.bind(authUserController),
 );
 
-router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-  authUserController.Login(req, res, next);
-});
+router.post(
+  "/login",
+  validateRequest(loginUserSchema),
+  authUserController.login.bind(authUserController),
+);
 
 router.post(
   "/forget-password",
-  (req: Request, res: Response, next: NextFunction) => {
-    authUserController.forgetPassword(req, res, next);
-  },
+
+  authUserController.forgetPassword.bind(authUserController),
 );
 
 router.post(
@@ -112,6 +114,7 @@ router.post(
     { name: "panDoc", maxCount: 1 },
     { name: "cibilDoc", maxCount: 1 },
   ]),
+  validateRequest(completeProfileSchema),
   userProfileController.completeProfile.bind(userProfileController),
 );
 
@@ -202,23 +205,50 @@ router.put(
   loanApplicationController.reapplyrejectedLoan.bind(loanApplicationController),
 );
 
+router.get(
+  "/applications",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userApplicationController.getuserApplicationList.bind(
+    userApplicationController,
+  ),
+);
 
-router.get("/applications", authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getuserApplicationList.bind(userApplicationController));
-
-router.get("/applications/:applicationId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userApplicationController.getUserApplicationDetails.bind(userApplicationController));
-router.get("/loan/:loanId/emis",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmisByLoanId.bind(userEmiController));
+router.get(
+  "/applications/:applicationId",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userApplicationController.getUserApplicationDetails.bind(
+    userApplicationController,
+  ),
+);
+router.get(
+  "/loan/:loanId/emis",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userEmiController.getEmisByLoanId.bind(userEmiController),
+);
 router.post(
   "/emis/pay",
   authMiddleware.auntenticate,
   authMiddleware.allowRoles(Role.User),
   authMiddleware.checkBlocked,
-   emiPaymentController.createEmiPaymentSession.bind(emiPaymentController)
+  validateRequest(createEmiPaymentSessionSchema),
+  emiPaymentController.createEmiPaymentSession.bind(emiPaymentController),
 );
 
-router.get("/emi/:emiId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.User),authMiddleware.checkBlocked,userEmiController.getEmiDetails.bind(userEmiController))
+router.get(
+  "/emi/:emiId",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userEmiController.getEmiDetails.bind(userEmiController),
+);
 
 //Notification user:
-
 
 router.get(
   "/notifications",

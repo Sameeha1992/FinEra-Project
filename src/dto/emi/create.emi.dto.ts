@@ -20,6 +20,7 @@ export interface EmiListingLoans{
   dueDate:Date,
   status:EmiStatus,
   penalty?:number,
+  totalAmount?:number
   paidAt?:Date
 
 }

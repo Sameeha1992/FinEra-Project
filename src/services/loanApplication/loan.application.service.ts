@@ -2,6 +2,7 @@ import { MESSAGES } from "@/config/constants/message";
 import { CreateLoanApplicationDTO } from "@/dto/loanApplication/loanApplication.dto";
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplication/loan.application.interface";
+import { IUserRepository } from "@/interfaces/repositories/user/userRepository.interface";
 import { ILoanApplicationService } from "@/interfaces/services/loanApplication/loan.application.service.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { ILoanApplication } from "@/models/applications/application.model";
@@ -15,6 +16,7 @@ export class LoanApplicationService implements ILoanApplicationService {
     @inject("ILoanApplicationRepository")
     private _iLoanApplicationRepo: ILoanApplicationRepository,
     @inject("IStorageService") private _IStorageService: IStorageService,
+    @inject("IUserRepository") private readonly _iuserRepository:IUserRepository
   ) {}
 
   async createLoanApplication(
@@ -26,8 +28,12 @@ export class LoanApplicationService implements ILoanApplicationService {
       salarySlipDoc?: Express.Multer.File[];
     },
   ): Promise<{ success: boolean; message: string }> {
+
+    await this.validateUserProfileCompletion(dto.userId);
+
     const hasActiveLoan = await this._iLoanApplicationRepo.existingActiveLoans(
       dto.userId,
+      dto.vendorId,
       dto.loanType,
     );
     if (hasActiveLoan) {
@@ -150,6 +156,8 @@ export class LoanApplicationService implements ILoanApplicationService {
       throw new CustomError(MESSAGES.REJECTED_LOANS_SHOULD_REAPPLIED);
     }
 
+    await this.validateUserProfileCompletion(existingLoan.userId.toString())
+
     if (typeof dto.personalDetails === "string") {
       dto.personalDetails = JSON.parse(dto.personalDetails);
     }
@@ -190,11 +198,7 @@ export class LoanApplicationService implements ILoanApplicationService {
       dto.personalDetails = { ...dto.personalDetails, salarySlipUrl: key };
     }
 
-    console.log("dto:", dto);
-    console.log("dto.userId:", dto.userId);
-    console.log("dto.vendorId:", dto.vendorId);
-    console.log("dto.loanProductId:", dto.loanProductId);
-    console.log("existingLoan:", existingLoan);
+    
     const updated = await this._iLoanApplicationRepo.updateById(applicationId, {
       ...dto,
       userId: existingLoan.userId,
@@ -212,5 +216,18 @@ export class LoanApplicationService implements ILoanApplicationService {
       success: true,
       message: MESSAGES.LOAN_REAPPLY_SUCCESS,
     };
+  }
+
+
+  async validateUserProfileCompletion(userId:string):Promise<void>{
+    const user = await this._iuserRepository.findById(userId);
+
+    if(!user){
+      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    }
+
+    if(!user.isProfileComplete){
+      throw new CustomError(MESSAGES.PROFILE_NOT_COMPLETED)
+    }
   }
 }

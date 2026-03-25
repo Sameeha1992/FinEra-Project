@@ -138,6 +138,7 @@ export class UserProfileService implements IUserprofileService {
       adhaarNumber: user.adhaarNumber,
       panNumber: user.panNumber,
       cibilScore: user.cibilScore,
+      isProfileComplete:user.isProfileComplete,
       documents: {
         adhaarDocUrl: adhaarDocUrl || "",
         panDocUrl: panDocUrl || "",

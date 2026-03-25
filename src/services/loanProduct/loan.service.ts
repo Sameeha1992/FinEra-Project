@@ -23,6 +23,10 @@ export class LoanProductService implements ILoanProductService{
             throw new CustomError(MESSAGES.VENDOR_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
 
+        if(!vendor.isProfileComplete){
+            throw new CustomError(MESSAGES.PROFILE_NOT_COMPLETED,STATUS_CODES.FORBIDDEN)
+        }
+
         if(vendor.status !== Status.Verified){
             throw new CustomError(MESSAGES.VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN,STATUS_CODES.FORBIDDEN)
         }
@@ -49,10 +53,17 @@ export class LoanProductService implements ILoanProductService{
         }
         const loanId = `LN-${Date.now()}`;
 
+        const loanDataWithStaticValues:ILoanProductDto={
+            ...data,
+            processingFee:200,
+            duePenalty:500
+        }
         const entityData = LoanProductMapper.toEntity(
-            data,
+            loanDataWithStaticValues,
             vendorId,loanId
         );
+
+
 
         const savedLoan = await this._loanRepository.create(entityData);
 

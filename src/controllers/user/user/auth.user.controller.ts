@@ -74,7 +74,7 @@ export class AuthUserController {
     }
   }
 
-  async Login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const loginCredentials: LoginDto = req.body;
 

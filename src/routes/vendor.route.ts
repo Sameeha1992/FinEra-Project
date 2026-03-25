@@ -1,11 +1,20 @@
-
 import express, { Request, Response, NextFunction } from "express";
 import { Role } from "@/models/enums/enum";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
-import { authMiddleware, authVendorController, loanProductController, userVerificationController, vendorProfileController } from "@/controllers/resolvers/resolvers";
+import {
+  authMiddleware,
+  authVendorController,
+  loanProductController,
+  userVerificationController,
+  vendorProfileController,
+} from "@/controllers/resolvers/resolvers";
+import { validateRequest } from "@/middleware/validationRequest";
+import { vendorRegisterSchema } from "@/validations/vendor/vendor.register.validation";
+import { vendorLoginSchema } from "@/validations/vendor/vendor.login.validation";
+import { vendorForgetPasswordSchema } from "@/validations/vendor/vendor.forgetPassword.validation";
+import { verifyForgetOtpSchema } from "@/validations/vendor/verifyForgetOtp.validation";
 
 const router = express.Router();
-
 
 router.post(
   "/generate-otp",
@@ -23,27 +32,27 @@ router.post(
 
 router.post(
   "/vendor-register",
-  (req: Request, res: Response, next: NextFunction) => {
-    authVendorController.registerVendor(req, res, next);
-  },
+  validateRequest(vendorRegisterSchema),
+
+  authVendorController.registerVendor.bind(authVendorController),
 );
 
-router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-  authVendorController.login(req, res, next);
-});
+router.post(
+  "/login",
+  validateRequest(vendorLoginSchema),
+  authVendorController.login.bind(authVendorController),
+);
 
 router.post(
   "/forget-password",
-  (req: Request, res: Response, next: NextFunction) => {
-    authVendorController.forgetPassword(req, res, next);
-  },
+  validateRequest(vendorForgetPasswordSchema),
+  authVendorController.forgetPassword.bind(authVendorController),
 );
 
 router.post(
   "/verify-forget-otp",
-  (req: Request, res: Response, next: NextFunction) => {
-    authVendorController.verifyforgetPassword(req, res, next);
-  },
+  validateRequest(verifyForgetOtpSchema),
+  authVendorController.verifyforgetPassword.bind(authVendorController),
 );
 
 router.post(
@@ -67,8 +76,13 @@ router.post(
   },
 );
 
-
-router.patch("/change-password",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,authVendorController.changePassword.bind(authVendorController))
+router.patch(
+  "/change-password",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  authVendorController.changePassword.bind(authVendorController),
+);
 
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authVendorController.logout(req, res, next);
@@ -88,8 +102,8 @@ router.post(
   authMiddleware.checkBlocked,
   authMiddleware.allowRoles(Role.Vendor),
   uploadImageMiddleware.fields([
-    {name :"registrationDoc",maxCount:1},
-    {name:"licenceDoc",maxCount:1}
+    { name: "registrationDoc", maxCount: 1 },
+    { name: "licenceDoc", maxCount: 1 },
   ]),
   vendorProfileController.completeProfile,
 );
@@ -102,23 +116,89 @@ router.get(
   vendorProfileController.getCompleteProfile,
 );
 
-router.put("/vendor-profile",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,uploadImageMiddleware.fields([
+router.put(
+  "/vendor-profile",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  uploadImageMiddleware.fields([
     { name: "registrationDoc", maxCount: 1 },
     { name: "licenceDoc", maxCount: 1 },
-  ]),vendorProfileController.updateCompleteVendorProfile.bind(vendorProfileController))
+  ]),
+  vendorProfileController.updateCompleteVendorProfile.bind(
+    vendorProfileController,
+  ),
+);
 
-
-router.post("/loan-product",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.createLoanProduct.bind(loanProductController))
-router.get("/loans",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getVendorLoans.bind(loanProductController));
-router.get(`/loans/:loanId`,authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanById.bind(loanProductController))
-router.put("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.updateLoanByVendor.bind(loanProductController))
-router.get("/loans/:loanId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,loanProductController.getLoanDetails.bind(loanProductController))
+router.post(
+  "/loan-product",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  loanProductController.createLoanProduct.bind(loanProductController),
+);
+router.get(
+  "/loans",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  loanProductController.getVendorLoans.bind(loanProductController),
+);
+router.get(
+  `/loans/:loanId`,
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  loanProductController.getLoanById.bind(loanProductController),
+);
+router.put(
+  "/loans/:loanId",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  loanProductController.updateLoanByVendor.bind(loanProductController),
+);
+router.get(
+  "/loans/:loanId",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  loanProductController.getLoanDetails.bind(loanProductController),
+);
 
 //Applications of the user:-
 
-router.get("/applications",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getUserApplicationList.bind(userVerificationController))
-router.get("/applications/:id",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.getApplicationDetail.bind(userVerificationController))
-router.patch("/applications/:id/approve",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.approveLoan.bind(userVerificationController))
-router.patch("/applications/:id/reject",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Vendor),authMiddleware.checkBlocked,userVerificationController.rejectLoan.bind(userVerificationController))
+router.get(
+  "/applications",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  userVerificationController.getUserApplicationList.bind(
+    userVerificationController,
+  ),
+);
+router.get(
+  "/applications/:id",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  userVerificationController.getApplicationDetail.bind(
+    userVerificationController,
+  ),
+);
+router.patch(
+  "/applications/:id/approve",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  userVerificationController.approveLoan.bind(userVerificationController),
+);
+router.patch(
+  "/applications/:id/reject",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  userVerificationController.rejectLoan.bind(userVerificationController),
+);
 
 export default router;

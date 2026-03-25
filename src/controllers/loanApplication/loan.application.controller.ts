@@ -59,7 +59,7 @@ export class LoanApplicationController {
 }, files)
       res.status(STATUS_CODES.CREATED).json(result);
     } catch (error) {
-          console.error("❌ FULL ERROR:", error);
+          console.error("FULL ERROR:", error);
 
       if (error instanceof ZodError) {
         return next(new CustomError(error.issues[0].message, 400));

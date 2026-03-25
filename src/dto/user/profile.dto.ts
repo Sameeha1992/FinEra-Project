@@ -21,7 +21,7 @@ export interface UserCompleteProfileDto {
   adhaarDoc: Express.Multer.File;
   panDoc: Express.Multer.File;
   cibilDoc: Express.Multer.File;
-  isProfileComplete:boolean;
+  isProfileComplete?:boolean;
 }
 
 export interface UserCompletedResponseDto {
@@ -40,7 +40,7 @@ export interface UserCompletedResponseDto {
   adhaarDoc: string;
   panDoc: string;
   cibilDoc: string;
-  isCompleteProfile:boolean;
+  isProfileComplete:boolean;
 }
 
 export interface UserDocumentsDto {
@@ -58,6 +58,7 @@ export interface UserCompleteUpdateDto {
   job?: string;
   income?: string;
   gender?: "male" | "female" | "other";
+  isProfileComplete?:boolean,
 
   // Identification info
   adhaarNumber?: string;

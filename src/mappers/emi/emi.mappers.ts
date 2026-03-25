@@ -11,6 +11,7 @@ export class EmiMapper{
             dueDate:emi.dueDate,
             status:emi.status,
             penalty:emi.penalty,
+            totalAmount:emi.amount + (emi.penalty ?? 0),
             paidAt:emi.paidAt
         }
     }
