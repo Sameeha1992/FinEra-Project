@@ -18,4 +18,11 @@ export interface INotificationService {
   markAllAsRead(userId: string): Promise<void>;
 
   getUnreadCount(userId: string): Promise<UnreadCountResponseDTO>;
+
+  checkNotificationExists(
+    emiId: string,
+    type: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<boolean>;
 }

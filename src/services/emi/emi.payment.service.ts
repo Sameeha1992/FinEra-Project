@@ -101,59 +101,82 @@ export class EmiPaymentSerive implements IEmiPaymentService {
     today.setHours(0, 0, 0, 0);
     dueDate.setHours(0, 0, 0, 0);
 
-    const graceEndDate = new Date(dueDate);
-    graceEndDate.setDate(graceEndDate.getDate() + 2);
-    graceEndDate.setHours(23, 59, 59, 999);
+    const diffTime = today.getTime() - dueDate.getTime();
+    const overdueDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (today < dueDate) {
+    if (overdueDays < 0) {
       if (emi.status === EmiStatus.UPCOMING) {
         return EmiMapper.toListingDto(emi);
       }
-
-      const updatedEmi = await this._iEmiRepository.updateEmiStatus(
-        emiId,
-        EmiStatus.UPCOMING,
-      );
-
-      if (!updatedEmi) {
-        throw new CustomError(MESSAGES.EMI_NOT_FOUND, STATUS_CODES.NOT_FOUND);
-      }
-
-      return EmiMapper.toListingDto(updatedEmi);
+      const updatedEmi = await this._iEmiRepository.updateEmiStatus(emiId, EmiStatus.UPCOMING);
+      return EmiMapper.toListingDto(updatedEmi!);
     }
 
-    if (today <= graceEndDate) {
+    if (overdueDays === 0) {
       if (emi.status === EmiStatus.PENDING) {
         return EmiMapper.toListingDto(emi);
       }
-
-      const updatedEmi = await this._iEmiRepository.updateEmiStatus(
-        emiId,
-        EmiStatus.PENDING,
-      );
-
-      if (!updatedEmi) {
-        throw new CustomError(MESSAGES.EMI_NOT_FOUND, STATUS_CODES.NOT_FOUND);
-      }
-
-      return EmiMapper.toListingDto(updatedEmi);
+      const updatedEmi = await this._iEmiRepository.updateEmiStatus(emiId, EmiStatus.PENDING);
+      return EmiMapper.toListingDto(updatedEmi!);
     }
 
-    if (emi.status === EmiStatus.OVERDUE) {
-      return EmiMapper.toListingDto(emi);
+    // Overdue Logic: Day 3 (overdueDays 2) = 500, Days 4-8 = +100/day (Max 1000)
+    let targetPenalty = 0;
+    if (overdueDays === 2) {
+      targetPenalty = 500;
+    } else if (overdueDays > 2) {
+      targetPenalty = 500 + Math.min(overdueDays - 2, 5) * 100;
     }
 
-    const updatedEmi = await this._iEmiRepository.updateEmiStatus(
-      emiId,
-      
-      EmiStatus.OVERDUE,
-    );
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(today);
+    todayEnd.setHours(23, 59, 59, 999);
 
-    if (!updatedEmi) {
-      throw new CustomError(MESSAGES.EMI_NOT_FOUND, STATUS_CODES.NOT_FOUND);
+    const alreadyAppliedToday =
+      emi.lastPenaltyAppliedAt &&
+      emi.lastPenaltyAppliedAt >= todayStart &&
+      emi.lastPenaltyAppliedAt <= todayEnd;
+
+    let finalStatus = EmiStatus.OVERDUE;
+    let finalPenalty = emi.penalty ?? 0;
+    let needsUpdate = false;
+
+    if (emi.status !== finalStatus) {
+        needsUpdate = true;
     }
 
-    return EmiMapper.toListingDto(updatedEmi);
+    if (!alreadyAppliedToday && targetPenalty > finalPenalty) {
+        finalPenalty = targetPenalty;
+        needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+        const updatedEmi = await this._iEmiRepository.updatePenaltyAndStatus(
+            emiId,
+            finalPenalty,
+            finalStatus,
+            new Date()
+        );
+        
+        // Trigger danger notification if Day 9+
+        if (overdueDays >= 8 && !updatedEmi?.highRiskNotified) {
+               const loan = await this._iLoanRepository.findById(emi.loan.toString());
+               if(loan){
+                await this._iNotificationService.createNotification({
+                    userId: loan.user.toString(),
+                    emiId: emiId,
+                    title: "Account at High Risk",
+                    message: "DANGER: Your EMI is critically overdue. Please pay immediately to avoid legal action.",
+                    type: NotificationType.EMI_OVERDUE,
+                });
+                await this._iEmiRepository.markHighRiskNotified(emiId);
+               }
+        }
+        return EmiMapper.toListingDto(updatedEmi!);
+    }
+
+    return EmiMapper.toListingDto(emi);
   }
 
   async handleSuccessfulEmiPayment(emiId: string): Promise<EmiListingLoans> {

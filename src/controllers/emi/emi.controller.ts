@@ -9,7 +9,7 @@ import { success } from "zod";
 
 @injectable()
 export class EmiController {
-  constructor(@inject("IEmiService") private _iEmiService: IEmiService) {}
+  constructor(@inject("IEmiService") private _iEmiService: IEmiService) { }
 
   async getEmisByLoanId(
     req: AuthenticateRequest,
@@ -44,21 +44,22 @@ export class EmiController {
     }
   }
 
-  async getEmiDetails(req:AuthenticateRequest,res:Response,next:NextFunction){
-   try{
-     const userId = req.user?.id;
-    const {emiId} = req.params;
-     if (!userId || !emiId) {
-      throw new CustomError(
-        MESSAGES.INVALID_REQUEST,
-        STATUS_CODES.BAD_REQUEST
-      );
-    }
+  async getEmiDetails(req: AuthenticateRequest, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+      const { emiId } = req.params;
+      if (!userId || !emiId) {
+        throw new CustomError(
+          MESSAGES.INVALID_REQUEST,
+          STATUS_CODES.BAD_REQUEST
+        );
+      }
 
-    const data = await this._iEmiService.getEmiDetails(emiId,userId);
-    return res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.EMI_DETAIL_FETCHED_SUCCESSFULLY,data:data})
-}catch(error){
-  console.log("Something issue in the detail of emi that is paid",error);
-  next(error)
-}  }
+      const data = await this._iEmiService.getEmiDetails(emiId, userId);
+      return res.status(STATUS_CODES.SUCCESS).json({ success: true, message: MESSAGES.EMI_DETAIL_FETCHED_SUCCESSFULLY, data: data })
+    } catch (error) {
+      console.log("Something issue in the detail of emi that is paid", error);
+      next(error)
+    }
+  }
 }

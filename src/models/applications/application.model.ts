@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface ILoanApplication extends Document {
+  _id:Types.ObjectId
   userId: Types.ObjectId;
   vendorId:Types.ObjectId;
   loanProductId: Types.ObjectId;

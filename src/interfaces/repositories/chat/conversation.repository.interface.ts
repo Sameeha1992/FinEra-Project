@@ -2,7 +2,7 @@ import { IChat } from "@/models/chat/chat.schema";
 import { IBaseRepository } from "../baseRepository.interface";
 
 
-export interface ICoversationRepository extends IBaseRepository<IChat>{
+export interface IConversationRepository extends IBaseRepository<IChat>{
 
     findByApplicationId(applicationId:string):Promise<IChat |null>
 

@@ -1,9 +1,12 @@
+import "reflect-metadata"
 import "tsconfig-paths/register";
 import dotenv from "dotenv"
 dotenv.config()
 
 
 import { createServer,Server } from "http";
+import {Server as SocketIOServer} from "socket.io";
+import { registerChatSocket } from "./config/socket.io";
 import { connectDB } from "./config/db";
 import App from "./app";
 import { connectRedis } from "./config/redis/redis.connect";
@@ -11,6 +14,7 @@ import logger from "./middleware/loggerMiddleware";
 import {env} from "@/validations/envValidation"
 const appInstance = new App();
 import { startCronJobs } from "./crone";
+import { container } from "tsyringe";
 
 // const startServer = async ()=>{
 //     try {
@@ -35,9 +39,21 @@ import { startCronJobs } from "./crone";
 
 export class ServerApp {
     private server:Server;
+    private io:SocketIOServer;
 
     constructor(){
-        this.server = createServer(appInstance.app)
+        this.server = createServer(appInstance.app);
+
+        this.io = new SocketIOServer(this.server, {
+      cors: {
+        origin: env.CORS_ORIGIN,
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
+    });
+
+    registerChatSocket(this.io);
+    container.registerInstance<SocketIOServer>("SocketIOServer", this.io);
     }
 
     private async connectServices():Promise<void>{

@@ -5,6 +5,7 @@ import morgan from "morgan"
 import userRouter from "../src/routes/user.route"
 import adminRouter from "../src/routes/admin.route"
 import vendorRouter from "../src/routes/vendor.route"
+import chatRouter from "@/routes/chat.route"
 import webhookRouter from "@/routes/webhook.route"
 import bodyParser from 'body-parser'
 import cookieParser from "cookie-parser"
@@ -81,6 +82,7 @@ export default class App{
   this.app.use("/api/user",userRouter);
   this.app.use("/api/admin",adminRouter);
   this.app.use("/api/vendor",vendorRouter);
+  this.app.use("/api/chat",chatRouter)
   } 
 
   private setupErrorHandling():void{

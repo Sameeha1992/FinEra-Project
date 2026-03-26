@@ -12,8 +12,8 @@ export const MESSAGES = {
   LOGOUT_SUCCESS: "Logged out successfully.",
   SESSION_EXPIRED: "Session has expired. Please log in again.",
   MULTIPLE_LOGIN_NOT_ALLOWED: "You are already logged in from another device.",
-  USER_BLOCKED:"User is blocked",
-  VENDOR_NOT_FOUND:"Vendor not found",
+  USER_BLOCKED: "User is blocked",
+  VENDOR_NOT_FOUND: "Vendor not found",
   // Registration & Profile
   REGISTRATION_SUCCESS: "Registration successful.",
   REGISTRATION_FAILED: "Registration failed. Please try again.",
@@ -21,29 +21,33 @@ export const MESSAGES = {
   PROFILE_UPDATE_FAILED: "Failed to update profile.",
   EMAIL_ALREADY_USED: "This email is already registered.",
   INVALID_EMAIL_FORMAT: "Please enter a valid email address.",
-  PROFILE_NOT_COMPLETED:"Please complete your profile",
+  PROFILE_NOT_COMPLETED: "Please complete your profile",
   // Password & Security
   PASSWORD_REQUIRED: "Password is required.",
   PASSWORD_MISMATCH: "Incorrect password.",
   PASSWORD_TOO_SHORT: "Password must be at least 8 characters long.",
-  PASSWORD_TOO_WEAK: "Password is too weak. Use a combination of letters, numbers, and special characters.",
+  PASSWORD_TOO_WEAK:
+    "Password is too weak. Use a combination of letters, numbers, and special characters.",
   PASSWORD_CONFIRM_REQUIRED: "Please confirm your password.",
   PASSWORD_CONFIRM_MISMATCH: "Passwords do not match.",
   PASSWORD_ALREADY_USED: "You cannot reuse your old password.",
-  PASSWORD_NOT_ALLOWED: "This password is not allowed. Please choose a different one.",
+  PASSWORD_NOT_ALLOWED:
+    "This password is not allowed. Please choose a different one.",
   PASSWORD_CHANGE_SUCCESS: "Password changed successfully.",
   PASSWORD_CHANGE_FAILED: "Failed to change password. Please try again.",
   PASSWORD_RESET_SENT: "Password reset email sent successfully.",
   PASSWORD_RESET_SUCCESS: "Password has been reset successfully.",
   PASSWORD_RESET_FAILED: "Failed to reset password.",
   PASSWORD_EXPIRED: "Your password has expired. Please set a new password.",
-  PASSWORD_TOO_COMMON: "This password is too common. Please choose a stronger password.",
-  PASSWORD_MUST_BE_DIFFERENT:"Password must be different",
+  PASSWORD_TOO_COMMON:
+    "This password is too common. Please choose a stronger password.",
+  PASSWORD_MUST_BE_DIFFERENT: "Password must be different",
 
   // Payments & Transactions
   TRANSACTION_SUCCESS: "Transaction completed successfully.",
   TRANSACTION_FAILED: "Transaction failed. Please try again.",
-  PAYMENT_IN_PROGRESS: "Payment already initiated. Complete or cancel the previous payment.",
+  PAYMENT_IN_PROGRESS:
+    "Payment already initiated. Complete or cancel the previous payment.",
   PAYMENT_FAILED: "Payment could not be processed.",
   INSUFFICIENT_BALANCE: "Insufficient balance for this transaction.",
   INVALID_PAYMENT_METHOD: "Selected payment method is not valid.",
@@ -60,19 +64,18 @@ export const MESSAGES = {
 
   // Notifications & OTP
   EMAIL_VERIFICATION_SENT: "Verification email sent successfully.",
-  EMAIL_NOT_FOUND:"Email not found",
+  EMAIL_NOT_FOUND: "Email not found",
   EMAIL_VERIFICATION_SUCCESS: "Email successfully verified.",
   EMAIL_VERIFICATION_FAILED: "Failed to verify email.",
   OTP_NOT_VERIFIED: "Please verify OTP before registering",
   OTP_INVALID: "Invalid or expired OTP",
   OTP_SENT: "OTP sent successfully.",
   OTP_VERIFIED: "OTP verified successfully.",
-  OTP_VERIFICATION_FAILED:"otp verification failed",
+  OTP_VERIFICATION_FAILED: "otp verification failed",
   OTP_EXPIRED: "OTP has expired. Please request a new one.",
-  STRIPE_CHECKOUT_SESSION_URL_NOT_GENERATED: "Stripe checkout session URL not generated",
+  STRIPE_CHECKOUT_SESSION_URL_NOT_GENERATED:
+    "Stripe checkout session URL not generated",
 
-
-  
   // Validation & Requests
   SERVER_ERROR: "An unexpected error occurred.",
   BAD_REQUEST: "Invalid request. Please check your input.",
@@ -80,13 +83,11 @@ export const MESSAGES = {
   REQUIRED_FIELD_MISSING: "Required field is missing.",
   INVALID_INPUT: "Invalid input provided.",
   RESOURCE_NOT_FOUND: "Requested resource not found.",
- INVALID_REQUEST:"Invalid request",
+  INVALID_REQUEST: "Invalid request",
   //TOKEN ISSUES
 
-  INVALID_REFRESH_TOKEN:"Invalid refreshtoken",
-  INVALID_ACCESS_TOKEN:"Invalid accesstoken",
-
-
+  INVALID_REFRESH_TOKEN: "Invalid refreshtoken",
+  INVALID_ACCESS_TOKEN: "Invalid accesstoken",
 
   // Miscellaneous / Generic
   SUCCESS: "Operation completed successfully.",
@@ -96,81 +97,95 @@ export const MESSAGES = {
   CREATED: "Created successfully.",
   UPDATED: "Updated successfully.",
   DELETED: "Deleted successfully.",
-  INTERNAL_SERVER_ERROR:"Internal Server Error",
-  ROUTES_NOT_FOUND:"Routes not found",
-  IMAGE_UPLOAD_SUCCESS:"Image uplaod success",
-  IMAGE_UPLAOD_FAILED:"Failed to uplaod images",
-  FILE_MISSING:"File missing",
-  TOKEN_CREATED:"Token created",
-  LOGOUT_FAILED:"FAiled to logout",
-  SOMETHING_WENT_WRONG:"Somehing went wrong",
-  ACCESS_DENIED:"Access denied fror the role",
-  ACCOUNT_NOT_FOUND:"Account not found",
-  ACCOUNT_BLOCKED:"Account is blocked",
-  SIGNED_URL_GENERATION_FAILED:"Failed to generate signed url",
-  OTP_SENDING_FAILED:"Failed to send otp",
-  REFRESH_TOKEN_REVOKED:"Refresh token revoked",
-  ACCESS_TOKEN_REFRESHED:"Access token refreshed successfully",
-  FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:"user profile data fetched successfully",
-  USER_FETCHED_SUCCESSFULLY:"User fetched successfully",
-  ACCESS_TOKEN_NOT_FOUND:"no access token found",
-  VERIFIED_USER_KYC_UPDATE_RESTRICTED :"KYC details (Aadhaar and PAN) cannot be modified after user verification.",
-  VENDORS_FETCHED_SUCCESSFULLY:"Vendor list fetched successfully",
-  INVALID_STATUS:"Invalid status value",
-  VENDOR_STATUS_UPDATED:"Vendor status updated successfully",
-  VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN:"Only verified vendors can create loan products",
-  ONLY_PENDING_APPLICATIONS_CAN_BE_APPROVED:"Only pending applications can be aspproved",
-  APPLICATION_DETAILS_FETCHED_SUCCESSFULLY:"Application details fetched successfully",
+  INTERNAL_SERVER_ERROR: "Internal Server Error",
+  ROUTES_NOT_FOUND: "Routes not found",
+  IMAGE_UPLOAD_SUCCESS: "Image uplaod success",
+  IMAGE_UPLAOD_FAILED: "Failed to uplaod images",
+  FILE_MISSING: "File missing",
+  TOKEN_CREATED: "Token created",
+  LOGOUT_FAILED: "FAiled to logout",
+  SOMETHING_WENT_WRONG: "Somehing went wrong",
+  ACCESS_DENIED: "Access denied fror the role",
+  ACCOUNT_NOT_FOUND: "Account not found",
+  ACCOUNT_BLOCKED: "Account is blocked",
+  SIGNED_URL_GENERATION_FAILED: "Failed to generate signed url",
+  OTP_SENDING_FAILED: "Failed to send otp",
+  REFRESH_TOKEN_REVOKED: "Refresh token revoked",
+  ACCESS_TOKEN_REFRESHED: "Access token refreshed successfully",
+  FETCHED_USER_PROFILE_DATA_SUCCESSFULLY:
+    "user profile data fetched successfully",
+  USER_FETCHED_SUCCESSFULLY: "User fetched successfully",
+  ACCESS_TOKEN_NOT_FOUND: "no access token found",
+  VERIFIED_USER_KYC_UPDATE_RESTRICTED:
+    "KYC details (Aadhaar and PAN) cannot be modified after user verification.",
+  VENDORS_FETCHED_SUCCESSFULLY: "Vendor list fetched successfully",
+  INVALID_STATUS: "Invalid status value",
+  VENDOR_STATUS_UPDATED: "Vendor status updated successfully",
+  VERIFIED_VENDORS_ONLY_CAN_CREATE_LOAN:
+    "Only verified vendors can create loan products",
+  ONLY_PENDING_APPLICATIONS_CAN_BE_APPROVED:
+    "Only pending applications can be aspproved",
+  APPLICATION_DETAILS_FETCHED_SUCCESSFULLY:
+    "Application details fetched successfully",
+
+  //Chat:-
+  CHAT_FETCHED_SUCCESSFULLY: "Chat fetched successfully",
+  CHAT_LIST_FETCHED_SUCCESSFULLY: "Chat list fetched successfully",
+  CHAT_MESSAGES_FETCHED_SUCCESSFULLY: "Chat messages fetched successfully",
+  CHAT_NOT_FOUND: "Chat not found",
   //Loan:-
 
-  MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:"minimum amount should not exceed ",
-  MINIMUM_TENURE_SHOULD_NOT_EXCEED_MAXIMUM:"Minimum tenure cannot exceed maximum tenure",
-  LOAN_ALREADY_EXISTS:"Loan already existed for the vendor",
-  LOAN_NOT_FOUND:"No loans had been found",
-  LOAN_ID_REQUIRED:"Loan Id is required",
-  LOAN_UPDATED_SUCCESSFULLY:"Loan updated successfully",
-  LOAN_TYPE_REQUIRED:"Loan type is required",
-  LOAN_DETAILS_FETCHED:"Loan details fetched successfully",
-  LOANTYPE_REQUIRED:"Loan type is required",
-  ACTIVE_LOANS_FETCHED_SUCCESSFULLY:"Active loans fetched successfully",
-  SALARY_IS_REQUIRED:"Salary is required",
-  LOAN_APPLICATION_SUBMITTED_SUCCESSFULLY:"Loan application submitted successfully",
-  LOAN_APPLICATION_NOT_FOUND:"Loan application not found",
-  PERSONAL_LOAN_DETAILS_REQUIRED:"Personal loan details required",
-  GOLD_LOAN_DETAILS_REQUIRED:"Gold loan details required",
-  HOME_LOAN_DETAILS_REQUIRED:"Home loan details required",
-  BUSINESS_LOAN_DETAILS_REQUIRED:"Business loan details required",
-  ACTIVE_LOANS_EXISTS:"Active loans exists",
-  REJECTED_LOANS_SHOULD_REAPPLIED:"Only rejected loans can be reapplied.",
+  MINIMUM_AMOUNT_SHOULD_NOT_EXCEED_MAXIMUM_AMOUNT:
+    "minimum amount should not exceed ",
+  MINIMUM_TENURE_SHOULD_NOT_EXCEED_MAXIMUM:
+    "Minimum tenure cannot exceed maximum tenure",
+  LOAN_ALREADY_EXISTS: "Loan already existed for the vendor",
+  LOAN_NOT_FOUND: "No loans had been found",
+  LOAN_ID_REQUIRED: "Loan Id is required",
+  LOAN_UPDATED_SUCCESSFULLY: "Loan updated successfully",
+  LOAN_TYPE_REQUIRED: "Loan type is required",
+  LOAN_DETAILS_FETCHED: "Loan details fetched successfully",
+  LOANTYPE_REQUIRED: "Loan type is required",
+  ACTIVE_LOANS_FETCHED_SUCCESSFULLY: "Active loans fetched successfully",
+  SALARY_IS_REQUIRED: "Salary is required",
+  LOAN_APPLICATION_SUBMITTED_SUCCESSFULLY:
+    "Loan application submitted successfully",
+  LOAN_APPLICATION_NOT_FOUND: "Loan application not found",
+  PERSONAL_LOAN_DETAILS_REQUIRED: "Personal loan details required",
+  GOLD_LOAN_DETAILS_REQUIRED: "Gold loan details required",
+  HOME_LOAN_DETAILS_REQUIRED: "Home loan details required",
+  BUSINESS_LOAN_DETAILS_REQUIRED: "Business loan details required",
+  ACTIVE_LOANS_EXISTS: "Active loans exists",
+  REJECTED_LOANS_SHOULD_REAPPLIED: "Only rejected loans can be reapplied.",
   LOAN_REAPPLY_ERROR: "Loan cannot be reapplied or is not rejected.",
   LOAN_REAPPLY_SUCCESS: "Loan reapplied successfully and is now pending.",
-  LOAN_APPLICATION_UPDATED_SUCCESSFULLY:"Loan application updated successfully",
-  LOAN_APPROVED_SUCCESSFULLY:"Loan approved succeessfully",
-  LOAN_REJECTED_SUCCESSFULLY:"Loan rejected successfully",
-  REJECTION_REASON_REQUIRED:"Rejection reason is required",
-  ONLY_PENDING_APPLICATIONS_CAN_BE_REJECTED: "Only pending applications are allowed to be rejected",
+  LOAN_APPLICATION_UPDATED_SUCCESSFULLY:
+    "Loan application updated successfully",
+  LOAN_APPROVED_SUCCESSFULLY: "Loan approved succeessfully",
+  LOAN_REJECTED_SUCCESSFULLY: "Loan rejected successfully",
+  REJECTION_REASON_REQUIRED: "Rejection reason is required",
+  ONLY_PENDING_APPLICATIONS_CAN_BE_REJECTED:
+    "Only pending applications are allowed to be rejected",
   LOAN_PRODUCT_NOT_FOUND: "Loan product not found",
-
 
   //EMI related:-
 
   EMI_NOT_FOUND: "EMI details not found",
   EMI_LIST_FETCHED_SUCCESSFULLY: "EMI list fetched successfully",
-  EMI_ALREADY_PAID:"Emi had already paid",
-  EMI_NOT_YET_PAYABLE:"Emi is not yet paid",
-  EMI_PAYMENT_SUCCESSFUL:"Emi successfully paid",
-STRIPE_CHECKOUT_SESSION_CREATED:"Stripe checkout session created",
-STRIPE_SIGNATURE_MISSING:"Stripe signature is missing",
-ONLY_PAID_EMI_DETAILS_CAN_BE_VIEWED: "Only paid EMI details can be viewed",
-EMI_DETAIL_FETCHED_SUCCESSFULLY:"Emi details fetched successfully",
-WEBHOOK_RECIEVED:"Webhook had recieved",
+  EMI_ALREADY_PAID: "Emi had already paid",
+  EMI_NOT_YET_PAYABLE: "Emi is not yet paid",
+  EMI_PAYMENT_SUCCESSFUL: "Emi successfully paid",
+  STRIPE_CHECKOUT_SESSION_CREATED: "Stripe checkout session created",
+  STRIPE_SIGNATURE_MISSING: "Stripe signature is missing",
+  ONLY_PAID_EMI_DETAILS_CAN_BE_VIEWED: "Only paid EMI details can be viewed",
+  EMI_DETAIL_FETCHED_SUCCESSFULLY: "Emi details fetched successfully",
+  WEBHOOK_RECIEVED: "Webhook had recieved",
 
+  //Notification:-
 
-//Notification:-
-
-NOTIFICATION_NOT_FOUND:"notifications not found",
-NOTIFICATIONS_FETCHED_SUCCESSFULLY:"Notifications had fetched successfully",
-NOTIFICATION_MARKED_AS_READ:"Notification marked as read",
-ALL_NOTIFICATIONS_MARKED_AS_READ:"All notifications has been marked as read",
-UNREAD_COUNT_FETCHED_SUCCESSFULLY:"unread count fetched successfully"
+  NOTIFICATION_NOT_FOUND: "notifications not found",
+  NOTIFICATIONS_FETCHED_SUCCESSFULLY: "Notifications had fetched successfully",
+  NOTIFICATION_MARKED_AS_READ: "Notification marked as read",
+  ALL_NOTIFICATIONS_MARKED_AS_READ: "All notifications has been marked as read",
+  UNREAD_COUNT_FETCHED_SUCCESSFULLY: "unread count fetched successfully",
 };

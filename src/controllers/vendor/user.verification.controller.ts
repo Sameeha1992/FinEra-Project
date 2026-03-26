@@ -160,6 +160,7 @@ export class UserVerificationController {
         data:result
       });
     } catch (error) {
+      console.log("reject reason",error)
       next(error);
     }
   }

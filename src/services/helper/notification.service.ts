@@ -10,7 +10,8 @@ import { INotificationService } from "@/interfaces/services/notifications/notifi
 import { NotificationMapper } from "@/mappers/notification/notification.mappers";
 import { CustomError } from "@/middleware/errorMiddleware";
 import mongoose from "mongoose";
-import { inject, injectable } from "tsyringe";
+import { inject, injectable, container } from "tsyringe";
+import { Server as SocketIOServer } from "socket.io";
 
 @injectable()
 export class NotificationService implements INotificationService {
@@ -37,7 +38,15 @@ export class NotificationService implements INotificationService {
         type,
       },
     );
-    return NotificationMapper.toResponseDTO(notification)
+    const notificationResponse = NotificationMapper.toResponseDTO(notification);
+
+    // Emit real-time notification via Socket.IO
+    // Resolve SocketIOServer lazily to avoid circular/timing issues in DI
+    console.log(`NotificationService: Emitting new_notification to room user_${userId}`);
+    const io = container.resolve<SocketIOServer>("SocketIOServer");
+    io.to(`user_${userId}`).emit("new_notification", notificationResponse);
+
+    return notificationResponse;
   }
 
   async getNotificationsByUserId(userId: string): Promise<NotificationResponseDTO[]> {
@@ -95,4 +104,17 @@ export class NotificationService implements INotificationService {
     return { unreadCount };
   }
 
+  async checkNotificationExists(
+    emiId: string,
+    type: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<boolean> {
+    return await this._iNotificationRepository.existsByTypeAndEmi(
+      emiId,
+      type,
+      startDate,
+      endDate,
+    );
+  }
 }

@@ -85,6 +85,13 @@ import { NotificationService } from '@/services/helper/notification.service'
 import { UserNotificationController } from '@/controllers/user/user/notification/user.notification.controller'
 import { IEmiNotificationCronService } from '@/interfaces/helper/emi.notification.crone.service'
 import { EmiNotificationCronService } from '@/services/helper/emi.notification.crone'
+import { IConversationRepository} from '@/interfaces/repositories/chat/conversation.repository.interface'
+import { ConversationRepository } from '@/repositories/chat/conversation.repository'
+import { IMessageRepository } from '@/interfaces/repositories/chat/messages.repository.interface'
+import { MessageRepsoitory } from '@/repositories/chat/message.repository'
+import { IChatService } from '@/interfaces/services/chat/chat.service.interface'
+import { ChatService } from '@/services/chat/chat.service'
+import { ChatController } from '@/controllers/chat/chat.controller'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -191,6 +198,15 @@ container.registerSingleton(UserNotificationController)
 
 // Cron Emi Notification:-
 
-container.registerSingleton<IEmiNotificationCronService>("IEmiNotificationCronService",EmiNotificationCronService)
+container.registerSingleton<IEmiNotificationCronService>("IEmiNotificationCronService",EmiNotificationCronService);
+
+// Chat:
+
+container.registerSingleton<IConversationRepository>("IConversationRepository",ConversationRepository);
+container.registerSingleton<IMessageRepository>("IMessageRepository",MessageRepsoitory);
+
+container.registerSingleton<IChatService>("IChatService",ChatService);
+
+container.registerSingleton(ChatController)
 
 export {container}

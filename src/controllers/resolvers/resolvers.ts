@@ -9,6 +9,7 @@ import { UserApplicationController } from "../user/user/userApplication/user.app
 import { EmiController } from "../emi/emi.controller";
 import { EmiPaymentController } from "../emi/emi.payment.controller";
 import { UserNotificationController } from "../user/user/notification/user.notification.controller";
+import { ChatController } from "../chat/chat.controller";
 
 export const authVendorController = container.resolve(VendorAuthController);
 export const vendorProfileController = container.resolve(VendorProfileController);
@@ -24,3 +25,5 @@ export const emiPaymentController = container.resolve(EmiPaymentController)
 //Notification:-
 
 export const userNotificationController = container.resolve(UserNotificationController)
+
+export const chatController = container.resolve(ChatController)

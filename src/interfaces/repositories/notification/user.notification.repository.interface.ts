@@ -8,4 +8,5 @@ export interface INotificationRepository extends IBaseRepository<INotification> 
   markAsRead(notificationId: string): Promise<INotification |null>;
   markAllAsRead(userId: string): Promise<void>;
   getUnreadCount(userId: string): Promise<number>;
+  existsByTypeAndEmi(emiId: string, type: string, startDate: Date, endDate: Date): Promise<boolean>;
 }

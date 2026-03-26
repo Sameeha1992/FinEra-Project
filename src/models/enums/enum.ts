@@ -50,4 +50,5 @@ export enum NotificationType {
   PAYMENT_SUCCESS = "PAYMENT_SUCCESS",
   LOAN_APPROVED = "Loan application approved successfully",
   LOAN_REJECTED = "Loan application is rejected",
+  CHAT_MESSAGE = "CHAT_MESSAGE",
 }

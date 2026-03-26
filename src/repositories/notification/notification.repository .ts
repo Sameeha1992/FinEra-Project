@@ -29,4 +29,13 @@ export class NotificationRepository extends BaseRepository<INotification> implem
   async getUnreadCount(userId: string): Promise<number> {
       return await Notification.countDocuments({userId,isRead:false})
   }
+
+  async existsByTypeAndEmi(emiId: string, type: string, startDate: Date, endDate: Date): Promise<boolean> {
+      const count = await Notification.countDocuments({
+          emiId: emiId,
+          type: type,
+          createdAt: { $gte: startDate, $lte: endDate }
+      });
+      return count > 0;
+  }
 }
