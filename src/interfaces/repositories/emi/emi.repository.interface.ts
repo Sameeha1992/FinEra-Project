@@ -11,7 +11,7 @@ export interface IEmiRepository extends IBaseRepository<IEmi> {
   findEmiById(emiId: string): Promise<IEmi | null>;
   markEmiAsPaid(emiId: string, paidAt: Date): Promise<IEmi | null>;
   updatePenaltyAndStatus(emiId: string,penalty: number,status: EmiStatus, lastPenaltyAppliedAt:Date): Promise<IEmi | null>;
-
+  lockEmiForPayment(emiId:string):Promise<IEmi |null>
   //For notifications:-
 
   findEmiByDueDate(startDate:Date,endDate:Date):Promise<IEmi[]>

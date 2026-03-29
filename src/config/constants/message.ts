@@ -51,7 +51,7 @@ export const MESSAGES = {
   PAYMENT_FAILED: "Payment could not be processed.",
   INSUFFICIENT_BALANCE: "Insufficient balance for this transaction.",
   INVALID_PAYMENT_METHOD: "Selected payment method is not valid.",
-
+  UNABLE_TO_PROCESS_PAYMENT:"Not able to process the payemnt",
   // Data Management
   DATA_SENT_SUCCESS: "Data sent successfully.",
   DATA_FETCH_SUCCESS: "Data fetched successfully.",
@@ -180,7 +180,7 @@ export const MESSAGES = {
   ONLY_PAID_EMI_DETAILS_CAN_BE_VIEWED: "Only paid EMI details can be viewed",
   EMI_DETAIL_FETCHED_SUCCESSFULLY: "Emi details fetched successfully",
   WEBHOOK_RECIEVED: "Webhook had recieved",
-
+  EMI_PAYMENT_ALREADY_IN_PROGRESS:"Emi payment already in progress",
   //Notification:-
 
   NOTIFICATION_NOT_FOUND: "notifications not found",

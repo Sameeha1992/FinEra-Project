@@ -23,6 +23,8 @@ highRiskNotified?: boolean;
 
   createdAt: Date;
   updatedAt: Date;
+
+  paymentLockedAt?: Date;
 }
 
 const EmiSchema = new Schema<IEmi>(
@@ -62,6 +64,9 @@ const EmiSchema = new Schema<IEmi>(
     paidAt: {
       type: Date,
     },
+    paymentLockedAt:{
+        type:Date
+    }
   },
   {
     timestamps: true,
