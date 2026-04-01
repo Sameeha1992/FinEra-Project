@@ -6,7 +6,7 @@ import { IUserRepository } from "@/interfaces/repositories/user/userRepository.i
 import { ILoanApplicationService } from "@/interfaces/services/loanApplication/loan.application.service.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { ILoanApplication } from "@/models/applications/application.model";
-import { LoanType } from "@/models/enums/enum";
+import { LoanApplicationStatus, LoanType, Status } from "@/models/enums/enum";
 import { Types } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
@@ -204,7 +204,7 @@ export class LoanApplicationService implements ILoanApplicationService {
       userId: existingLoan.userId,
       vendorId: existingLoan.vendorId,
       loanProductId: existingLoan.loanProductId,
-      status: "PENDING",
+      status:LoanApplicationStatus.PENDING,
       rejectionReason: undefined,
       updatedAt: new Date(),
     });
@@ -229,5 +229,6 @@ export class LoanApplicationService implements ILoanApplicationService {
     if(!user.isProfileComplete){
       throw new CustomError(MESSAGES.PROFILE_NOT_COMPLETED)
     }
+
   }
 }

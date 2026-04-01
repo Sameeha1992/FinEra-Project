@@ -5,6 +5,7 @@ import { container } from "tsyringe";
 import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { Role } from "@/models/enums/enum";
 import { VendorVerificationController } from "@/controllers/admin/vendor.verification.controller";
+import { AdminDashboardController } from "@/controllers/admin/admin.dashboard.controller";
 
 
 
@@ -14,7 +15,7 @@ const authAdminController = container.resolve(AdminAuthController)
 const adminAccountController = container.resolve(AdminVendorMgtController)
 const authMiddleware = container.resolve(AuthMiddleware)
 const vendorVerificationController = container.resolve(VendorVerificationController);
-
+const adminDashboardController = container.resolve(AdminDashboardController)
 
 adminRouter.post("/login",(req:Request,res:Response,next:NextFunction)=>{
     authAdminController.login(req,res,next)
@@ -39,4 +40,5 @@ adminRouter.post("/logout",(req:Request,res:Response,next:NextFunction)=>{
 adminRouter.get("/vendors",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),vendorVerificationController.getVendorList.bind(vendorVerificationController))
 adminRouter.get("/vendors/:vendorId",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),vendorVerificationController.getVendorDetails.bind(vendorVerificationController))
 adminRouter.patch("/vendors/:vendorId/status",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),vendorVerificationController.updateVendorStatus.bind(vendorVerificationController))
+adminRouter.get("/dashboard",authMiddleware.auntenticate,authMiddleware.allowRoles(Role.Admin),authMiddleware.checkBlocked,adminDashboardController.getDashboard.bind(adminDashboardController))
 export default adminRouter

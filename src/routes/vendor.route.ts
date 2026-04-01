@@ -7,6 +7,8 @@ import {
   loanProductController,
   userVerificationController,
   vendorProfileController,
+  vendorDashboardController,
+  transactionController,
 } from "@/controllers/resolvers/resolvers";
 import { validateRequest } from "@/middleware/validationRequest";
 import { vendorRegisterSchema } from "@/validations/vendor/vendor.register.validation";
@@ -87,6 +89,22 @@ router.patch(
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authVendorController.logout(req, res, next);
 });
+
+router.get(
+  "/dashboard",
+  authMiddleware.auntenticate,
+  authMiddleware.checkBlocked,
+  authMiddleware.allowRoles(Role.Vendor),
+  vendorDashboardController.getDashboardData.bind(vendorDashboardController),
+);
+
+router.get(
+  "/dashboard/export",
+  authMiddleware.auntenticate,
+  authMiddleware.checkBlocked,
+  authMiddleware.allowRoles(Role.Vendor),
+  vendorDashboardController.exportDashboardData.bind(vendorDashboardController),
+);
 
 router.get(
   "/vendor-profile",
@@ -200,5 +218,23 @@ router.patch(
   authMiddleware.checkBlocked,
   userVerificationController.rejectLoan.bind(userVerificationController),
 );
+
+router.get(
+  "/transactions",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  transactionController.getVendorTransactions.bind(transactionController)
+);
+
+
+router.get(
+  "/transactions/report",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  transactionController.downloadVendorTransactionReport.bind(transactionController),
+);
+
 
 export default router;

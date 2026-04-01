@@ -8,10 +8,12 @@ import { IEmiPaymentService } from "@/interfaces/services/emi/emi.payment.interf
 import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
 import { EmiMapper } from "@/mappers/emi/emi.mappers";
 import { CustomError } from "@/middleware/errorMiddleware";
-import { EmiStatus } from "@/models/enums/enum";
+import { EmiStatus, PaymentStatus } from "@/models/enums/enum";
 import { env } from "@/validations/envValidation";
 import { inject, injectable } from "tsyringe";
 import { NotificationType } from "@/models/enums/enum";
+import { ITransactionRepository } from "@/interfaces/repositories/transactions/transactions.repository.interface";
+import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplication/loan.application.interface";
 
 @injectable()
 export class EmiPaymentSerive implements IEmiPaymentService {
@@ -21,6 +23,10 @@ export class EmiPaymentSerive implements IEmiPaymentService {
     @inject("IStripeService") private _iStripeService: IStripeService,
     @inject("INotificationService")
     private readonly _iNotificationService: INotificationService,
+    @inject("ITransactionRepository")
+    private _iTransactionRepository: ITransactionRepository,
+    @inject("ILoanApplicationRepository")
+    private _iLoanApplicationRepository: ILoanApplicationRepository,
   ) {}
   async createEmiPaymentSession(
     emiId: string,
@@ -74,12 +80,18 @@ export class EmiPaymentSerive implements IEmiPaymentService {
 
       // If it's already PAID, throw specific error
       if (currentEmi?.status === EmiStatus.PAID) {
-        throw new CustomError(MESSAGES.EMI_ALREADY_PAID, STATUS_CODES.BAD_REQUEST);
+        throw new CustomError(
+          MESSAGES.EMI_ALREADY_PAID,
+          STATUS_CODES.BAD_REQUEST,
+        );
       }
 
       // If it's in progress and NOT expired (since lockEmiForPayment failed), it's a genuine concurrent attempt or a very recent lock
       if (currentEmi?.status === EmiStatus.PAYMENT_IN_PROGRESS) {
-        throw new CustomError(MESSAGES.EMI_PAYMENT_ALREADY_IN_PROGRESS, STATUS_CODES.BAD_REQUEST);
+        throw new CustomError(
+          MESSAGES.EMI_PAYMENT_ALREADY_IN_PROGRESS,
+          STATUS_CODES.BAD_REQUEST,
+        );
       }
 
       throw new CustomError(
@@ -263,6 +275,17 @@ export class EmiPaymentSerive implements IEmiPaymentService {
     if (!loan) {
       throw new CustomError(MESSAGES.LOAN_NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
+
+    const application = await this._iLoanApplicationRepository.findById(
+      loan.applicationId.toString(),
+    );
+
+    if (!application) {
+      throw new CustomError(
+        MESSAGES.LOAN_APPLICATION_NOT_FOUND,
+        STATUS_CODES.NOT_FOUND,
+      );
+    }
     await this._iNotificationService.createNotification({
       userId: loan.user.toString(),
       emiId: paidEmi._id.toString(),
@@ -270,6 +293,22 @@ export class EmiPaymentSerive implements IEmiPaymentService {
       message: `Your EMI of ₹${paidEmi.amount + (paidEmi.penalty ?? 0)} was paid successfully.`,
       type: NotificationType.PAYMENT_SUCCESS,
     });
+
+    
+    await this._iTransactionRepository.createTransaction({
+      transactionId: `TXN-${Date.now()}`,
+      userId: loan.user,
+      vendorId: application.vendorId,
+      loanId: loan._id,
+      emiId: paidEmi._id,
+      amount: paidEmi.amount,
+      paymentStatus:PaymentStatus.COMPLETED,
+      penaltyAmount: paidEmi.penalty ?? 0,
+      totalAmount: paidEmi.amount + (paidEmi.penalty ?? 0),
+      paidAt: paidEmi.paidAt ?? new Date(),
+    });
+    
+
     return EmiMapper.toListingDto(paidEmi);
   }
 }

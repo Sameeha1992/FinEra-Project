@@ -10,6 +10,8 @@ import { EmiController } from "../emi/emi.controller";
 import { EmiPaymentController } from "../emi/emi.payment.controller";
 import { UserNotificationController } from "../user/user/notification/user.notification.controller";
 import { ChatController } from "../chat/chat.controller";
+import { VendorDashboardController } from "../vendor/vendorDashboard.controller";
+import { TransactionController } from "../transactions/transaction.controller";
 
 export const authVendorController = container.resolve(VendorAuthController);
 export const vendorProfileController = container.resolve(VendorProfileController);
@@ -27,3 +29,12 @@ export const emiPaymentController = container.resolve(EmiPaymentController)
 export const userNotificationController = container.resolve(UserNotificationController)
 
 export const chatController = container.resolve(ChatController)
+
+export const vendorDashboardController = container.resolve(VendorDashboardController)
+
+
+//Transaction:-
+
+export const transactionController = container.resolve(TransactionController)
+//Admin:-
+

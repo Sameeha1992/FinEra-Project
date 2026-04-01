@@ -92,6 +92,22 @@ import { MessageRepsoitory } from '@/repositories/chat/message.repository'
 import { IChatService } from '@/interfaces/services/chat/chat.service.interface'
 import { ChatService } from '@/services/chat/chat.service'
 import { ChatController } from '@/controllers/chat/chat.controller'
+import { IAdminDashboardService } from '@/interfaces/services/admin/admin.dashboard.service.interface'
+import { AdminDashboardService } from '@/services/admin/admin.dashboard.service'
+import { AdminDashboardController } from '@/controllers/admin/admin.dashboard.controller'
+import { IVendorDashboardRepository } from '@/interfaces/repositories/vendor/vendorDashboard.repository.interface'
+import { VendorDashboardRepository } from '@/repositories/vendor/vendorDashboard.repository'
+import { IVendorDashboardService } from '@/interfaces/services/vendor/vendorDashboard.service.interface'
+import { VendorDashboardService } from '@/services/vendor/vendorDashboard.service'
+import { VendorDashboardController } from '@/controllers/vendor/vendorDashboard.controller'
+import { IUserProfileVerificationRepository } from '@/interfaces/repositories/vendor/user.profileVerification.repsoitory.interface'
+import { IUserProfileVerificationService } from '@/interfaces/services/vendor/user.profileVerification.service.interface'
+import { ITransactionRepository } from '@/interfaces/repositories/transactions/transactions.repository.interface'
+import { TransactionRepository } from '@/repositories/transactions/transactions.repository'
+import { ITransactionService } from '@/interfaces/services/transaction/transaction.service.interface'
+import { TransactionService } from '@/services/transaction/transaction.service'
+import { IVendorTransactionPdfService } from '@/interfaces/helper/pdfDoc.service.interface'
+import { VendorTransactionPdfService } from '@/services/helper/pdfDoc.service'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -164,6 +180,10 @@ container.registerSingleton<IUserVerificationRepo>("IUserVerificationRepo",UserV
 container.registerSingleton<IUserVerificationService>("IUserVerificationService",UserVerificationService);
 container.registerSingleton(UserVerificationController)
 
+// User and Vendor Transaction:
+
+container.registerSingleton<ITransactionRepository>("ITransactionRepository",TransactionRepository);
+container.registerSingleton<ITransactionService>("ITransactionService",TransactionService)
 //User Applications Checking:- UserSide:-
 
 container.registerSingleton<IUserApplicationsRepository>("IUserApplicationsRepository",UserApplicationsRepository);
@@ -209,4 +229,18 @@ container.registerSingleton<IChatService>("IChatService",ChatService);
 
 container.registerSingleton(ChatController)
 
+// Vendor Dashboard:
+container.registerSingleton<IVendorDashboardRepository>("IVendorDashboardRepository", VendorDashboardRepository);
+container.registerSingleton<IVendorDashboardService>("IVendorDashboardService", VendorDashboardService);
+container.registerSingleton(VendorDashboardController);
+
+
+// Admin dashbaord:
+
+container.registerSingleton<IAdminDashboardService>("IAdminDashboardService",AdminDashboardService);
+container.registerSingleton(AdminDashboardController)
+
+//Pdf in dashboard:-
+
+container.registerSingleton<IVendorTransactionPdfService>("IVendorTransactionPdfService",VendorTransactionPdfService)
 export {container}

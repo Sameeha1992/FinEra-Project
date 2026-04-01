@@ -41,7 +41,7 @@ export interface ILoanApplication extends Document {
     registrationDocUrl?: string,
   };
 
-  status: "PENDING" | "APPROVED" | "REJECTED";
+  status: LoanApplicationStatus;
 
   createdAt: Date;
   updatedAt: Date;
@@ -51,7 +51,7 @@ export interface ILoanApplication extends Document {
 
 
 import mongoose, { Schema } from "mongoose";
-import { LoanType } from "../enums/enum";
+import { LoanApplicationStatus, LoanType } from "../enums/enum";
 
 const loanApplicationSchema = new Schema(
   {
@@ -123,8 +123,8 @@ const loanApplicationSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECTED"],
-      default: "PENDING",
+      enum: Object.values(LoanApplicationStatus),
+      default: LoanApplicationStatus.PENDING,
     },
   },
   { timestamps: true }

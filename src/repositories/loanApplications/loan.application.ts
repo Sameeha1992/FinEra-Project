@@ -2,7 +2,7 @@ import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplic
 import LoanApplication, { ILoanApplication } from "@/models/applications/application.model";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository } from "../base_repository";
-import { LoanType } from "@/models/enums/enum";
+import { LoanApplicationStatus, LoanType } from "@/models/enums/enum";
 
 @injectable()
 export class LoanApplicationRepository extends BaseRepository<ILoanApplication> implements ILoanApplicationRepository{
@@ -15,5 +15,20 @@ export class LoanApplicationRepository extends BaseRepository<ILoanApplication> 
         return !!loan
       }
 
+      async countLoanApplications(): Promise<number> {
+        return await LoanApplication.countDocuments()
+      }
     
+      async countApprovedLoans(): Promise<number> {
+        return await LoanApplication.countDocuments({status:LoanApplicationStatus.APPROVED})
+      }
+
+      async countPendingLoans(): Promise<number> {
+        return await LoanApplication.countDocuments({status:LoanApplicationStatus.PENDING});
+
+      }
+
+      async countRejectedLoans(): Promise<number> {
+        return await LoanApplication.countDocuments({status:LoanApplicationStatus.REJECTED})
+      }
 }

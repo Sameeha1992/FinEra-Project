@@ -51,7 +51,7 @@ export const MESSAGES = {
   PAYMENT_FAILED: "Payment could not be processed.",
   INSUFFICIENT_BALANCE: "Insufficient balance for this transaction.",
   INVALID_PAYMENT_METHOD: "Selected payment method is not valid.",
-  UNABLE_TO_PROCESS_PAYMENT:"Not able to process the payemnt",
+  UNABLE_TO_PROCESS_PAYMENT: "Not able to process the payemnt",
   // Data Management
   DATA_SENT_SUCCESS: "Data sent successfully.",
   DATA_FETCH_SUCCESS: "Data fetched successfully.",
@@ -127,6 +127,17 @@ export const MESSAGES = {
     "Only pending applications can be aspproved",
   APPLICATION_DETAILS_FETCHED_SUCCESSFULLY:
     "Application details fetched successfully",
+  USER_NOT_YET_VERIFIED: "Only verified usercan apply for the loan",
+  USER_PROFILE_REJECTED: "User profile is rejected by the vendor",
+
+
+  USER_VERIFIED_SUCCESS: "User verified successfully",
+USER_REJECTED_SUCCESS: "User rejected successfully",
+USER_STATUS_UPDATED: "User verification status updated successfully",
+INVALID_VERIFICATION_STATUS: "Invalid verification status",
+USER_ALREADY_VERIFIED_OR_REJECTED: "User is already verified or rejected",
+FAILED_TO_UPDATE_USER_STATUS: "Failed to update user verification status",
+
 
   //Chat:-
   CHAT_FETCHED_SUCCESSFULLY: "Chat fetched successfully",
@@ -180,7 +191,7 @@ export const MESSAGES = {
   ONLY_PAID_EMI_DETAILS_CAN_BE_VIEWED: "Only paid EMI details can be viewed",
   EMI_DETAIL_FETCHED_SUCCESSFULLY: "Emi details fetched successfully",
   WEBHOOK_RECIEVED: "Webhook had recieved",
-  EMI_PAYMENT_ALREADY_IN_PROGRESS:"Emi payment already in progress",
+  EMI_PAYMENT_ALREADY_IN_PROGRESS: "Emi payment already in progress",
   //Notification:-
 
   NOTIFICATION_NOT_FOUND: "notifications not found",
@@ -188,4 +199,7 @@ export const MESSAGES = {
   NOTIFICATION_MARKED_AS_READ: "Notification marked as read",
   ALL_NOTIFICATIONS_MARKED_AS_READ: "All notifications has been marked as read",
   UNREAD_COUNT_FETCHED_SUCCESSFULLY: "unread count fetched successfully",
+
+
+  TRANSACTIONS_FETCHED_SUCCESSFULLY:"Transactions are fetched successfully",
 };

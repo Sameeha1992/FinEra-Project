@@ -17,5 +17,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
         return await UserModel.findOneAndUpdate({email},{password:hashPassword},{new:true})
     }
     
+    async countUser(): Promise<number> {
+        return await UserModel.countDocuments()
+    }
 }
 

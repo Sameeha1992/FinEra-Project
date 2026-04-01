@@ -13,6 +13,7 @@ import {
   emiPaymentController,
   loanApplicationController,
   loanProductController,
+  transactionController,
   userApplicationController,
   userEmiController,
   userNotificationController,
@@ -281,5 +282,14 @@ router.get(
   authMiddleware.checkBlocked,
   userNotificationController.getUnreadCount.bind(userNotificationController),
 );
+
+router.get(
+  "/transactions",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  transactionController.getUserTransactions.bind(transactionController)
+);
+
 
 export default router;

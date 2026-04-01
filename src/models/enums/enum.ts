@@ -43,6 +43,12 @@ export enum EmiStatus {
   HIGH_RISK = "HIGH RISK",
 }
 
+export enum PaymentStatus{
+  PENDING="Pending",
+  COMPLETED="Completed",
+  FAILED="Failed"
+}
+
 
 export enum NotificationType {
   EMI_DUE_SOON = "EMI_DUE_SOON",
@@ -52,4 +58,11 @@ export enum NotificationType {
   LOAN_APPROVED = "Loan application approved successfully",
   LOAN_REJECTED = "Loan application is rejected",
   CHAT_MESSAGE = "CHAT_MESSAGE",
+}
+
+
+export enum LoanApplicationStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
