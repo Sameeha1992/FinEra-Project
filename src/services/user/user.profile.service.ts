@@ -174,9 +174,13 @@ export class UserProfileService implements IUserprofileService {
       }
     }
 
-    const updateData = Object.fromEntries(
-      Object.entries(dto).filter(([_, value]) => value !== undefined),
-    );
+   const updateData = Object.fromEntries(
+  Object.entries(dto).filter(
+    ([key, value]) => 
+      value !== undefined && 
+      !["adhaarDoc", "panDoc", "documents"].includes(key)
+  ),
+);
 
    
 
@@ -191,7 +195,7 @@ export class UserProfileService implements IUserprofileService {
     if (files?.panDoc) {
       const key = `documents/pan/${userId}`;
       await this._IStorageService.uploadImage(files.panDoc, key);
-      updateData.adhaarDoc = key;
+      updateData.panDoc = key;
     }
     const updatedUser = await this._iUserRepository.updateById(
       userId,

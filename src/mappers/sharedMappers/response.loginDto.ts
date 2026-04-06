@@ -12,7 +12,7 @@ export class UserMapper {
       role: user.role ?? Role.User,
       Id: user.customerId ?? user._id.toString(),
       status: user.status ?? "not_verified",
-      isProfileComplete:false
+      isProfileComplete: false,
     };
   }
 }

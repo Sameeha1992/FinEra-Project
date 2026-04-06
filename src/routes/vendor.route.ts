@@ -9,6 +9,7 @@ import {
   vendorProfileController,
   vendorDashboardController,
   transactionController,
+  vendorNotificationController,
 } from "@/controllers/resolvers/resolvers";
 import { validateRequest } from "@/middleware/validationRequest";
 import { vendorRegisterSchema } from "@/validations/vendor/vendor.register.validation";
@@ -224,17 +225,53 @@ router.get(
   authMiddleware.auntenticate,
   authMiddleware.allowRoles(Role.Vendor),
   authMiddleware.checkBlocked,
-  transactionController.getVendorTransactions.bind(transactionController)
+  transactionController.getVendorTransactions.bind(transactionController),
 );
-
 
 router.get(
   "/transactions/report",
   authMiddleware.auntenticate,
   authMiddleware.allowRoles(Role.Vendor),
   authMiddleware.checkBlocked,
-  transactionController.downloadVendorTransactionReport.bind(transactionController),
+  transactionController.downloadVendorTransactionReport.bind(
+    transactionController,
+  ),
 );
 
+router.get(
+  "/notifications",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  vendorNotificationController.getVendorNotifications.bind(
+    vendorNotificationController,
+  ),
+);
+
+router.get(
+  "/notifications/unread-count",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  vendorNotificationController.getUnreadCount.bind(
+    vendorNotificationController,
+  ),
+);
+
+router.patch(
+  "/notifications/:notificationId/read",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  vendorNotificationController.markAsRead.bind(vendorNotificationController),
+);
+
+router.patch(
+  "/notifications/mark-all-read",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Vendor),
+  authMiddleware.checkBlocked,
+  vendorNotificationController.markAllAsRead.bind(vendorNotificationController),
+);
 
 export default router;

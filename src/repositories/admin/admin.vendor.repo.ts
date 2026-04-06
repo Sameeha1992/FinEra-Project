@@ -21,7 +21,7 @@ export class AdminVendorMgtRepo
   }
 
   async findAllVendors(
-    query: PaginationQuery & { role: RoleModel }
+    query: PaginationQuery & { role: RoleModel },
   ): Promise<PaginatedResult<IVendor | IUser>> {
     const { page, limit, search, role } = query;
     const skip = (page - 1) * limit;
@@ -44,7 +44,7 @@ export class AdminVendorMgtRepo
           .sort({ createdAt: -1 }),
         VendorModel.countDocuments(filter),
       ]);
-      
+
       return { data, total, page, limit };
     }
 
@@ -64,27 +64,26 @@ export class AdminVendorMgtRepo
       UserModel.countDocuments(filter),
     ]);
 
-
     return { data, total, page, limit };
   }
 
-
-  async updateStatus(id: string, role: "vendor" | "user", accountStatus: AccountStatus): Promise<IVendor | IUser | null> {
-      
-     if (role === "vendor") {
+  async updateStatus(
+    id: string,
+    role: "vendor" | "user",
+    accountStatus: AccountStatus,
+  ): Promise<IVendor | IUser | null> {
+    if (role === "vendor") {
       return await VendorModel.findByIdAndUpdate(
         id,
         { accountStatus },
-        { new: true }
+        { new: true },
       );
     } else {
       return await UserModel.findByIdAndUpdate(
         id,
         { accountStatus },
-        { new: true }
+        { new: true },
       );
     }
   }
-
-  
 }

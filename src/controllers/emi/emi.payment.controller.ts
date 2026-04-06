@@ -33,13 +33,11 @@ export class EmiPaymentController {
         userId,
       );
 
-      res
-        .status(STATUS_CODES.SUCCESS)
-        .json({
-          success: true,
-          message: MESSAGES.PAYMENT_IN_PROGRESS,
-          data: result,
-        });
+      res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: MESSAGES.PAYMENT_IN_PROGRESS,
+        data: result,
+      });
     } catch (error) {
       console.log("Something issue while payment", error);
       next(error);

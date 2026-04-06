@@ -3,7 +3,7 @@ import { PaymentStatus } from "../enums/enum";
 
 export interface ITransaction extends Document {
   _id: string;
-  transactionId:string,
+  transactionId: string;
   userId: mongoose.Types.ObjectId;
   vendorId: mongoose.Types.ObjectId;
   loanId: mongoose.Types.ObjectId;
@@ -45,21 +45,21 @@ const TransactionSchema = new Schema<ITransaction>(
       ref: "Emi",
       required: true,
     },
-    transactionId:{
-      type:String,
-      unique:true,
-      required:true
+    transactionId: {
+      type: String,
+      unique: true,
+      required: true,
     },
 
     amount: {
       type: Number,
       required: true,
     },
-    
+
     paymentStatus: {
       type: String,
       enum: Object.values(PaymentStatus),
-      default:PaymentStatus.PENDING,
+      default: PaymentStatus.PENDING,
       required: true,
     },
 

@@ -24,13 +24,13 @@ export interface ITransactionRepository extends IBaseRepository<ITransaction> {
     total: number;
   }>;
 
-
   countTransactionsByUserId(userId: string): Promise<number>;
 
   countTransactionsByVendorId(vendorId: string): Promise<number>;
 
-getVendorTransactionsForReport(
-  vendorId: string,
-  startDate?: Date,
-  endDate?: Date
-): Promise<ITransaction[]>;}
+  getVendorTransactionsForReport(
+    vendorId: string,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<ITransaction[]>;
+}

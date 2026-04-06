@@ -1,8 +1,16 @@
 import { IEmiNotificationCronService } from "@/interfaces/helper/emi.notification.crone.service";
 import { IEmiRepository } from "@/interfaces/repositories/emi/emi.repository.interface";
 import { ILoanRepository } from "@/interfaces/repositories/loan/loan.repository.interface";
+import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplication/loan.application.interface";
+import { IUserRepository } from "@/interfaces/repositories/user/userRepository.interface";
 import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
-import { EmiStatus, NotificationType } from "@/models/enums/enum";
+import { IVendorNotificationService } from "@/interfaces/services/notifications/vendor.notification.service.interface.";
+import {
+  EmiStatus,
+  NotificationType,
+  VendorNotificationType,
+} from "@/models/enums/enum";
+import { application } from "express";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
@@ -10,7 +18,14 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
   constructor(
     @inject("IEmiRepository") private readonly _iEmiRepository: IEmiRepository,
     @inject("ILoanRepository") private _iLoanRepository: ILoanRepository,
-    @inject("INotificationService") private _iNotificationService: INotificationService,
+    @inject("INotificationService")
+    private _iNotificationService: INotificationService,
+    @inject("IVendorNotificationService")
+    private readonly _iVendorNotificationService: IVendorNotificationService,
+    @inject("IUserRepository")
+    private readonly _iUserRepository: IUserRepository,
+    @inject("ILoanApplicationRepository")
+    private readonly _iLoanApplicationRepository: ILoanApplicationRepository,
   ) {}
 
   async run(): Promise<void> {
@@ -34,7 +49,10 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
   }
 
   async notifyDueInTwoDays(startDate: Date, endDate: Date): Promise<void> {
-    const emis = await this._iEmiRepository.findEmiByDueDate(startDate, endDate);
+    const emis = await this._iEmiRepository.findEmiByDueDate(
+      startDate,
+      endDate,
+    );
     for (const emi of emis) {
       if (emi.status === EmiStatus.PAID) continue;
 
@@ -50,7 +68,7 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
         emi._id.toString(),
         NotificationType.EMI_DUE_SOON,
         todayStart,
-        todayEnd
+        todayEnd,
       );
 
       if (exists) continue;
@@ -66,7 +84,10 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
   }
 
   async notifyDueToday(startDate: Date, endDate: Date): Promise<void> {
-    const emis = await this._iEmiRepository.findEmiByDueDate(startDate, endDate);
+    const emis = await this._iEmiRepository.findEmiByDueDate(
+      startDate,
+      endDate,
+    );
     for (const emi of emis) {
       if (emi.status === EmiStatus.PAID) continue;
 
@@ -82,7 +103,7 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
         emi._id.toString(),
         NotificationType.EMI_DUE_TODAY,
         todayStart,
-        todayEnd
+        todayEnd,
       );
 
       if (exists) continue;
@@ -110,6 +131,13 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
 
       const loan = await this._iLoanRepository.findById(emi.loan.toString());
       if (!loan) continue;
+
+      const user = await this._iUserRepository.findById(loan.user.toString());
+
+      const application = await this._iLoanApplicationRepository.findById(
+        loan.applicationId.toString(),
+      );
+      if (!user || !application) continue;
 
       const dueDate = new Date(emi.dueDate);
       const diffTime = currentDate.getTime() - dueDate.getTime();
@@ -139,7 +167,7 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
           emi._id.toString(),
           targetPenalty,
           EmiStatus.OVERDUE,
-          new Date()
+          new Date(),
         );
 
         await this._iNotificationService.createNotification({
@@ -149,7 +177,22 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
           message: `Your EMI is ${overdueDays + 1} days overdue. A penalty of ₹${targetPenalty} has been applied.`,
           type: NotificationType.EMI_OVERDUE,
         });
+
+        //Vendor Notification
+        await this._iVendorNotificationService.createOverdueNotificationIfNotExists(
+          {
+            vendorId: application.vendorId.toString(),
+            userId: loan.user.toString(),
+            loanId: loan._id.toString(),
+            emiId: emi._id.toString(),
+            title: "User EMI Overdue",
+            message: `${user.name} has an overdue EMI. Penalty applied: ₹${targetPenalty}.`,
+            type: VendorNotificationType.USER_EMI_OVERDUE,
+          },
+        );
       }
+
+      
 
       // 3. High Risk / Danger Notification (at Day 9 / overdueDays 8)
       if (overdueDays >= 8 && !emi.highRiskNotified) {
@@ -157,9 +200,20 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
           userId: loan.user.toString(),
           emiId: emi._id.toString(),
           title: "Account at High Risk",
-          message: "DANGER: Your EMI is critically overdue. Please pay immediately to avoid legal action.",
+          message:
+            "DANGER: Your EMI is critically overdue. Please pay immediately to avoid legal action.",
           type: NotificationType.EMI_OVERDUE,
         });
+
+         await this._iVendorNotificationService.createNotification({
+        vendorId: application.vendorId.toString(),
+        userId: loan.user.toString(),
+        loanId: loan._id.toString(),
+        emiId: emi._id.toString(),
+        title: "User EMI at High Risk",
+        message: `${user.name}'s EMI is critically overdue and the account is now high risk.`,
+        type: VendorNotificationType.USER_EMI_HIGH_RISK,
+      });
         await this._iEmiRepository.markHighRiskNotified(emi._id.toString());
       }
     }

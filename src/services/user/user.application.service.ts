@@ -5,6 +5,7 @@ import {
   UserApplicationDetailsDTO,
   UserApplicationListItemDTO,
 } from "@/dto/user/userAppliaction/user.application.dto";
+import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { ILoanRepository } from "@/interfaces/repositories/loan/loan.repository.interface";
 import { IUserApplicationsRepository } from "@/interfaces/repositories/user/userLoanApplication/user.applications.service.interface";
 import { IUserApplicationsService } from "@/interfaces/services/user/user.application.service.interface";
@@ -17,6 +18,7 @@ export class UserApplicationService implements IUserApplicationsService {
   constructor(
     @inject("IUserApplicationsRepository") private _IuserApplicationRepo: IUserApplicationsRepository,
       @inject("ILoanRepository") private _iLoanRepository:ILoanRepository,
+      @inject("IStorageService") private _iStorageService:IStorageService
 
   ) {}
   async getUserApplicationsList(
@@ -59,6 +61,21 @@ export class UserApplicationService implements IUserApplicationsService {
 
     if (!application) {
       throw new CustomError(MESSAGES.LOAN_APPLICATION_NOT_FOUND);
+    }
+    if(application.homeDetails?.propertyDocUrl){
+      application.homeDetails.propertyDocUrl = await this._iStorageService.generateSignedUrl(application.homeDetails.propertyDocUrl,3600)
+    }
+
+     if(application.personalDetails?.salarySlipUrl){
+      application.personalDetails.salarySlipUrl = await this._iStorageService.generateSignedUrl(application.personalDetails.salarySlipUrl,3600)
+    }
+
+     if(application.goldDetails?.goldImageUrl){
+      application.goldDetails.goldImageUrl = await this._iStorageService.generateSignedUrl(application.goldDetails.goldImageUrl,3600)
+    }
+
+     if(application.businessDetails?.registrationDocUrl){
+      application.businessDetails.registrationDocUrl = await this._iStorageService.generateSignedUrl(application.businessDetails.registrationDocUrl,3600)
     }
 
     const result = userApplicationListMapper.toDetail(application);

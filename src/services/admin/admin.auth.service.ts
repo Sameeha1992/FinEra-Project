@@ -17,18 +17,16 @@ export class AdminAuthService implements IAdminAuthService {
     @inject("IJwtService") private _IJwtService: IJwtService,
     @inject("IAdminAuthRepo") private _IAdminAuthRepo: IAdminAuthRepo,
     @inject("IPasswordService") private _IPasswordService: IPasswordService,
-    @inject("IRedisService") private _IRedisService:IRedisService
+    @inject("IRedisService") private _IRedisService: IRedisService,
   ) {}
 
-  async login(
-    credentials: LoginDto
-  ): Promise<{
+  async login(credentials: LoginDto): Promise<{
     admin: LoginResponseDto;
     accessToken: string;
     refreshToken: string;
   }> {
     const adminData: IUser | null = await this._IAdminAuthRepo.findByEmail(
-      credentials.email
+      credentials.email,
     );
 
     if (!adminData) {
@@ -47,7 +45,7 @@ export class AdminAuthService implements IAdminAuthService {
 
     const isPassword = this._IPasswordService.comparePassword(
       credentials.password,
-      adminData.password
+      adminData.password,
     );
 
     if (!isPassword) {
@@ -59,55 +57,61 @@ export class AdminAuthService implements IAdminAuthService {
 
     const accessToken = this._IJwtService.generateAccessToken(
       adminData._id,
-      "admin"
+      "admin",
     );
     const refreshToken = this._IJwtService.generateRefreshToken(
       adminData._id,
-      "admin"
+      "admin",
     );
 
     return { admin: adminLoginResponse, accessToken, refreshToken };
   }
 
-  async refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}> {
+  async refreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const decode = await this._IJwtService.verifyToken(refreshToken, "refresh");
 
     if (!decode) {
       throw new CustomError("Refresh token not valid");
     }
-    
 
-    const isBlacklisted = await this._IRedisService.isRefreshTokenBlacklisted(decode.jti);
+    const isBlacklisted = await this._IRedisService.isRefreshTokenBlacklisted(
+      decode.jti,
+    );
 
-    if(isBlacklisted){
-      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED)
+    if (isBlacklisted) {
+      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED);
     }
 
-    const ttlSeconds = decode.exp - Math.floor(Date.now() /1000)
+    const ttlSeconds = decode.exp - Math.floor(Date.now() / 1000);
 
-    if(ttlSeconds >0){
-      await this._IRedisService.blacklistRefreshToken(decode.jti,ttlSeconds)
+    if (ttlSeconds > 0) {
+      await this._IRedisService.blacklistRefreshToken(decode.jti, ttlSeconds);
     }
 
-
-    const newAccessToken = this._IJwtService.generateAccessToken(decode._id,decode.role);
-    const newRefreshToken = this._IJwtService.generateRefreshToken(decode._id,decode.role);
-
+    const newAccessToken = this._IJwtService.generateAccessToken(
+      decode._id,
+      decode.role,
+    );
+    const newRefreshToken = this._IJwtService.generateRefreshToken(
+      decode._id,
+      decode.role,
+    );
 
     return {
-      accessToken:newAccessToken,
-      refreshToken:newRefreshToken
-    }
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
   }
 
-  async logout(refreshToken:string):Promise<void>{
-     const payload = this._IJwtService.verifyToken(refreshToken,"refresh")
-     if(!payload){
-      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN)
-     }
-       const ttlSeconds = payload.exp - Math.floor(Date.now() /1000);
+  async logout(refreshToken: string): Promise<void> {
+    const payload = this._IJwtService.verifyToken(refreshToken, "refresh");
+    if (!payload) {
+      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
+    }
+    const ttlSeconds = payload.exp - Math.floor(Date.now() / 1000);
 
-       await this._IRedisService.blacklistRefreshToken(payload.jti,ttlSeconds)
-
+    await this._IRedisService.blacklistRefreshToken(payload.jti, ttlSeconds);
   }
 }

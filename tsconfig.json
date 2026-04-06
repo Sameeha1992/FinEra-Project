@@ -113,6 +113,7 @@
     "baseUrl": "./src",
     "paths": {
       "@/*":["*"]
-    }                                 /* Skip type checking all .d.ts files. */
+    },
+    "ignoreDeprecations":"6.0"                                 /* Skip type checking all .d.ts files. */
   }
 }

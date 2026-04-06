@@ -39,10 +39,7 @@ const ChatSchema = new Schema<IChat>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export default mongoose.model<IChat>(
-  "Chat",
-  ChatSchema
-);
+export default mongoose.model<IChat>("Chat", ChatSchema);

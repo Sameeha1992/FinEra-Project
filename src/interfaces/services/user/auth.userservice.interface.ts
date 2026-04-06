@@ -11,18 +11,28 @@ export interface IAuthUserService {
   registerUser(userData: UserRegisterDTO): Promise<IUser>;
   generateOtp(email: string): Promise<IOtp>;
   verifyOtp(otpData: Omit<OtpVerifyDto, "expiredAt">): Promise<void>;
-  Login(
-    credentials: LoginDto
-  ): Promise<{
+  Login(credentials: LoginDto): Promise<{
     user: LoginResponseDto;
     accessToken: string;
     refreshToken: string;
   }>;
-  refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}>;
-  forgetPassword(email:string):Promise<string>;
-  verifyforgetOtp(data:OtpVerifyForgetDto):Promise<void>;
-  resetPassword(email:string,password:string):Promise<string>;
-  googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>
-  logout(refreshToken:string):Promise<void>
-  changePassword(userId:string,hashedPassword:string,newPassword:string):Promise<void>
+  refreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }>;
+  forgetPassword(email: string): Promise<string>;
+  verifyforgetOtp(data: OtpVerifyForgetDto): Promise<void>;
+  resetPassword(email: string, password: string): Promise<string>;
+  googleLogin(
+    googleToken: string,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: LoginResponseDto;
+  }>;
+  logout(refreshToken: string): Promise<void>;
+  changePassword(
+    userId: string,
+    hashedPassword: string,
+    newPassword: string,
+  ): Promise<void>;
 }

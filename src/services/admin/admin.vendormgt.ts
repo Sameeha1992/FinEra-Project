@@ -1,4 +1,4 @@
-import { UserVendorResponseDto} from "@/dto/admin/adminvendorMgtDto";
+import { UserVendorResponseDto } from "@/dto/admin/adminvendorMgtDto";
 import { IAdminVendorMgtRepo } from "@/interfaces/repositories/admin/admin.vendor.interface";
 import { IAdminVendorMgtService } from "@/interfaces/services/admin/admin.vendormgt.interface";
 import {
@@ -15,13 +15,12 @@ import { inject, injectable } from "tsyringe";
 export class AdminVendorMgtService implements IAdminVendorMgtService {
   constructor(
     @inject("IAdminVendorMgtRepo")
-    private readonly _IAdminVendorMgtRepo: IAdminVendorMgtRepo
+    private readonly _IAdminVendorMgtRepo: IAdminVendorMgtRepo,
   ) {}
   async getAllVendors(
-    query: PaginationQuery & {role: "vendor" |"user"}
+    query: PaginationQuery & { role: "vendor" | "user" },
   ): Promise<PaginatedResult<UserVendorResponseDto>> {
     const result = await this._IAdminVendorMgtRepo.findAllVendors(query);
-    
 
     return {
       data: VendorMgtMapper.toResponseList(result.data),
@@ -31,9 +30,16 @@ export class AdminVendorMgtService implements IAdminVendorMgtService {
     };
   }
 
-
-  async updateStatus(id: string, role: "vendor" | "user", accountStatus: AccountStatus): Promise<IVendor | IUser | null> {
-    const updatedRecord = await this._IAdminVendorMgtRepo.updateStatus(id,role,accountStatus);
-    return updatedRecord
+  async updateStatus(
+    id: string,
+    role: "vendor" | "user",
+    accountStatus: AccountStatus,
+  ): Promise<IVendor | IUser | null> {
+    const updatedRecord = await this._IAdminVendorMgtRepo.updateStatus(
+      id,
+      role,
+      accountStatus,
+    );
+    return updatedRecord;
   }
 }

@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express"; // ← IMPORT THIS!
 import { container } from "tsyringe";
-import { LoginDto } from "../../../dto/shared/login.dto";
-import { UserLoginService } from "../../../services/shared/login/user.login.stratergy";
+
 import { env } from "@/validations/envValidation";
 import { isProduction } from "@/utils/setAuthCookies";
+import { UserLoginService } from "@/services/shared/login/user.login.stratergy";
+import { LoginDto } from "@/dto/shared/login.dto";
 
 const userLoginService = container.resolve(UserLoginService);
 
 export const vendorLogin = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const credentials: LoginDto = req.body;
-    const { user, accessToken, refreshToken } = await userLoginService.login(
-      credentials
-    );
+    const { user, accessToken, refreshToken } =
+      await userLoginService.login(credentials);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -29,13 +29,13 @@ export const vendorLogin = async (
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction,
-      maxAge:env.REFRESH_TOKEN_COOKIE_MAX_AGE,
+      maxAge: env.REFRESH_TOKEN_COOKIE_MAX_AGE,
     });
 
     res.json({
       success: true,
       message: "Login Successfull",
-      user
+      user,
     });
   } catch (error) {
     next(error);

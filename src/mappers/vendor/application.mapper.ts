@@ -41,14 +41,13 @@ export class userApplicationMapper {
         additionalDoc: user.additionalDoc,
       },
 
-      
       personalDetails: app.personalDetails,
       goldDetails: app.goldDetails,
       homeDetails: app.homeDetails,
       businessDetails: app.businessDetails,
 
       rejectionReason: app.rejectionReason,
-      verifiedAt: app.verifiedAt
+      verifiedAt: app.verifiedAt,
     };
   }
 }

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ILoan extends Document {
- _id: mongoose.Types.ObjectId; 
+  _id: mongoose.Types.ObjectId;
   loanId: string;
   applicationId: mongoose.Types.ObjectId;
 
@@ -11,8 +11,8 @@ export interface ILoan extends Document {
   amount: number;
   interestRate: number;
   duePenalty: number;
-  processingFee:number;
-  isProcessingFeePaid:boolean
+  processingFee: number;
+  isProcessingFeePaid: boolean;
   tenure: number;
 
   status: "PENDING" | "APPROVED" | "REJECTED" | "CLOSED";

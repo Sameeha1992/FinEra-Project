@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface CreateLoanDTO {
   loanId: string;
-  applicationId:mongoose.Types.ObjectId;
+  applicationId: mongoose.Types.ObjectId;
 
   user: mongoose.Types.ObjectId;
 

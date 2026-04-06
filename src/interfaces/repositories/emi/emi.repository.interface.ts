@@ -10,12 +10,16 @@ export interface IEmiRepository extends IBaseRepository<IEmi> {
   findNextEmi(loan: string, currentEmiNumber: number): Promise<IEmi | null>;
   findEmiById(emiId: string): Promise<IEmi | null>;
   markEmiAsPaid(emiId: string, paidAt: Date): Promise<IEmi | null>;
-  updatePenaltyAndStatus(emiId: string,penalty: number,status: EmiStatus, lastPenaltyAppliedAt:Date): Promise<IEmi | null>;
-  lockEmiForPayment(emiId:string):Promise<IEmi |null>
+  updatePenaltyAndStatus(
+    emiId: string,
+    penalty: number,
+    status: EmiStatus,
+    lastPenaltyAppliedAt: Date,
+  ): Promise<IEmi | null>;
+  lockEmiForPayment(emiId: string): Promise<IEmi | null>;
   //For notifications:-
 
-  findEmiByDueDate(startDate:Date,endDate:Date):Promise<IEmi[]>
-  findOverDueEmis(currentDate:Date):Promise<IEmi[]>
-  markHighRiskNotified(emiId: string): Promise<IEmi | null>
-  
+  findEmiByDueDate(startDate: Date, endDate: Date): Promise<IEmi[]>;
+  findOverDueEmis(currentDate: Date): Promise<IEmi[]>;
+  markHighRiskNotified(emiId: string): Promise<IEmi | null>;
 }

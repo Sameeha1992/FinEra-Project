@@ -9,7 +9,7 @@ import { INotificationRepository } from "@/interfaces/repositories/notification/
 import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
 import { NotificationMapper } from "@/mappers/notification/notification.mappers";
 import { CustomError } from "@/middleware/errorMiddleware";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { inject, injectable, container } from "tsyringe";
 import { Server as SocketIOServer } from "socket.io";
 
@@ -31,8 +31,8 @@ export class NotificationService implements INotificationService {
 
     const notification = await this._iNotificationRepository.createNotification(
       {
-        userId: new mongoose.Types.ObjectId(userId),
-        emiId: emiId ? new mongoose.Types.ObjectId(emiId) : undefined,
+        userId: new Types.ObjectId(userId),
+        emiId: emiId ? new Types.ObjectId(emiId) : undefined,
         title,
         message,
         type,

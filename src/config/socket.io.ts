@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import "reflect-metadata";
 import { Server, Socket } from "socket.io";
 import { container } from "tsyringe";
 import { IChatService } from "@/interfaces/services/chat/chat.service.interface";
@@ -7,8 +7,7 @@ import { IJwtService } from "@/interfaces/helper/jwt.service.interface";
 import { JwtPayload } from "jsonwebtoken";
 
 export const registerChatSocket = (io: Server) => {
-
-  // ✅ Socket auth middleware — verifies JWT before any connection is accepted
+  //  Socket auth middleware — verifies JWT before any connection is accepted
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
 
@@ -17,7 +16,9 @@ export const registerChatSocket = (io: Server) => {
     }
 
     const jwtService = container.resolve<IJwtService>("IJwtService");
-    const decoded = jwtService.verifyToken(token, "access") as (JwtPayload & { _id: string; role: Role }) | null;
+    const decoded = jwtService.verifyToken(token, "access") as
+      | (JwtPayload & { _id: string; role: Role })
+      | null;
 
     if (!decoded) {
       return next(new Error("Unauthorized: Invalid token"));
@@ -29,12 +30,26 @@ export const registerChatSocket = (io: Server) => {
   });
 
   io.on("connection", (socket: Socket) => {
-    const userId = socket.data.user.id;
-    socket.join(`user_${userId}`);
-    console.log(`Socket.IO: User ${userId} joined room user_${userId}`);
-    console.log("Socket connected:", socket.id);
+    // const userId = socket.data.user.id;
+    // socket.join(`user_${userId}`);
+    // console.log(`Socket.IO: User ${userId} joined room user_${userId}`);
+    // console.log("Socket connected:", socket.id);
 
-    // Join one chat room using conversation id — with authorization check
+    const accountId = socket.data.user.id;
+    const role = socket.data.user.role as Role;
+
+    if (role === Role.User) {
+      socket.join(`user_${accountId}`);
+      console.log(`Socket.IO: User ${accountId} joined room user_${accountId}`);
+    }
+
+    if (role === Role.Vendor) {
+      socket.join(`vendor_${accountId}`);
+      console.log(
+        `Socket.IO: Vendor ${accountId} joined room vendor_${accountId}`,
+      );
+    }
+    // Join one chat room using conversation id 
     socket.on("join_conversation", async (conversationId: string) => {
       try {
         const chatService = container.resolve<IChatService>("IChatService");
@@ -42,13 +57,13 @@ export const registerChatSocket = (io: Server) => {
         const senderId = socket.data.user.id;
         const role = socket.data.user.role as Role;
 
-        // getMessages already checks if user belongs to this conversation
-        // It will throw if they don't — we reuse that existing security logic
         await chatService.getMessages(conversationId, senderId, role);
 
         socket.join(conversationId);
       } catch (error) {
-        socket.emit("chat_error", { message: "Unauthorized to join this conversation" });
+        socket.emit("chat_error", {
+          message: "Unauthorized to join this conversation",
+        });
       }
     });
 
@@ -67,7 +82,7 @@ export const registerChatSocket = (io: Server) => {
           conversationId,
           senderId,
           role,
-          text
+          text,
         );
 
         // Emit message to all users in this conversation room

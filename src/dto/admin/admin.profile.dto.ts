@@ -1,5 +1,4 @@
-export interface AdminProfileDto{
-    name:string,
-    email:string;
-    
+export interface AdminProfileDto {
+  name: string;
+  email: string;
 }

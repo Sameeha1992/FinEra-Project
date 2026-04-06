@@ -5,7 +5,7 @@ import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth"
 import { IAdminDashboardService } from "@/interfaces/services/admin/admin.dashboard.service.interface";
 import { inject, injectable } from "tsyringe";
 
-const PROCESSING_FEE = 500;
+const PROCESSING_FEE = 200;
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
   constructor(

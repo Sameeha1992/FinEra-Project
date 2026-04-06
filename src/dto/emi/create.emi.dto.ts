@@ -11,16 +11,14 @@ export interface CreateEmiDTO {
   paidAt?: Date;
 }
 
-
-export interface EmiListingLoans{
-  emiId:string,
-  loan:string,
-  emiNumber:number,
-  amount:number,
-  dueDate:Date,
-  status:EmiStatus,
-  penalty?:number,
-  totalAmount?:number
-  paidAt?:Date
-
+export interface EmiListingLoans {
+  emiId: string;
+  loan: string;
+  emiNumber: number;
+  amount: number;
+  dueDate: Date;
+  status: EmiStatus;
+  penalty?: number;
+  totalAmount?: number;
+  paidAt?: Date;
 }

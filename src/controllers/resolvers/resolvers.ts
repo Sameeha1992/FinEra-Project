@@ -12,29 +12,46 @@ import { UserNotificationController } from "../user/user/notification/user.notif
 import { ChatController } from "../chat/chat.controller";
 import { VendorDashboardController } from "../vendor/vendorDashboard.controller";
 import { TransactionController } from "../transactions/transaction.controller";
+import { VendorNotificationController } from "../vendor/vendor.notification.controller";
 
 export const authVendorController = container.resolve(VendorAuthController);
-export const vendorProfileController = container.resolve(VendorProfileController);
+export const vendorProfileController = container.resolve(
+  VendorProfileController,
+);
 export const loanProductController = container.resolve(LoanProductController);
-export const loanApplicationController = container.resolve(LoanApplicationController) 
+export const loanApplicationController = container.resolve(
+  LoanApplicationController,
+);
 export const authMiddleware = container.resolve(AuthMiddleware);
 
 //User:
-export const userVerificationController = container.resolve(UserVerificationController)
-export const userApplicationController = container.resolve(UserApplicationController)
+export const userVerificationController = container.resolve(
+  UserVerificationController,
+);
+export const userApplicationController = container.resolve(
+  UserApplicationController,
+);
 export const userEmiController = container.resolve(EmiController);
-export const emiPaymentController = container.resolve(EmiPaymentController)
+export const emiPaymentController = container.resolve(EmiPaymentController);
 //Notification:-
 
-export const userNotificationController = container.resolve(UserNotificationController)
+export const userNotificationController = container.resolve(
+  UserNotificationController,
+);
 
-export const chatController = container.resolve(ChatController)
+//Vendor Side notification:-
 
-export const vendorDashboardController = container.resolve(VendorDashboardController)
+export const vendorNotificationController = container.resolve(
+  VendorNotificationController,
+);
 
+export const chatController = container.resolve(ChatController);
+
+export const vendorDashboardController = container.resolve(
+  VendorDashboardController,
+);
 
 //Transaction:-
 
-export const transactionController = container.resolve(TransactionController)
+export const transactionController = container.resolve(TransactionController);
 //Admin:-
-

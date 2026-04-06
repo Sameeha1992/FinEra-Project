@@ -1,17 +1,43 @@
 import { z } from "zod";
 
+const isAtLeast18YearsOld = (dateString: string) => {
+  const dob = new Date(dateString);
+
+  if (isNaN(dob.getTime())) return false;
+
+  const today = new Date();
+
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < dob.getDate())
+  ) {
+    age--;
+  }
+
+  return age >= 18;
+};
+
+
 export const completeProfileSchema = z.object({
   body:z.object({
     dob: z
     .string()
     .trim()
-    .min(1, "Date of birth is required"),
-
+    .min(1, "Date of birth is required")
+    .refine((val) => !isNaN(new Date(val).getTime()), {
+        message: "Invalid date of birth",
+      })
+      .refine((val) => isAtLeast18YearsOld(val), {
+        message: "User must be at least 18 years old",
+      }),
   job: z
     .string()
     .trim()
     .min(2, "Job is required")
-    .max(100, "Job is too long"),
+    .max(50, "Job is too long"),
 
   income: z
     .string()

@@ -20,20 +20,14 @@ export class EmiRepository
 
   async findByLoanId(loan: string): Promise<IEmi[]> {
     try {
-      console.log("========== EMI REPOSITORY DEBUG ==========");
-      console.log("loanId received in repo:", loan);
 
       const emis = await Emi.find({ loan }).sort({ emiNumber: 1 });
 
-      console.log("EMI documents from DB:", emis);
-      console.log("EMI count:", emis.length);
 
-      console.log("========== EMI REPOSITORY END ==========");
 
       return emis;
     } catch (error) {
-      console.log("========== EMI REPOSITORY ERROR ==========");
-      console.log("repository error:", error);
+      console.log("Error for emi finding",error)
       throw error;
     }
   }
@@ -85,7 +79,7 @@ export class EmiRepository
       {
         _id: emiId,
         $or: [
-          // Case 1: Normal state
+        //Normal state
           { status: { $nin: [EmiStatus.PAID, EmiStatus.PAYMENT_IN_PROGRESS] } },
           // Case 2: Expired lock
           {

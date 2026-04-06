@@ -60,14 +60,16 @@ export class AuthMiddleware {
     res: Response,
     next: NextFunction,
   ) => {
-    console.log("is authenticated")
+    console.log("is authenticated");
     const authHeader = req.headers.authorization;
 
-    if(!authHeader || !authHeader.startsWith("Bearer ")){
-      return res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.UNAUTHORIZED_ACCESS})
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res
+        .status(STATUS_CODES.UNAUTHORIZED)
+        .json({ success: false, message: MESSAGES.UNAUTHORIZED_ACCESS });
     }
-   
-    const token = authHeader.split(" ")[1]
+
+    const token = authHeader.split(" ")[1];
 
     try {
       const decode = this._jwtService.verifyToken(
@@ -80,8 +82,7 @@ export class AuthMiddleware {
         role: decode.role,
         email: decode.email,
       };
-      console.log("Token User",req.user)
-      
+      console.log("Token User", req.user);
 
       next();
     } catch (error) {
@@ -110,9 +111,8 @@ export class AuthMiddleware {
     };
   };
 
-
   //BLOCKED USERS:-
-  
+
   checkBlocked = async (
     req: AuthenticateRequest,
     res: Response,

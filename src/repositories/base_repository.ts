@@ -1,42 +1,38 @@
-import {Document, Model } from "mongoose";
-import {IBaseRepository} from "../interfaces/repositories/baseRepository.interface"
+import { Document, Model } from "mongoose";
+import { IBaseRepository } from "../interfaces/repositories/baseRepository.interface";
 
+export class BaseRepository<T extends Document> implements IBaseRepository<T> {
+  protected model: Model<T>;
 
-export class BaseRepository<T extends Document>implements IBaseRepository<T>{
-protected model:Model<T>;
-
-constructor(model:Model<T>){
+  constructor(model: Model<T>) {
     this.model = model;
-}
+  }
 
-async create(data:Partial<T>):Promise<T>{
+  async create(data: Partial<T>): Promise<T> {
     const newRecord = new this.model(data);
-    return await newRecord.save()
-}
+    return await newRecord.save();
+  }
 
-async findById(id:string):Promise<T|null>{
-return await this.model.findById(id)
-}
+  async findById(id: string): Promise<T | null> {
+    return await this.model.findById(id);
+  }
 
-async findAll(): Promise<T[]> {
-    return await this.model.find()
-}
+  async findAll(): Promise<T[]> {
+    return await this.model.find();
+  }
 
-async findOne(query:any):Promise<T|null>{
-    return await this.model.findOne(query)
-}
+  async findOne(query: any): Promise<T | null> {
+    return await this.model.findOne(query);
+  }
 
-async find(query: any): Promise<T[]> {
-    return await this.model.find(query)
-}
- async updateById(id:string,updateData:Partial<T>):Promise<T | null>{
-    return await this.model.findByIdAndUpdate(id,updateData,{new:true})
- }
+  async find(query: any): Promise<T[]> {
+    return await this.model.find(query);
+  }
+  async updateById(id: string, updateData: Partial<T>): Promise<T | null> {
+    return await this.model.findByIdAndUpdate(id, updateData, { new: true });
+  }
 
- async deleteById(id: string): Promise<T | null> {
-     return this.model.findByIdAndDelete(id);
- }
-
- 
-
+  async deleteById(id: string): Promise<T | null> {
+    return this.model.findByIdAndDelete(id);
+  }
 }

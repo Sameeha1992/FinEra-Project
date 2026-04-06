@@ -37,9 +37,6 @@ import { StorageService } from '@/services/helper/storageService'
 import { IVendorProfileService } from '@/interfaces/services/vendor/vendor.profile.interface'
 import { VendorProfileService } from '@/services/vendor/vendor.profile'
 import { VendorProfileController } from '@/controllers/vendor/vendor.profile.controller'
-import { AuthMiddleware } from '@/middleware/authMiddleware'
-import { IAdminProfileService } from '@/interfaces/services/admin/admin.profile.interface'
-import { uploadImageMiddleware } from '@/middleware/multer.middleware'
 import { ILoanProductRepository } from '@/interfaces/repositories/loanProduct/loanProduct.repository'
 import { LoanProductRepository } from '@/repositories/loanProduct/loanProduct.repository'
 import { LoanProductService } from '@/services/loanProduct/loan.service'
@@ -100,14 +97,17 @@ import { VendorDashboardRepository } from '@/repositories/vendor/vendorDashboard
 import { IVendorDashboardService } from '@/interfaces/services/vendor/vendorDashboard.service.interface'
 import { VendorDashboardService } from '@/services/vendor/vendorDashboard.service'
 import { VendorDashboardController } from '@/controllers/vendor/vendorDashboard.controller'
-import { IUserProfileVerificationRepository } from '@/interfaces/repositories/vendor/user.profileVerification.repsoitory.interface'
-import { IUserProfileVerificationService } from '@/interfaces/services/vendor/user.profileVerification.service.interface'
 import { ITransactionRepository } from '@/interfaces/repositories/transactions/transactions.repository.interface'
 import { TransactionRepository } from '@/repositories/transactions/transactions.repository'
 import { ITransactionService } from '@/interfaces/services/transaction/transaction.service.interface'
 import { TransactionService } from '@/services/transaction/transaction.service'
 import { IVendorTransactionPdfService } from '@/interfaces/helper/pdfDoc.service.interface'
 import { VendorTransactionPdfService } from '@/services/helper/pdfDoc.service'
+import { IVendorNotificationRepository } from '@/interfaces/repositories/notification/vendor.notification'
+import { VendorNotificationRepository } from '@/repositories/notification/vendor.notification'
+import { IVendorNotificationService } from '@/interfaces/services/notifications/vendor.notification.service.interface.'
+import { VendorNotificationService } from '@/services/vendor/vendor.notification.service'
+import { VendorNotificationController } from '@/controllers/vendor/vendor.notification.controller'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -220,6 +220,12 @@ container.registerSingleton(UserNotificationController)
 
 container.registerSingleton<IEmiNotificationCronService>("IEmiNotificationCronService",EmiNotificationCronService);
 
+
+//Vendor Notification:-
+
+container.registerSingleton<IVendorNotificationRepository>("IVendorNotificationRepository",VendorNotificationRepository);
+container.registerSingleton<IVendorNotificationService>("IVendorNotificationService",VendorNotificationService);
+container.registerSingleton(VendorNotificationController)
 // Chat:
 
 container.registerSingleton<IConversationRepository>("IConversationRepository",ConversationRepository);

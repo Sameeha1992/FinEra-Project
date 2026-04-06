@@ -4,7 +4,6 @@ import { BaseRepository } from "../base_repository";
 import { IConversationRepository } from "@/interfaces/repositories/chat/conversation.repository.interface";
 import { injectable } from "tsyringe";
 
-
 @injectable()
 export class ConversationRepository
   extends BaseRepository<IChat>

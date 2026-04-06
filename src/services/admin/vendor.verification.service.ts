@@ -17,7 +17,7 @@ export class VendorVerificationService implements IVendorVerificationService {
   constructor(
     @inject("IVendorVerifcationRepository")
     private _IvendorVerificationRepo: IVendorVerifcationRepository,
-    @inject("IStorageService") private _IstorageService:IStorageService
+    @inject("IStorageService") private _IstorageService: IStorageService,
   ) {}
   async getVendorList(
     page: number,
@@ -58,8 +58,15 @@ export class VendorVerificationService implements IVendorVerificationService {
       throw new CustomError(MESSAGES.USER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
 
-    const registerationDoc = vendor.registrationDoc ? await this._IstorageService.generateSignedUrl(vendor.registrationDoc, 3600) : undefined;
-    const licenceDoc = vendor.licenceDoc ? await this._IstorageService.generateSignedUrl(vendor.licenceDoc,3600):undefined;
+    const registerationDoc = vendor.registrationDoc
+      ? await this._IstorageService.generateSignedUrl(
+          vendor.registrationDoc,
+          3600,
+        )
+      : undefined;
+    const licenceDoc = vendor.licenceDoc
+      ? await this._IstorageService.generateSignedUrl(vendor.licenceDoc, 3600)
+      : undefined;
 
     const vendorDto: VendorDetailDTO = {
       vendorId: vendor.vendorId,
@@ -79,19 +86,26 @@ export class VendorVerificationService implements IVendorVerificationService {
       uploadedAt: vendor.uploadedAt,
     };
 
-    return vendorDto
+    return vendorDto;
   }
 
-  async updateVendorStatus(vendorId: string, status: Status,rejectionReason:string): Promise<UpdateVendorStatusDto> {
-    
-    const vendor = await this._IvendorVerificationRepo.updateVendorStatus(vendorId,status,rejectionReason);
-    if(!vendor){
-      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+  async updateVendorStatus(
+    vendorId: string,
+    status: Status,
+    rejectionReason: string,
+  ): Promise<UpdateVendorStatusDto> {
+    const vendor = await this._IvendorVerificationRepo.updateVendorStatus(
+      vendorId,
+      status,
+      rejectionReason,
+    );
+    if (!vendor) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
 
     return {
-      vendorId:vendor.vendorId,
-      status:vendor.status
-    }
+      vendorId: vendor.vendorId,
+      status: vendor.status,
+    };
   }
 }

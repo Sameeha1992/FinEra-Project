@@ -6,12 +6,10 @@ import {
 
 export interface INotificationService {
   createNotification(
-    data: CreateNotificationDTO
+    data: CreateNotificationDTO,
   ): Promise<NotificationResponseDTO>;
 
-  getNotificationsByUserId(
-    userId: string
-  ): Promise<NotificationResponseDTO[]>;
+  getNotificationsByUserId(userId: string): Promise<NotificationResponseDTO[]>;
 
   markAsRead(notificationId: string): Promise<NotificationResponseDTO>;
 
@@ -23,6 +21,6 @@ export interface INotificationService {
     emiId: string,
     type: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
   ): Promise<boolean>;
 }

@@ -1,14 +1,14 @@
 import { LoginResponseDto, LoginDto } from "../../../dto/shared/login.dto";
 
 export interface IAdminAuthService {
-  login(
-    credentials: LoginDto
-  ): Promise<{
+  login(credentials: LoginDto): Promise<{
     accessToken: string;
     refreshToken: string;
     admin: LoginResponseDto;
   }>;
-  refreshToken(resfreshToken: string): Promise<{accessToken:string,refreshToken:string}>;
+  refreshToken(
+    resfreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }>;
 
-  logout(refreshToken:string):Promise<void>
+  logout(refreshToken: string): Promise<void>;
 }

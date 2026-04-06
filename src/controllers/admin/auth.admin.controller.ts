@@ -55,7 +55,7 @@ export class AdminAuthController {
       const { accessToken, refreshToken: newRefreshToken } =
         await this._adminAuthService.refreshToken(refreshToken);
 
-      // const isProduction = process.env.NODE_ENV === "production";
+      ;
 
       // Set access token cookie
       res.cookie("refreshToken", newRefreshToken, {

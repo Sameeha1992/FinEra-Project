@@ -4,9 +4,15 @@ import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplication/loan.application.interface";
 import { IUserRepository } from "@/interfaces/repositories/user/userRepository.interface";
 import { ILoanApplicationService } from "@/interfaces/services/loanApplication/loan.application.service.interface";
+import { IVendorNotificationService } from "@/interfaces/services/notifications/vendor.notification.service.interface.";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { ILoanApplication } from "@/models/applications/application.model";
-import { LoanApplicationStatus, LoanType, Status } from "@/models/enums/enum";
+import {
+  LoanApplicationStatus,
+  LoanType,
+  Status,
+  VendorNotificationType,
+} from "@/models/enums/enum";
 import { Types } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
@@ -16,7 +22,10 @@ export class LoanApplicationService implements ILoanApplicationService {
     @inject("ILoanApplicationRepository")
     private _iLoanApplicationRepo: ILoanApplicationRepository,
     @inject("IStorageService") private _IStorageService: IStorageService,
-    @inject("IUserRepository") private readonly _iuserRepository:IUserRepository
+    @inject("IUserRepository")
+    private readonly _iuserRepository: IUserRepository,
+    @inject("IVendorNotificationService")
+    private readonly _iVendorNotificationService: IVendorNotificationService,
   ) {}
 
   async createLoanApplication(
@@ -28,7 +37,6 @@ export class LoanApplicationService implements ILoanApplicationService {
       salarySlipDoc?: Express.Multer.File[];
     },
   ): Promise<{ success: boolean; message: string }> {
-
     await this.validateUserProfileCompletion(dto.userId);
 
     const hasActiveLoan = await this._iLoanApplicationRepo.existingActiveLoans(
@@ -129,8 +137,21 @@ export class LoanApplicationService implements ILoanApplicationService {
       loanProductId: new Types.ObjectId(dto.loanProductId),
     };
 
-    await this._iLoanApplicationRepo.create(loanData);
 
+    const savedApplication = await this._iLoanApplicationRepo.create(loanData);
+
+    const user = await this._iuserRepository.findById(dto.userId);
+
+    if (user) {
+      await this._iVendorNotificationService.createNotification({
+        vendorId: savedApplication.vendorId.toString(),
+        userId: savedApplication.userId.toString(),
+        applicationId: savedApplication._id.toString(),
+        title: "New Loan Application",
+        message: `${user.name} has applied for a ${savedApplication.loanType} loan.`,
+        type: VendorNotificationType.NEW_LOAN_APPLICATION,
+      });
+    }
     return {
       success: true,
       message: MESSAGES.LOAN_APPLICATION_SUBMITTED_SUCCESSFULLY,
@@ -156,7 +177,7 @@ export class LoanApplicationService implements ILoanApplicationService {
       throw new CustomError(MESSAGES.REJECTED_LOANS_SHOULD_REAPPLIED);
     }
 
-    await this.validateUserProfileCompletion(existingLoan.userId.toString())
+    await this.validateUserProfileCompletion(existingLoan.userId.toString());
 
     if (typeof dto.personalDetails === "string") {
       dto.personalDetails = JSON.parse(dto.personalDetails);
@@ -198,13 +219,12 @@ export class LoanApplicationService implements ILoanApplicationService {
       dto.personalDetails = { ...dto.personalDetails, salarySlipUrl: key };
     }
 
-    
     const updated = await this._iLoanApplicationRepo.updateById(applicationId, {
       ...dto,
       userId: existingLoan.userId,
       vendorId: existingLoan.vendorId,
       loanProductId: existingLoan.loanProductId,
-      status:LoanApplicationStatus.PENDING,
+      status: LoanApplicationStatus.PENDING,
       rejectionReason: undefined,
       updatedAt: new Date(),
     });
@@ -218,17 +238,15 @@ export class LoanApplicationService implements ILoanApplicationService {
     };
   }
 
-
-  async validateUserProfileCompletion(userId:string):Promise<void>{
+  async validateUserProfileCompletion(userId: string): Promise<void> {
     const user = await this._iuserRepository.findById(userId);
 
-    if(!user){
-      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    if (!user) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
 
-    if(!user.isProfileComplete){
-      throw new CustomError(MESSAGES.PROFILE_NOT_COMPLETED)
+    if (!user.isProfileComplete) {
+      throw new CustomError(MESSAGES.PROFILE_NOT_COMPLETED);
     }
-
   }
 }

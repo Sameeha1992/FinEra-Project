@@ -5,12 +5,11 @@ import { AccountStatus } from "@/models/enums/enum";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 
-
 @injectable()
 export class AdminVendorMgtController {
   constructor(
     @inject("IAdminVendorMgtService")
-    private readonly _IAdminVendorService: IAdminVendorMgtService
+    private readonly _IAdminVendorService: IAdminVendorMgtService,
   ) {}
 
   async getAccounts(req: Request, res: Response, next: NextFunction) {
@@ -33,23 +32,19 @@ export class AdminVendorMgtController {
         search,
         role,
       });
-      return res
-        .status(STATUS_CODES.SUCCESS)
-        .json({
-          success: true,
-          data: result.data,
-          total: result.total,
-          page: result.page,
-          limit: result.limit,
-        });
+      return res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        data: result.data,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+      });
     } catch (error) {
-      return res
-        .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          message: MESSAGES.FAILURE,
-          error: (error as Error).message,
-        });
+      return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: MESSAGES.FAILURE,
+        error: (error as Error).message,
+      });
     }
   }
 
@@ -67,7 +62,7 @@ export class AdminVendorMgtController {
       const updated = await this._IAdminVendorService.updateStatus(
         id,
         role,
-        accountStatus
+        accountStatus,
       );
       if (!updated) {
         return res
@@ -75,15 +70,15 @@ export class AdminVendorMgtController {
           .json({ success: false, message: MESSAGES.NOT_FOUND });
       }
 
-      return res
-        .status(STATUS_CODES.SUCCESS)
-        .json({
-          success: true,
-          message: `Account ${
-            accountStatus === "active" ? AccountStatus.Unblocked : AccountStatus.Blocked
-          } successfully`,
-          data: updated,
-        });
+      return res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: `Account ${
+          accountStatus === "active"
+            ? AccountStatus.Unblocked
+            : AccountStatus.Blocked
+        } successfully`,
+        data: updated,
+      });
     } catch (error) {
       return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         success: false,

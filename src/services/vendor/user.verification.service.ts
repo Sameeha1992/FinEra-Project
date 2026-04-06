@@ -84,7 +84,7 @@ export class UserVerificationService implements IUserVerificationService {
         "SALARY SLIP KEY:",
         application.personalDetails?.salarySlipUrl,
       );
-      console.log("PROPERTY DOC KEY:", application.homeDetails?.propertyDocUrl);
+      // console.log("PROPERTY DOC KEY:", application.homeDetails?.propertyDocUrl);
       console.log(
         "BUSINESS DOC KEY:",
         application.businessDetails?.registrationDocUrl,
@@ -140,7 +140,10 @@ export class UserVerificationService implements IUserVerificationService {
           );
       }
 
-      console.log("APPLICATION DETAILS", application);
+      // console.log("APPLICATION DETAILS", application);
+
+      // console.log("FINAL APPLICATION DTO:", JSON.stringify(application, null, 2));
+
       return application;
     } catch (error) {
       console.error("❌ SERVICE ERROR:", error);

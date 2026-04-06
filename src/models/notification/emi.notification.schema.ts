@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { NotificationType } from "../enums/enum";
 
-
 export interface INotification extends Document {
   userId: Types.ObjectId;
   emiId?: Types.ObjectId;
@@ -52,12 +51,12 @@ const notificationSchema = new Schema<INotification>(
   },
   {
     timestamps: true, // adds createdAt & updatedAt
-  }
+  },
 );
 
 const Notification = mongoose.model<INotification>(
   "Notification",
-  notificationSchema
+  notificationSchema,
 );
 
 export default Notification;

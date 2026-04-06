@@ -86,10 +86,11 @@ export default class App{
   } 
 
   private setupErrorHandling():void{
-   this.app.use((req,res,next)=>{
+   this.app.use((req,res)=>{
     res.status(STATUS_CODES.NOT_FOUND).json({success:false,message:MESSAGES.ROUTES_NOT_FOUND})
    });
 
    this.app.use(errorHandlers)
+  
   }
 }

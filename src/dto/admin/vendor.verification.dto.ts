@@ -1,17 +1,14 @@
 import { AccountStatus, Role, Status } from "@/models/enums/enum";
 
-export interface VendorVerificationListDto{
-    vendorId:string;
-    vendorName:string;
-    email:string;
-    status:Status;
-    accountStatus:AccountStatus,
-
+export interface VendorVerificationListDto {
+  vendorId: string;
+  vendorName: string;
+  email: string;
+  status: Status;
+  accountStatus: AccountStatus;
 }
 
-
 export interface VendorDetailDTO {
-
   vendorId: string;
 
   vendorName: string;
@@ -41,10 +38,9 @@ export interface VendorDetailDTO {
   updatedAt: Date;
 
   uploadedAt?: Date;
-
 }
 
-export interface UpdateVendorStatusDto{
-  vendorId:string,
-  status:Status
+export interface UpdateVendorStatusDto {
+  vendorId: string;
+  status: Status;
 }

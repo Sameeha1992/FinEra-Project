@@ -62,8 +62,7 @@ export class UserVerificationController {
     try {
       const vendorId = req.user?.id;
       const applicationId = req.params.id;
-      console.log("vendorId for applucation", vendorId);
-      console.log("applicationid", applicationId);
+     
 
       if (!vendorId || !applicationId) {
         return res
@@ -77,7 +76,6 @@ export class UserVerificationController {
           vendorId,
         );
 
-      console.log("Application from service:", application); // 👈 ADD THIS
 
       if (!application) {
         return res.status(STATUS_CODES.BAD_REQUEST).json({

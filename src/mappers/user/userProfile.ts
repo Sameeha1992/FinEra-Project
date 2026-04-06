@@ -1,27 +1,25 @@
-import { UserCompletedResponseDto, UserCompleteProfileDto, UserProfileResponseDTO } from "@/dto/user/profile.dto";
+import {
+  UserCompletedResponseDto,
+  UserCompleteProfileDto,
+  UserProfileResponseDTO,
+} from "@/dto/user/profile.dto";
 import { Status } from "@/models/enums/enum";
 import { IUser } from "@/models/user/user.model";
 
-export class UserProfileMapper{
-    static toResponse(user:IUser):UserProfileResponseDTO{
-        return{
-            customerId:user.customerId,
-            name:user.name,
-            email:user.email,
-            phone:user.phone,
-            status:user.status,
-            isProfileComplete:user.isProfileComplete
-            
-
-        }
-    }
+export class UserProfileMapper {
+  static toResponse(user: IUser): UserProfileResponseDTO {
+    return {
+      customerId: user.customerId,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      status: user.status,
+      isProfileComplete: user.isProfileComplete,
+    };
+  }
 }
 
-
-
-
 export class CompleteProfileMapper {
-
   // Frontend DTO → DB Entity
   static toEntity(
     dto: UserCompleteProfileDto,
@@ -29,15 +27,14 @@ export class CompleteProfileMapper {
       adhaarDoc?: string;
       panDoc?: string;
       cibilDoc?: string;
-    }
+    },
   ): Partial<IUser> {
-
     return {
       dob: dto.dob,
       job: dto.job,
       income: dto.income,
       gender: dto.gender,
-      isProfileComplete:dto.isProfileComplete,
+      isProfileComplete: dto.isProfileComplete,
 
       adhaarNumber: dto.adhaarNumber,
       panNumber: dto.panNumber,
@@ -50,15 +47,14 @@ export class CompleteProfileMapper {
     };
   }
 
-
-   static toResponse(user: IUser): UserCompletedResponseDto {
+  static toResponse(user: IUser): UserCompletedResponseDto {
     return {
       name: user.name,
       customerId: user.customerId,
       email: user.email,
       phone: user.phone ?? "",
       status: user.status ?? Status.Not_Verified,
-      isProfileComplete:user.isProfileComplete ?? false,
+      isProfileComplete: user.isProfileComplete ?? false,
 
       dob: user.dob ?? "",
       job: user.job ?? "",

@@ -11,7 +11,6 @@ export interface ILoanApplicationService {
     },
   ): Promise<{ success: boolean; message: string }>;
 
-  
   reapplyRejectedLoan(
     applicationId: string,
     dto: CreateLoanApplicationDTO,

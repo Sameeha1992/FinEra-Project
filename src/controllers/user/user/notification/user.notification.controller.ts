@@ -45,7 +45,6 @@ export class UserNotificationController {
 
     const notification =
       await this._iNotificationService.markAsRead(notificationId);
-      console.log("notifications",notification)
 
     res.status(STATUS_CODES.SUCCESS).json({
       success: true,

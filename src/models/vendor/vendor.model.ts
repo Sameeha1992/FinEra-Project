@@ -1,59 +1,51 @@
-import mongoose, { Schema,Document } from "mongoose"
-import { AccountStatus, Role, Status, verificationStatus } from "../enums/enum"
+import mongoose, { Schema, Document } from "mongoose";
+import { AccountStatus, Role, Status, verificationStatus } from "../enums/enum";
 
-export interface IVendor extends Document{
-    _id:mongoose.Types.ObjectId,
-    vendorId:string,
-    vendorName:string,
-    email:string,
-    password:string,
-    registrationNumber:string,
-    registrationDoc?:string,
-    licenceNumber?:string,
-    licenceDoc?:string,
-    status:Status,
-    rejectionReason?:string,
-    isProfileComplete:boolean,
-    isBlocked:boolean,
-    role:Role,
-    accountStatus:AccountStatus,
-    createdAt:Date,
-    updatedAt:Date,
-    uploadedAt?:Date,
-    
-
+export interface IVendor extends Document {
+  _id: mongoose.Types.ObjectId;
+  vendorId: string;
+  vendorName: string;
+  email: string;
+  password: string;
+  registrationNumber: string;
+  registrationDoc?: string;
+  licenceNumber?: string;
+  licenceDoc?: string;
+  status: Status;
+  rejectionReason?: string;
+  isProfileComplete: boolean;
+  isBlocked: boolean;
+  role: Role;
+  accountStatus: AccountStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  uploadedAt?: Date;
 }
 
-
 const vendorSchema = new Schema<IVendor>(
-    {
-        vendorId:{type:String,required:true,unique:true},
-        vendorName:{type:String,required:true,unique:true},
-        email:{type:String,required:true,unique:true},
-        password:{type:String,required:false},
-        registrationNumber:{type:String,required:true,unique:true},
-        registrationDoc:{type:String},
-        licenceNumber:{type:String},
-        isProfileComplete:{type:Boolean,default:false},
-        isBlocked:{type:Boolean,default:false},
-        
-        accountStatus:{type:String,default:AccountStatus.Unblocked},
-        licenceDoc:{type:String},
-         status:{
-            type:String,
-            enum:Object.values(Status),
-            default:Status.Not_Verified
-        },
-        rejectionReason:{type:String},
-        role:{type:String,enum:Object.values(Role),default:Role.Vendor},
-        uploadedAt:{type:Date}
+  {
+    vendorId: { type: String, required: true, unique: true },
+    vendorName: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: false },
+    registrationNumber: { type: String, required: true, unique: true },
+    registrationDoc: { type: String },
+    licenceNumber: { type: String },
+    isProfileComplete: { type: Boolean, default: false },
+    isBlocked: { type: Boolean, default: false },
 
+    accountStatus: { type: String, default: AccountStatus.Unblocked },
+    licenceDoc: { type: String },
+    status: {
+      type: String,
+      enum: Object.values(Status),
+      default: Status.Not_Verified,
     },
-        {collection:"vendor",timestamps:true}
+    rejectionReason: { type: String },
+    role: { type: String, enum: Object.values(Role), default: Role.Vendor },
+    uploadedAt: { type: Date },
+  },
+  { collection: "vendor", timestamps: true },
+);
 
-)
-
-
-export const VendorModel = mongoose.model<IVendor>("Vendor",vendorSchema);
-
-
+export const VendorModel = mongoose.model<IVendor>("Vendor", vendorSchema);

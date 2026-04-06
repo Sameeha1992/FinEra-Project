@@ -16,10 +16,10 @@ export class NotificationMapper {
   }
 
   static toResponseDTOList(
-    notifications: INotification[]
+    notifications: INotification[],
   ): NotificationResponseDTO[] {
     return notifications.map((notification) =>
-      this.toResponseDTO(notification)
+      this.toResponseDTO(notification),
     );
   }
 }

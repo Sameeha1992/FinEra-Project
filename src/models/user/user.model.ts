@@ -1,75 +1,71 @@
-import mongoose,{Schema,Document} from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import { AccountStatus, Role, Status } from "../enums/enum";
 import { boolean } from "zod";
 
-
-export interface IUser extends Document{
-    _id:string;
-    customerId:string;
-    name:string;
-    email:string;
-    phone?:string;
-    profileImage?:string;
-    dob?:string;
-    job?:string;
-    income?:string;
-    gender?: "male"| "female" | "other";
-    isBlocked?:boolean,
-    password?:string;
-    adhaarNumber?:string;
-    vendorId:string;
-    panNumber?:string;
-    cibilScore?: string;
-    adhaarDoc?: string;
-    panDoc?:string;
-    cibilDoc?: string;
-    additionalDoc?:string;
-    isBlacklisted?: boolean;
-    status?: Status;
-    accountStatus?:AccountStatus;
-    role?:Role.User|Role.Vendor|Role.Admin;
-    createdAt?: Date;
-    updatedAt?: Date;
-    message?: string;
-    isProfileComplete?:boolean
+export interface IUser extends Document {
+  _id: string;
+  customerId: string;
+  name: string;
+  email: string;
+  phone?: string;
+  profileImage?: string;
+  dob?: string;
+  job?: string;
+  income?: string;
+  gender?: "male" | "female" | "other";
+  isBlocked?: boolean;
+  password?: string;
+  adhaarNumber?: string;
+  vendorId: string;
+  panNumber?: string;
+  cibilScore?: string;
+  adhaarDoc?: string;
+  panDoc?: string;
+  cibilDoc?: string;
+  additionalDoc?: string;
+  isBlacklisted?: boolean;
+  status?: Status;
+  accountStatus?: AccountStatus;
+  role?: Role.User | Role.Vendor | Role.Admin;
+  createdAt?: Date;
+  updatedAt?: Date;
+  message?: string;
+  isProfileComplete?: boolean;
 }
 
-
 const UserSchema = new Schema<IUser>(
-    {
-
-        customerId:{type: String,required:true, unique:true},
-        name:{type: String,required:true},
-        email:{type: String,required:true,unique:true},
-        phone:{type: Number},
-        dob:{type:String},
-        profileImage:{type:String,default:null},
-        job:{type:String},
-        income:{type:Number},
-        gender:{type:String, enum:["male","female","other"]},
-        password:{type:String,required:false},
-        adhaarNumber:{type:String},
-        panNumber:{type:String},
-        cibilScore:{type:Number},
-        adhaarDoc:{type:String},
-        panDoc:{type:String},
-        cibilDoc:{type:String},
-        additionalDoc:{type:String},
-        isBlacklisted:{type:Boolean, default:false},
-        message:{type:String},
-        isBlocked:{type:Boolean,default:false},
-        accountStatus:{type:String,default:AccountStatus.Unblocked},
-        isProfileComplete:{type:Boolean,default:false},
-        vendorId:{type:String},
-        status:{
-            type:String,
-            default:Status.Not_Verified
-        },
-
-        role:{type:String,enum:Object.values(Role),default:Role.User},
-
+  {
+    customerId: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phone: { type: Number },
+    dob: { type: String },
+    profileImage: { type: String, default: null },
+    job: { type: String },
+    income: { type: Number },
+    gender: { type: String, enum: ["male", "female", "other"] },
+    password: { type: String, required: false },
+    adhaarNumber: { type: String },
+    panNumber: { type: String },
+    cibilScore: { type: Number },
+    adhaarDoc: { type: String },
+    panDoc: { type: String },
+    cibilDoc: { type: String },
+    additionalDoc: { type: String },
+    isBlacklisted: { type: Boolean, default: false },
+    message: { type: String },
+    isBlocked: { type: Boolean, default: false },
+    accountStatus: { type: String, default: AccountStatus.Unblocked },
+    isProfileComplete: { type: Boolean, default: false },
+    vendorId: { type: String },
+    status: {
+      type: String,
+      default: Status.Not_Verified,
     },
-    {collection:"user",timestamps:true}
-)
 
-export const UserModel = mongoose.model<IUser>("User",UserSchema);
+    role: { type: String, enum: Object.values(Role), default: Role.User },
+  },
+  { collection: "user", timestamps: true },
+);
+
+export const UserModel = mongoose.model<IUser>("User", UserSchema);

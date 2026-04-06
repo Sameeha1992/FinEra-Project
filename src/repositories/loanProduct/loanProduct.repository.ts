@@ -101,81 +101,73 @@ export class LoanProductRepository
     return loanProduct.findOne({ loanId, vendor: vendorId });
   }
 
-
-  // User side loan 
+  // User side loan
 
   async getActiveLoansForUsers(
     loanType: LoanType,
-    userSalary?:number,
+    userSalary?: number,
     page: number = 1,
     limit: number = 10,
-    search?:string
+    search?: string,
   ): Promise<LoanListingResult> {
-   const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-  // ── Base filter ───────────────────────────────────────────────
-  const filter: FilterQuery<ILoanProduct> = {
-    loanType,
-    status: LoanStatus.ACTIVE,
-  };
+    // ── Base filter ───────────────────────────────────────────────
+    const filter: FilterQuery<ILoanProduct> = {
+      loanType,
+      status: LoanStatus.ACTIVE,
+    };
 
-  console.log("Repository filter:", JSON.stringify(filter, null, 2));
+    console.log("Repository filter:", JSON.stringify(filter, null, 2));
 
-  // ── Apply salary filter only if userSalary is provided ───────
-  if (userSalary && userSalary >0) {
-    filter.$and = [
-      {
-        $or: [
-          { "eligibility.minSalary": { $lte: userSalary } },
-          { "eligibility.minSalary": { $exists: false } },
-        ],
-      },
-    ];
+    // ── Apply salary filter only if userSalary is provided ───────
+    if (userSalary && userSalary > 0) {
+      filter.$and = [
+        {
+          $or: [
+            { "eligibility.minSalary": { $lte: userSalary } },
+            { "eligibility.minSalary": { $exists: false } },
+          ],
+        },
+      ];
+    }
+
+    // console.log("All loans in DB for type:", loanType, await loanProduct.find({}));
+    // ── Apply search filter if provided ─────────────────────────
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { "vendor.bankName": { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // ── Query loans ──────────────────────────────────────────────
+    const loans = await loanProduct
+      .find(filter)
+      .populate("vendor", "vendorName")
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const total = await loanProduct.countDocuments(filter);
+    console.log("loans in thenreopoditorybhghgb", loans);
+    return {
+      loans,
+      total,
+      page,
+      limit,
+    };
   }
 
-  // console.log("All loans in DB for type:", loanType, await loanProduct.find({}));
-  // ── Apply search filter if provided ─────────────────────────
-  if (search) {
-    filter.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { description: { $regex: search, $options: "i" } },
-      { "vendor.bankName": { $regex: search, $options: "i" } },
-    ];
+  async getLoanDetailForUsers(
+    _id: string,
+  ): Promise<(ILoanProduct & { vendor: IVendor }) | null> {
+    const loan = await loanProduct
+      .findById({ _id, status: LoanStatus.ACTIVE })
+      .populate<{ vendor: IVendor }>("vendor", "vendorName")
+      .lean();
+
+    return loan as (ILoanProduct & { vendor: IVendor }) | null;
   }
-
-  // ── Query loans ──────────────────────────────────────────────
-  const loans = await loanProduct
-    .find(filter)
-    .populate("vendor", "vendorName")
-    .skip(skip)
-    .limit(limit)
-    .lean()
-    
-
-  const total = await loanProduct.countDocuments(filter);
-  console.log("loans in thenreopoditorybhghgb",loans)
-  return {
-    loans,
-    total,
-    page,
-    limit,
-  };
-}
-
-
-
-async getLoanDetailForUsers(
-  _id: string
-): Promise<(ILoanProduct & { vendor: IVendor }) | null> {
-
-  const loan = await loanProduct
-    .findById({ _id, status: LoanStatus.ACTIVE })
-    .populate<{ vendor: IVendor }>("vendor", "vendorName")
-    .lean();
-
-     
-
-
-  return loan as (ILoanProduct & { vendor: IVendor }) | null;
-}
 }

@@ -29,7 +29,6 @@ export interface ILoanProduct extends Document {
     maxAge?: number;
     minSalary?: number;
     minCibilScore?: number;
-    
   };
   createdAt: Date;
   updatedAt: Date;

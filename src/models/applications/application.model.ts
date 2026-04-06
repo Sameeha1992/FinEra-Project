@@ -1,13 +1,13 @@
 import { Document, Types } from "mongoose";
 
 export interface ILoanApplication extends Document {
-  _id:Types.ObjectId
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
-  vendorId:Types.ObjectId;
+  vendorId: Types.ObjectId;
   loanProductId: Types.ObjectId;
-  applicationNumber:string;
-  rejectionReason?:string;
-  verifiedAt?:Date;
+  applicationNumber: string;
+  rejectionReason?: string;
+  verifiedAt?: Date;
 
   loanType: LoanType;
 
@@ -21,24 +21,24 @@ export interface ILoanApplication extends Document {
     employerName?: string;
     yearsOfExperience?: number;
     purpose?: string;
-    salarySlipUrl?: string,
+    salarySlipUrl?: string;
   };
 
   goldDetails?: {
     goldWeight?: number;
-    goldImageUrl?: string
+    goldImageUrl?: string;
   };
 
   homeDetails?: {
     propertyValue?: number;
     propertyLocation?: string;
-    propertyDocUrl?: string, 
+    propertyDocUrl?: string;
   };
 
   businessDetails?: {
     businessName?: string;
     annualRevenue?: number;
-    registrationDocUrl?: string,
+    registrationDocUrl?: string;
   };
 
   status: LoanApplicationStatus;
@@ -46,9 +46,6 @@ export interface ILoanApplication extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
-
-
-
 
 import mongoose, { Schema } from "mongoose";
 import { LoanApplicationStatus, LoanType } from "../enums/enum";
@@ -73,16 +70,16 @@ const loanApplicationSchema = new Schema(
       required: true,
     },
 
-    applicationNumber:{
-      type:String,
-      unique:true
+    applicationNumber: {
+      type: String,
+      unique: true,
     },
 
-    rejectionReason:{
-      type:String,
+    rejectionReason: {
+      type: String,
     },
-    verifiedAt:{
-      type:Date
+    verifiedAt: {
+      type: Date,
     },
 
     loanType: {
@@ -101,7 +98,7 @@ const loanApplicationSchema = new Schema(
       employerName: String,
       yearsOfExperience: Number,
       purpose: String,
-      salarySlipUrl:String,
+      salarySlipUrl: String,
     },
 
     goldDetails: {
@@ -112,13 +109,13 @@ const loanApplicationSchema = new Schema(
     homeDetails: {
       propertyValue: Number,
       propertyLocation: String,
-      propertyDocUrl:String
+      propertyDocUrl: String,
     },
 
     businessDetails: {
       businessName: String,
       annualRevenue: Number,
-      registrationDocUrl:String
+      registrationDocUrl: String,
     },
 
     status: {
@@ -127,12 +124,12 @@ const loanApplicationSchema = new Schema(
       default: LoanApplicationStatus.PENDING,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const LoanApplication = mongoose.model<ILoanApplication>(
   "LoanApplication",
-  loanApplicationSchema
+  loanApplicationSchema,
 );
 
 export default LoanApplication;

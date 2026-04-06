@@ -33,11 +33,10 @@ export class LoanProductMapper {
 
       interestRate: dto.interestRate,
       duePenalty: dto.duePenalty,
-      processingFee:dto.processingFee,
-      
+      processingFee: dto.processingFee,
 
       status: dto.status,
-      loanType:dto.loanType,
+      loanType: dto.loanType,
 
       features: dto.features ?? [],
       eligibility: {
@@ -55,7 +54,7 @@ export class LoanProductMapper {
 
       name: entity.name,
       description: entity.description,
-      processingFee:entity.processingFee,
+      processingFee: entity.processingFee,
 
       amount: entity.amount,
       tenure: entity.tenure,
@@ -64,7 +63,7 @@ export class LoanProductMapper {
       duePenalty: entity.duePenalty,
 
       status: entity.status,
-      loanType:entity.loanType,
+      loanType: entity.loanType,
 
       features: entity.features,
       eligibility: {
@@ -77,16 +76,18 @@ export class LoanProductMapper {
   }
 }
 
-export class LoanDetalUserMapper{
-  static toResponse(entity:ILoanProduct & {vendor:IVendor}):LoanDetailForUserDto{
-  return {
-    loanId:entity.loanId,
-    vendor:{
-      id:entity.vendor._id.toString(),
-      vendorName:entity.vendor.vendorName
-    },
+export class LoanDetalUserMapper {
+  static toResponse(
+    entity: ILoanProduct & { vendor: IVendor },
+  ): LoanDetailForUserDto {
+    return {
+      loanId: entity.loanId,
+      vendor: {
+        id: entity.vendor._id.toString(),
+        vendorName: entity.vendor.vendorName,
+      },
 
-     name: entity.name,
+      name: entity.name,
       description: entity.description,
       status: entity.status,
 
@@ -109,7 +110,6 @@ export class LoanDetalUserMapper{
         minSalary: entity.eligibility?.minSalary,
         minCibilScore: entity.eligibility?.minCibilScore,
       },
-
-  }
+    };
   }
 }

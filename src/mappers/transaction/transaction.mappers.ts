@@ -1,11 +1,10 @@
-import { 
-  UserTransactionResponseDto, 
-  VendorTransactionResponseDto 
+import {
+  UserTransactionResponseDto,
+  VendorTransactionResponseDto,
 } from "@/dto/transaction/transaction.dto";
 import { ITransaction } from "@/models/transactions/transactions.model";
 
 export class TransactionMapper {
-
   // 👤 USER SIDE
   static toUserTransactionDto(
     transaction: ITransaction,
@@ -25,8 +24,7 @@ export class TransactionMapper {
   static toVendorTransactionDto(
     transaction: ITransaction,
   ): VendorTransactionResponseDto {
-
-    const user = transaction.userId as any // because of populate
+    const user = transaction.userId as any; // because of populate
 
     return {
       id: transaction._id.toString(),

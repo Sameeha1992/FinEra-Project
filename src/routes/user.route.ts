@@ -139,15 +139,6 @@ router.put(
   userProfileController.updateCompleteProfile.bind(userProfileController),
 );
 
-// router.put("/profile/image",uploadImageMiddleware.single("image"),userProfileController.updateProfileImage.bind(userProfileController))
-
-//   console.log("will come")
-
-// router.put("/profile/image",uploadImageMiddleware.single("image"),(req:Request,res:Response,next:NextFunction)=>{
-//   userProfileController.updateProfileImage(req,res,next)
-
-// })
-
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authUserController.logout(req, res, next);
 });
@@ -288,8 +279,7 @@ router.get(
   authMiddleware.auntenticate,
   authMiddleware.allowRoles(Role.User),
   authMiddleware.checkBlocked,
-  transactionController.getUserTransactions.bind(transactionController)
+  transactionController.getUserTransactions.bind(transactionController),
 );
-
 
 export default router;

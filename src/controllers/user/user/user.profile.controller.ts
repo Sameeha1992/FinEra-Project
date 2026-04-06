@@ -74,15 +74,12 @@ export class UserProfileController {
 
       const profileData =
         await this._userProfileService.getCompleteProfile(userId);
-        console.log("data for tyhe complete profile",profileData)
 
-      res
-        .status(STATUS_CODES.SUCCESS)
-        .json({
-          success: true,
-          message: MESSAGES.FETCHED_USER_PROFILE_DATA_SUCCESSFULLY,
-          data: profileData,
-        });
+      res.status(STATUS_CODES.SUCCESS).json({
+        success: true,
+        message: MESSAGES.FETCHED_USER_PROFILE_DATA_SUCCESSFULLY,
+        data: profileData,
+      });
     } catch (error) {
       next(error);
     }
@@ -119,28 +116,37 @@ export class UserProfileController {
     }
   }
 
-  async updateCompleteProfile(req:Request,res:Response,next:NextFunction){
+  async updateCompleteProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const typedReq = req as AuthenticateFileRequest
+      const typedReq = req as AuthenticateFileRequest;
       const userId = typedReq.user?.id;
 
-      if(!userId){
-        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS)
+      if (!userId) {
+        throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS);
       }
 
       const dto: UserUpdateCompleteProfile = req.body;
-      console.log("dto of the update",dto)
 
       const files = {
-        adhaarDoc:typedReq.files?.adhaarDoc?.[0],
-         panDoc: typedReq.files?.panDoc?.[0]
+        adhaarDoc: typedReq.files?.adhaarDoc?.[0],
+        panDoc: typedReq.files?.panDoc?.[0],
       };
 
-      const updatedProfile = await this._userProfileService.updateCompleteProfile(userId,dto,files)
-      console.log("this is the backend controller",updatedProfile)
-      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.PROFILE_UPDATED,data:updatedProfile})
+      const updatedProfile =
+        await this._userProfileService.updateCompleteProfile(
+          userId,
+          dto,
+          files,
+        );
+      res
+        .status(STATUS_CODES.SUCCESS)
+        .json({
+          success: true,
+          message: MESSAGES.PROFILE_UPDATED,
+          data: updatedProfile,
+        });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

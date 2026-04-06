@@ -6,8 +6,12 @@ export class ChatMapper {
   static toConversationDto(chat: IChat): ChatConversationDto {
     return {
       conversationId: chat._id.toString(),
-      userId: chat.userId._id ? chat.userId._id.toString() : chat.userId.toString(),
-      vendorId: chat.vendorId._id ? chat.vendorId._id.toString() : chat.vendorId.toString(),
+      userId: chat.userId._id
+        ? chat.userId._id.toString()
+        : chat.userId.toString(),
+      vendorId: chat.vendorId._id
+        ? chat.vendorId._id.toString()
+        : chat.vendorId.toString(),
       applicationId: chat.applicationId.toString(),
       userName: (chat.userId as any).name,
       vendorName: (chat.vendorId as any).vendorName,
@@ -18,8 +22,8 @@ export class ChatMapper {
     };
   }
 
-  static toMessageDto(message:IMessage):ChatMessageDto{
-     return {
+  static toMessageDto(message: IMessage): ChatMessageDto {
+    return {
       messageId: message._id.toString(),
       conversationId: message.conversationId.toString(),
       senderId: message.senderId.toString(),
@@ -27,7 +31,7 @@ export class ChatMapper {
       text: message.text,
       isRead: message.isRead,
       createdAt: message.createdAt,
-      updatedAt:message.updatedAt
+      updatedAt: message.updatedAt,
     };
   }
 }

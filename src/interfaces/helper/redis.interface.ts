@@ -5,9 +5,13 @@ export interface IRedisService {
 
   delete(key: string): Promise<void>;
 
-  markUserVerified(email: string,type:'user'|'vendor', TTL_SECONDS: number): Promise<void>;
+  markUserVerified(
+    email: string,
+    type: "user" | "vendor",
+    TTL_SECONDS: number,
+  ): Promise<void>;
 
-  isUserVerified(email: string,type:'user'|'vendor'): Promise<boolean>;
+  isUserVerified(email: string, type: "user" | "vendor"): Promise<boolean>;
 
   blacklistRefreshToken(jiti: string, ttlSeconds: number): Promise<void>;
 

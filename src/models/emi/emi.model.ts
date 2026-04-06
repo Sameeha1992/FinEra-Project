@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { EmiStatus } from "../enums/enum";
 
 export interface IEmi extends Document {
-  _id:mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   loan: mongoose.Types.ObjectId;
 
   emiNumber: number;
@@ -18,8 +18,8 @@ export interface IEmi extends Document {
   paidAt?: Date;
 
   lastPenaltyAppliedAt?: Date;
-  
-highRiskNotified?: boolean;
+
+  highRiskNotified?: boolean;
 
   createdAt: Date;
   updatedAt: Date;
@@ -52,7 +52,7 @@ const EmiSchema = new Schema<IEmi>(
 
     status: {
       type: String,
-      enum:Object.values(EmiStatus),
+      enum: Object.values(EmiStatus),
       default: EmiStatus.UPCOMING,
     },
 
@@ -64,13 +64,13 @@ const EmiSchema = new Schema<IEmi>(
     paidAt: {
       type: Date,
     },
-    paymentLockedAt:{
-        type:Date
-    }
+    paymentLockedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.model<IEmi>("Emi", EmiSchema);

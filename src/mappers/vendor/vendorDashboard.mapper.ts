@@ -2,7 +2,12 @@ import { VendorDashboardDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 export class VendorDashboardMapper {
   static toDto(data: {
-    appCounts: { total: number; pending: number; approved: number; rejected: number };
+    appCounts: {
+      total: number;
+      pending: number;
+      approved: number;
+      rejected: number;
+    };
     overdueLoans: number;
     activeLoans: number;
     repaymentsSum: number;
@@ -11,8 +16,21 @@ export class VendorDashboardMapper {
     appTrend: any[];
     typeDistribution: { label: string; value: number }[];
   }): VendorDashboardDto {
-    const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+    const monthsShort = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
     // Create map for trend data
     const trendMap = new Map();
     const last6Months = [];
@@ -24,17 +42,22 @@ export class VendorDashboardMapper {
       const monthLabel = monthsShort[d.getMonth()];
       const key = `${year}-${month}`;
       last6Months.push({ key, label: monthLabel });
-      trendMap.set(key, { month: monthLabel, approved: 0, rejected: 0, pending: 0 });
+      trendMap.set(key, {
+        month: monthLabel,
+        approved: 0,
+        rejected: 0,
+        pending: 0,
+      });
     }
 
-    data.appTrend.forEach(item => {
+    data.appTrend.forEach((item) => {
       const key = `${item._id.year}-${item._id.month}`;
       if (trendMap.has(key)) {
         trendMap.set(key, {
           month: trendMap.get(key).month,
           approved: item.approved,
           rejected: item.rejected,
-          pending: item.pending
+          pending: item.pending,
         });
       }
     });
@@ -53,10 +76,10 @@ export class VendorDashboardMapper {
       applicationStatusOverview: [
         { label: "Approved", value: data.appCounts.approved },
         { label: "Pending", value: data.appCounts.pending },
-        { label: "Rejected", value: data.appCounts.rejected }
+        { label: "Rejected", value: data.appCounts.rejected },
       ],
       loanTypeDistribution: data.typeDistribution,
-      monthlyApplicationTrend: last6Months.map(m => trendMap.get(m.key))
+      monthlyApplicationTrend: last6Months.map((m) => trendMap.get(m.key)),
     };
   }
 }
