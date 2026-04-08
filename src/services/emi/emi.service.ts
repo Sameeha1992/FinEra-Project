@@ -2,6 +2,7 @@ import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import { CreateEmiDTO, EmiListingLoans } from "@/dto/emi/create.emi.dto";
 import { GenerateEmiScheduleInput } from "@/dto/emi/emi.calculation.dto";
+import { EmiListingPageDto, EmiStatisticsDto } from "@/dto/emi/emi.statistic.dto";
 import { IEmiRepository } from "@/interfaces/repositories/emi/emi.repository.interface";
 import { ILoanRepository } from "@/interfaces/repositories/loan/loan.repository.interface";
 import { IEmiService } from "@/interfaces/services/emi/emi.servive.interface";
@@ -19,7 +20,7 @@ export class EmiService implements IEmiService {
   async getEmisByLoanId(
     loanId: string,
     userId: string,
-  ): Promise<EmiListingLoans[]> {
+  ): Promise<EmiListingPageDto> {
     console.log("service loan:", loanId);
 
     if (!loanId) {
@@ -50,7 +51,12 @@ export class EmiService implements IEmiService {
     const mappedEmis = emis.map((emi) => EmiMapper.toListingDto(emi));
     console.log("mapped emis:", mappedEmis);
 
-    return mappedEmis;
+    const statistics = this.buildEmiStatistics(mappedEmis)
+    return {
+      statistics,
+      emis:mappedEmis
+      
+    }
   }
 
   async generateEmiSchedule(data: GenerateEmiScheduleInput): Promise<CreateEmiDTO[]> {
@@ -112,4 +118,39 @@ const emiAmount = Number(
 
     return EmiMapper.toListingDto(emi)
   }
+
+  private buildEmiStatistics(emis:EmiListingLoans[]):EmiStatisticsDto{
+
+    const totalEmiCount = emis.length;
+
+    const paidEmis = emis.filter((emi)=>emi.status === EmiStatus.PAID);
+
+    const paidEmiCount = paidEmis.length;
+
+    const remainingEmiCount = totalEmiCount - paidEmiCount;
+
+    const totalPaidAmount = paidEmis.reduce((sum,emi)=>sum +emi.amount,0);
+
+    const totalEmiAmount = emis.reduce((sum,emi)=>sum+emi.amount,0);
+
+    const remainingBalanceAmount = totalEmiAmount - totalPaidAmount;
+
+    const overdueCount = emis.filter((emi)=>emi.status === EmiStatus.OVERDUE).length;
+
+    const unpaidEmis = emis.filter((emi)=>emi.status !== EmiStatus.PAID).sort((a,b)=>new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),);
+
+    const nextEmiDueDate = unpaidEmis.length > 0 ? unpaidEmis[0].dueDate :null;
+
+    return {
+      totalEmiCount,
+    paidEmiCount,
+    remainingEmiCount,
+    totalPaidAmount,
+    remainingBalanceAmount,
+    nextEmiDueDate,
+    overdueCount,
+    }
+
+  }
+
 }

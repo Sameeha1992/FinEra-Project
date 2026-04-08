@@ -9,7 +9,7 @@ import { INotificationRepository } from "@/interfaces/repositories/notification/
 import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
 import { NotificationMapper } from "@/mappers/notification/notification.mappers";
 import { CustomError } from "@/middleware/errorMiddleware";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { inject, injectable, container } from "tsyringe";
 import { Server as SocketIOServer } from "socket.io";
 
