@@ -1,4 +1,4 @@
-import { VendorNotificationType } from "@/models/enums/enum";
+import { VendorNotificationType } from "../../models/enums/enum";
 
 export interface CreateVendorNotificationDto {
   vendorId: string;

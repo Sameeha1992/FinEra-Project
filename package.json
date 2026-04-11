@@ -5,8 +5,8 @@
   "main": "server.ts",
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc",
-    "start": "node dist/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
     "lint": "eslint ."
   },
   "author": "",
@@ -42,6 +42,7 @@
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.3",
     "stripe": "^20.4.1",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "tsyringe": "^4.10.0",
     "uuid": "^8.3.2",
@@ -70,3 +71,5 @@
     "typescript-eslint": "^8.46.3"
   }
 }
+
+

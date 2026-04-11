@@ -5,7 +5,7 @@ import {
   PaginationQuery,
 } from "@/interfaces/shared/pagination.interface";
 import { IUser } from "@/models/user/user.model";
-import { AccountStatus } from "@/models/enums/enum";
+import { AccountStatus } from "../../../models/enums/enum";
 
 export interface IAdminVendorMgtRepo extends IBaseRepository<IVendor | IUser> {
   findAllVendors(

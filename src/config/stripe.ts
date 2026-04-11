@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import {env} from "@/validations/envValidation"
+import {env} from "../validations/envValidation"
 
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);

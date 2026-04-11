@@ -12,7 +12,7 @@ import { getCookieOptions, isProduction } from "../../../utils/setAuthCookies";
 import { env } from "@/validations/envValidation";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { success } from "zod";
-import { Role } from "@/models/enums/enum";
+import { Role } from "../../../models/enums/enum";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
 @injectable()

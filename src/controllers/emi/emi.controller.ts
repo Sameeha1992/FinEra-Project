@@ -1,8 +1,8 @@
-import { MESSAGES } from "@/config/constants/message";
-import { STATUS_CODES } from "@/config/constants/statusCode";
-import { IEmiService } from "@/interfaces/services/emi/emi.servive.interface";
-import { CustomError } from "@/middleware/errorMiddleware";
-import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
+import { MESSAGES } from "../../config/constants/message";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { IEmiService } from "../../interfaces/services/emi/emi.servive.interface";
+import { CustomError } from "../../middleware/errorMiddleware";
+import { AuthenticateRequest } from "../../types/express/authenticateRequest.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 import { success } from "zod";

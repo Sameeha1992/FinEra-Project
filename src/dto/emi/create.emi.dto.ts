@@ -1,4 +1,4 @@
-import { EmiStatus } from "@/models/enums/enum";
+import { EmiStatus } from "../../models/enums/enum";
 import mongoose from "mongoose";
 
 export interface CreateEmiDTO {

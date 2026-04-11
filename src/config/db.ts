@@ -1,6 +1,6 @@
 import mongoose  from "mongoose";
 import dotenv from "dotenv"
-import { env } from "@/validations/envValidation";
+import { env } from "../validations/envValidation";
 
 dotenv.config()
 

@@ -1,16 +1,16 @@
 import "reflect-metadata"; 
+import './config/di/di.containers'
 import express, { Application } from 'express'
 import cors from "cors"
 import morgan from "morgan"
-import userRouter from "../src/routes/user.route"
-import adminRouter from "../src/routes/admin.route"
-import vendorRouter from "../src/routes/vendor.route"
+import userRouter from "@/routes/user.route"
+import adminRouter from "@/routes/admin.route"
+import vendorRouter from "@/routes/vendor.route"
 import chatRouter from "@/routes/chat.route"
 import webhookRouter from "@/routes/webhook.route"
 import bodyParser from 'body-parser'
 import cookieParser from "cookie-parser"
 
-import './config/di/di.containers'
 
 
 import "@/validations/envValidation"

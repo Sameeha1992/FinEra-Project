@@ -4,10 +4,10 @@ import { Request, Response, NextFunction } from "express";
 import { LoginDto } from "../../dto/shared/login.dto";
 import { STATUS_CODES } from "../../config/constants/statusCode";
 import { MESSAGES } from "../../config/constants/message";
-import { env } from "@/validations/envValidation";
-import { clearAuthCookies } from "@/utils/clearAuthCookies";
-import { isProduction } from "@/utils/setAuthCookies";
-import { Role } from "@/models/enums/enum";
+import { env } from "../../validations/envValidation";
+import { clearAuthCookies } from "../../utils/clearAuthCookies";
+import { isProduction } from "../../utils/setAuthCookies";
+import { Role } from "../../models/enums/enum";
 import { success } from "zod";
 
 @injectable()

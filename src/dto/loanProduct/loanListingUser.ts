@@ -1,4 +1,4 @@
-import { LoanStatus } from "@/models/enums/enum";
+import { LoanStatus } from "../../models/enums/enum";
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
 
 export interface LoanListingResult {

@@ -1,4 +1,4 @@
-import { NotificationType } from "@/models/enums/enum";
+import { NotificationType } from "../../models/enums/enum";
 import { Type } from "@aws-sdk/client-s3";
 import { Types } from "mongoose";
 

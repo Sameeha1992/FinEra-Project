@@ -1,4 +1,4 @@
-import { LoanType } from "@/models/enums/enum";
+import { LoanType } from "../../models/enums/enum";
 import { Types } from "mongoose";
 
 export interface CreateLoanApplicationDTO {

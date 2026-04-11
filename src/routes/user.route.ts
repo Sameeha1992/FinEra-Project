@@ -1,10 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
 
-import { container } from "../config/di/di.containers";
-import { AuthUserController } from "../controllers/user/user/auth.user.controller";
-import { validateRequest } from "../middleware/validationRequest";
-import { registerUserSchema } from "../validations/user/auth/userRegister.validation";
-import { UserProfileController } from "../controllers/user/user/user.profile.controller";
 import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 import { Role } from "@/models/enums/enum";
@@ -22,6 +17,11 @@ import { EmiController } from "@/controllers/emi/emi.controller";
 import { loginUserSchema } from "@/validations/user/auth/user.login.validation";
 import { completeProfileSchema } from "@/validations/user/auth/complete.profile.validation";
 import { createEmiPaymentSessionSchema } from "@/validations/emi/emi.payment.validation";
+import { container } from "tsyringe";
+import { AuthUserController } from "@/controllers/user/user/auth.user.controller";
+import { UserProfileController } from "@/controllers/user/user/user.profile.controller";
+import { validateRequest } from "@/middleware/validationRequest";
+import { registerUserSchema } from "@/validations/user/auth/userRegister.validation";
 
 const router = express.Router();
 

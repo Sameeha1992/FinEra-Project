@@ -1,4 +1,4 @@
-import { LoanStatus, LoanType } from "@/models/enums/enum";
+import { LoanStatus, LoanType } from "../../models/enums/enum";
 import  {Types, ObjectId } from "mongoose";
 
 export interface EligibilityDto {

@@ -1,9 +1,8 @@
-import "reflect-metadata"
-import "tsconfig-paths/register";
 import dotenv from "dotenv"
 dotenv.config()
-
-
+import "reflect-metadata"
+import "tsconfig-paths/register";
+import './config/di/di.containers'
 import { createServer,Server } from "http";
 import {Server as SocketIOServer} from "socket.io";
 import { registerChatSocket } from "./config/socket.io";

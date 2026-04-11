@@ -1,4 +1,4 @@
-import { Status } from "@/models/enums/enum";
+import { Status } from "../../models/enums/enum";
 
 export interface UserProfileResponseDTO {
   customerId: string;

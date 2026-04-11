@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { Server, Socket } from "socket.io";
 import { container } from "tsyringe";
-import { IChatService } from "@/interfaces/services/chat/chat.service.interface";
-import { Role } from "@/models/enums/enum";
-import { IJwtService } from "@/interfaces/helper/jwt.service.interface";
+import { IChatService } from "../interfaces/services/chat/chat.service.interface";
+import { Role } from "../models/enums/enum";
+import { IJwtService } from "../interfaces/helper/jwt.service.interface";
 import { JwtPayload } from "jsonwebtoken";
 
 export const registerChatSocket = (io: Server) => {

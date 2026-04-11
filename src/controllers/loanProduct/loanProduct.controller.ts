@@ -6,7 +6,7 @@ import {
 } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProductService } from "@/interfaces/services/loanProduct/loanProduct.service";
 import { CustomError } from "@/middleware/errorMiddleware";
-import { LoanType } from "@/models/enums/enum";
+import { LoanType } from "../../models/enums/enum";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";

@@ -1,8 +1,8 @@
-import { MESSAGES } from "@/config/constants/message";
-import { STATUS_CODES } from "@/config/constants/statusCode";
-import { UpdateVendorStatusDto } from "@/dto/admin/vendor.verification.dto";
-import { IVendorVerificationService } from "@/interfaces/services/admin/vendor.verification.service.interface";
-import { Status } from "@/models/enums/enum";
+import { MESSAGES } from "../../config/constants/message";
+import { STATUS_CODES } from "../../config/constants/statusCode";
+import { UpdateVendorStatusDto } from "../../dto/admin/vendor.verification.dto";
+import { IVendorVerificationService } from "../../interfaces/services/admin/vendor.verification.service.interface";
+import { Status } from "../../models/enums/enum";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 import { success } from "zod";

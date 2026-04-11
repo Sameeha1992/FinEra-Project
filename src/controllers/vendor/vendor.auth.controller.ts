@@ -10,7 +10,7 @@ import { OtpVerifyForgetDto } from "../../dto/user/auth/otp-generation.dto";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
 import { success } from "zod";
-import { Role } from "@/models/enums/enum";
+import { Role } from "../../models/enums/enum";
 import { env } from "@/validations/envValidation";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
