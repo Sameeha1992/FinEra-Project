@@ -4,10 +4,12 @@ import logger from "../../middleware/loggerMiddleware";
 
 
 export const redisClient = createClient({
+  username:config.redis.REDIS_USER,
   password: config.redis.REDIS_PASS,
   socket: {
     host: config.redis.REDIS_HOST || 'redis',   
     port: Number(config.redis.REDIS_PORT) || 6379,
+    
   },
 });
 
