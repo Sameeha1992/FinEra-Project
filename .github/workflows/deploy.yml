@@ -3,15 +3,14 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - main   # change to master if your branch is master
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-
-     - name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Deploy to EC2
