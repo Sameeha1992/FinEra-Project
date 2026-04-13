@@ -24,6 +24,6 @@ jobs:
             git pull origin main
             docker compose down
             docker compose up -d --build
-            port: 22
+
           timeout: 30s
           command_timeout: 20m
