@@ -1,1 +1,1 @@
-export const PROCESSING_FEE = 200;
+export const PROCESSING_FEE = 500;
