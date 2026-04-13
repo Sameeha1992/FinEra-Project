@@ -1,4 +1,5 @@
 import { MESSAGES } from "@/config/constants/message";
+import { PROCESSING_FEE } from "@/config/constants/loan";
 import { CreateEmiDTO } from "@/dto/emi/create.emi.dto";
 import {
   VendorApplicationQueryDTO,
@@ -195,7 +196,7 @@ export class UserVerificationService implements IUserVerificationService {
       throw new CustomError(MESSAGES.LOAN_PRODUCT_NOT_FOUND);
     }
 
-    const processingFee = Math.ceil(application.loanAmount * 0.01);
+    const processingFee = PROCESSING_FEE;
     const netLoanAmount = application.loanAmount - processingFee;
 
     const loanData = CreateLoanMappers.toEntity(
@@ -231,7 +232,7 @@ export class UserVerificationService implements IUserVerificationService {
       userId: application.userId.toString(),
       loanId: createdLoan._id.toString(),
       title: "Loan Approved",
-      message: `Your application has been approved.Loan amount ₹${netLoanAmount} has been created successfully.`,
+      message: `Your application has been approved.Loan amount ₹${application.loanAmount} has been created successfully.`,
       type: NotificationType.LOAN_APPROVED,
     });
 

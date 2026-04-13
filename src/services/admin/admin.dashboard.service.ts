@@ -3,9 +3,9 @@ import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplic
 import { IUserRepository } from "@/interfaces/repositories/user/userRepository.interface";
 import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { IAdminDashboardService } from "@/interfaces/services/admin/admin.dashboard.service.interface";
+import { PROCESSING_FEE } from "@/config/constants/loan";
 import { inject, injectable } from "tsyringe";
 
-const PROCESSING_FEE = 200;
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
   constructor(
