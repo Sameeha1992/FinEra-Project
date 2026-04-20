@@ -108,6 +108,11 @@ import { VendorNotificationRepository } from '../../repositories/notification/ve
 import { IVendorNotificationService } from '../../interfaces/services/notifications/vendor.notification.service.interface.'
 import { VendorNotificationService } from '../../services/vendor/vendor.notification.service'
 import { VendorNotificationController } from '@/controllers/vendor/vendor.notification.controller'
+import { IUserDashboardRepository } from '../../interfaces/repositories/user/user.dashboard.repository.interface'
+import { UserDashboardRepository } from '../../repositories/user/user.dashboard.repository'
+import { IUserDashboardService } from '../../interfaces/services/user/user.dashboard.service.interface'
+import { UserDashboardService } from '../../services/user/user.dashboard.service'
+import { UserDashboardController } from '../../controllers/user/user.dashboard.controller'
 // import { LoanApplicationService } from '@/services/loanApplication/loan.application.service'
 // import { LoanApplicationController } from '@/controllers/loanApplication/loan.application.controller'
 
@@ -249,4 +254,10 @@ container.registerSingleton(AdminDashboardController)
 //Pdf in dashboard:-
 
 container.registerSingleton<IVendorTransactionPdfService>("IVendorTransactionPdfService",VendorTransactionPdfService)
+
+// User Dashboard:
+container.registerSingleton<IUserDashboardRepository>("IUserDashboardRepository", UserDashboardRepository);
+container.registerSingleton<IUserDashboardService>("IUserDashboardService", UserDashboardService);
+container.registerSingleton(UserDashboardController);
+
 export {container}

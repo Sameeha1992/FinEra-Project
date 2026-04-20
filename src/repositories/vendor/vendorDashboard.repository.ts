@@ -7,6 +7,7 @@ import Transaction from "@/models/transactions/transactions.model";
 import { LoanApplicationStatus, EmiStatus, PaymentStatus } from "@/models/enums/enum";
 import { IVendorDashboardRepository } from "@/interfaces/repositories/vendor/vendorDashboard.repository.interface";
 import { injectable } from "tsyringe";
+import { MonthlyApplicationTrendDto, VendorDashboardExportDto, VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 @injectable()
 export class VendorDashboardRepository implements IVendorDashboardRepository {
@@ -156,7 +157,7 @@ export class VendorDashboardRepository implements IVendorDashboardRepository {
         return result[0]?.total || 0;
     }
 
-    async getMonthlyApplicationTrend(vendorId: string): Promise<any[]> {
+    async getMonthlyApplicationTrend(vendorId: string): Promise<MonthlyApplicationTrendDto[]> {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
         sixMonthsAgo.setDate(1);
@@ -203,63 +204,119 @@ export class VendorDashboardRepository implements IVendorDashboardRepository {
             { $sort: { value: -1 } }
         ]);
     }
+async getExportData(
+  vendorId: string,
+  filters: VendorReportFilterDto
+): Promise<VendorDashboardExportDto[]> {
+  const matchStage: Record<string, unknown> = {
+    vendorId: new mongoose.Types.ObjectId(vendorId),
+    paymentStatus: PaymentStatus.COMPLETED,
+  };
 
-    async getExportData(vendorId: string): Promise<any[]> {
-        return await Transaction.aggregate([
-            { $match: { vendorId: new mongoose.Types.ObjectId(vendorId), paymentStatus: PaymentStatus.COMPLETED } },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "userId",
-                    foreignField: "_id",
-                    as: "user"
-                }
-            },
-            { $unwind: "$user" },
-            {
-                $lookup: {
-                    from: "loans",
-                    localField: "loanId",
-                    foreignField: "_id",
-                    as: "loan"
-                }
-            },
-            { $unwind: "$loan" },
-            {
-                $lookup: {
-                    from: "loanproducts",
-                    localField: "loan.loanProduct",
-                    foreignField: "_id",
-                    as: "product"
-                }
-            },
-            { $unwind: "$product" },
-            {
-                $lookup: {
-                    from: "emis",
-                    localField: "emiId",
-                    foreignField: "_id",
-                    as: "emi"
-                }
-            },
-            { $unwind: "$emi" },
-            {
-                $project: {
-                    _id: 0,
-                    userName: "$user.name",
-                    userEmail: "$user.email",
-                    loanType: "$product.loanType",
-                    productName: "$product.name",
-                    interestRate: "$loan.interestRate",
-                    emiNumber: "$emi.emiNumber",
-                    emiAmount: "$emi.amount",
-                    penaltyPaid: "$penaltyAmount",
-                    totalPaid: "$totalAmount",
-                    paidAt: "$paidAt",
-                    transactionId: "$transactionId"
-                }
-            },
-            { $sort: { paidAt: -1 } }
-        ]);
+  if (filters.userId && mongoose.Types.ObjectId.isValid(filters.userId)) {
+    matchStage.userId = new mongoose.Types.ObjectId(filters.userId);
+  }
+
+  if (filters.transactionId) {
+    matchStage.transactionId = filters.transactionId;
+  }
+
+  if (filters.month && filters.year) {
+    const start = new Date(filters.year, filters.month - 1, 1);
+    const end = new Date(filters.year, filters.month, 0, 23, 59, 59, 999);
+
+    matchStage.paidAt = {
+      $gte: start,
+      $lte: end,
+    };
+  } else if (filters.startDate || filters.endDate) {
+    const paidAtFilter: Record<string, Date> = {};
+
+    if (filters.startDate) {
+      paidAtFilter.$gte = new Date(filters.startDate);
     }
+
+    if (filters.endDate) {
+      const end = new Date(filters.endDate);
+      end.setHours(23, 59, 59, 999);
+      paidAtFilter.$lte = end;
+    }
+
+    matchStage.paidAt = paidAtFilter;
+  }
+
+  const pipeline: mongoose.PipelineStage[] = [
+    { $match: matchStage },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+
+    {
+      $lookup: {
+        from: "loans",
+        localField: "loanId",
+        foreignField: "_id",
+        as: "loan",
+      },
+    },
+    { $unwind: "$loan" },
+
+    {
+      $lookup: {
+        from: "loanproducts",
+        localField: "loan.loanProduct",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    { $unwind: "$product" },
+
+    {
+      $lookup: {
+        from: "emis",
+        localField: "emiId",
+        foreignField: "_id",
+        as: "emi",
+      },
+    },
+    { $unwind: "$emi" },
+  ];
+
+    if (filters.loanType) {
+    pipeline.push({
+      $match: {
+        "product.loanType": filters.loanType,
+      },
+    });
+  }
+
+  pipeline.push(
+    {
+      $project: {
+        _id: 0,
+        userName: "$user.name",
+        userEmail: "$user.email",
+        loanType: "$product.loanType",
+        productName: "$product.name",
+        interestRate: "$loan.interestRate",
+        emiNumber: "$emi.emiNumber",
+        emiAmount: "$emi.amount",
+        penaltyPaid: "$penaltyAmount",
+        totalPaid: "$totalAmount",
+        paidAt: "$paidAt",
+        transactionId: "$transactionId",
+      },
+    },
+    { $sort: { paidAt: -1 } }
+  );
+
+  return await Transaction.aggregate(pipeline);
+}
 }

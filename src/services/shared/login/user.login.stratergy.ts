@@ -22,7 +22,7 @@ export class UserLoginService extends BaseLoginService {
     super(_IpasswordService, _IjwtService);
   }
 
-  protected async findByEmail(email: string): Promise<any> {
+  protected async findByEmail(email: string): Promise<IUser |null> {
     return this._IuserRepository.findByEmail(email);
   }
 

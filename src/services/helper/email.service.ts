@@ -23,12 +23,12 @@ export class EmailService implements IEmailService{
             html:content
         };
         try {
-            const info = await this.transporter.sendMail(mailOptions)
+            await this.transporter.sendMail(mailOptions)
+            console.log(`Email successfully sent to: ${toEmail}`);
           
         } catch (error) {
-          console.error("Failed to send email:",error);
-
-        throw new Error("Failed to send OTP email. Please try again.");
+           console.error(`SMTP Error for ${toEmail}:`, error);
+           throw new Error("Failed to send OTP email. Please try again.");
         }
     }
 

@@ -7,8 +7,7 @@ import {
 import { inject, injectable } from "tsyringe";
 import { STATUS_CODES } from "../../../config/constants/statusCode";
 import { CustomError } from "@/middleware/errorMiddleware";
-import { MESSAGES } from "@/config/constants/message";
-import { success } from "zod";
+import { MESSAGES } from "@/config/constants/message"
 import { UserUpdateCompleteProfile } from "@/dto/user/profile.dto";
 
 @injectable()
@@ -21,7 +20,6 @@ export class UserProfileController {
   async getProfile(
     req: AuthenticateRequest,
     res: Response,
-    next: NextFunction,
   ) {
     try {
       if (!req.user?.id) {
@@ -35,29 +33,35 @@ export class UserProfileController {
       return res
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, data: profile });
-    } catch (error) {
+    } catch (error:unknown) {
+      console.log(error)
       throw new CustomError(MESSAGES.SOMETHING_WENT_WRONG);
+      
     }
   }
 
   completeProfile = async (req: Request, res: Response, next: NextFunction) => {
-    const typedReq = req as AuthenticateFileRequest;
+    try {
+      const typedReq = req as AuthenticateFileRequest;
 
-    const userId = typedReq.user!.id;
+      const userId = typedReq.user!.id;
 
-    const result = await this._userProfileService.completeProfile(
-      userId,
-      typedReq.body,
-      {
-        adhaarDoc: typedReq.files?.adhaarDoc?.[0],
-        panDoc: typedReq.files?.panDoc?.[0],
-        cibilDoc: typedReq.files?.cibilDoc?.[0],
-      },
-    );
+      const result = await this._userProfileService.completeProfile(
+        userId,
+        typedReq.body,
+        {
+          adhaarDoc: typedReq.files?.adhaarDoc?.[0],
+          panDoc: typedReq.files?.panDoc?.[0],
+          cibilDoc: typedReq.files?.cibilDoc?.[0],
+        },
+      );
 
-    return res
-      .status(STATUS_CODES.SUCCESS)
-      .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });
+      return res
+        .status(STATUS_CODES.SUCCESS)
+        .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });
+    } catch (error) {
+      next(error);
+    }
   };
 
   async getCompleteProfile(

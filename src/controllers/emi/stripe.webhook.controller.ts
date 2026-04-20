@@ -3,7 +3,6 @@ import { STATUS_CODES } from "../../config/constants/statusCode";
 import { IStripeService } from "../../interfaces/helper/stripe.service.interface";
 import { IEmiPaymentService } from "../../interfaces/services/emi/emi.payment.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
-import { env } from "../../validations/envValidation";
 import { Request, Response, NextFunction } from "express";
 import Stripe from "stripe";
 import { inject, injectable } from "tsyringe";

@@ -22,8 +22,9 @@ export class UserApplicationController {
       const userId = req.user?.id;
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
+      const search = typeof req.query.search === "string" ? req.query.search : undefined;
 
-      const result = await this._IuserApplicationService.getUserApplicationsList(userId!,page,limit);
+      const result = await this._IuserApplicationService.getUserApplicationsList(userId!,page,limit,search);
       res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.USER_FETCHED_SUCCESSFULLY,data:result})
     } catch (error) {
         next(error)

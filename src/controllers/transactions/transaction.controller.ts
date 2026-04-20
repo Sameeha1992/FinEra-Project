@@ -1,12 +1,13 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
+import { VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 import { IVendorTransactionPdfService } from "@/interfaces/helper/pdfDoc.service.interface";
 import { ITransactionService } from "@/interfaces/services/transaction/transaction.service.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 import { Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import { success } from "zod";
+
 
 @injectable()
 export class TransactionController {
@@ -56,11 +57,15 @@ export class TransactionController {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
 
+      const rawSearch = typeof req.query.search === "string" ? req.query.search.trim() : "";
+
+      const search = rawSearch !== "" ? rawSearch:undefined;
       const transactions =
         await this._iTransactionService.getVendorTransactions(
           vendorId!,
           page,
           limit,
+          search
         );
 
       res.status(STATUS_CODES.SUCCESS).json({
@@ -72,53 +77,54 @@ export class TransactionController {
       next(error);
     }
   }
+async downloadVendorTransactionReport(
+  req: AuthenticateRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const vendorId = req.user?.id;
 
-  async downloadVendorTransactionReport(
-    req: AuthenticateRequest,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const vendorId = req.user?.id;
+    if (!vendorId) {
+      throw new CustomError(
+        MESSAGES.VENDOR_NOT_FOUND,
+        STATUS_CODES.BAD_REQUEST,
+      );
+    }
 
-      if (!vendorId) {
-        throw new CustomError(
-          MESSAGES.VENDOR_NOT_FOUND,
-          STATUS_CODES.BAD_REQUEST,
-        );
-      }
+    const filters: VendorReportFilterDto = {
+      date: req.query.date as string,
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string,
+      month: req.query.month ? Number(req.query.month) : undefined,
+      year: req.query.year ? Number(req.query.year) : undefined,
+      userId: req.query.userId as string,
+      loanType: req.query.loanType as string,
+      transactionId: req.query.transactionId as string,
+    };
 
-      const startDate = req.query.startDate
-        ? new Date(req.query.startDate as string)
-        : undefined;
-
-      const endDate = req.query.endDate
-        ? new Date(req.query.endDate as string)
-        : undefined;
-
-      const transactions =
-        await this._iTransactionService.getVendorTransactionReportData(
-          vendorId,
-          startDate,
-          endDate,
-        );
-
-      const doc =
-        this._iVendorTransactionPdfService.generateVendorTransactionPdf(
-          transactions,
-          "Vendor Transaction Report",
-        );
-
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-        "Content-Disposition",
-        'attachment; filename="vendor-transaction-report.pdf"',
+    const transactions =
+      await this._iTransactionService.getVendorTransactionReportData(
+        vendorId,
+        filters,
       );
 
-      doc.pipe(res);
-      doc.end();
-    } catch (error) {
-      next(error);
-    }
+    const doc =
+      this._iVendorTransactionPdfService.generateVendorTransactionPdf(
+        transactions,
+        "Vendor Transaction Report",
+      );
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="vendor-transaction-report.pdf"',
+    );
+
+    doc.pipe(res);
+    doc.end();
+  } catch (error) {
+    next(error);
   }
+}
 }

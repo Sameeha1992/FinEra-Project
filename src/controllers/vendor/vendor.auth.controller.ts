@@ -9,8 +9,6 @@ import { getCookieOptions, isProduction } from "../../utils/setAuthCookies";
 import { OtpVerifyForgetDto } from "../../dto/user/auth/otp-generation.dto";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
-import { success } from "zod";
-import { Role } from "../../models/enums/enum";
 import { env } from "@/validations/envValidation";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
@@ -30,9 +28,7 @@ export class VendorAuthController {
       );
       res.status(201).json({ success: true, data: createVendor });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ success: false, error: error.message });
-      }
+      next(error);
     }
   }
 
@@ -42,7 +38,7 @@ export class VendorAuthController {
       await this._IvendorAuthService.generateOtp(email);
 
       res
-        .status(200)
+        .status(STATUS_CODES.SUCCESS)
         .json({
           success: true,
           message: MESSAGES.OTP_SENT,
@@ -50,8 +46,7 @@ export class VendorAuthController {
           debug: "Email service temporarly disabled",
         });
     } catch (error) {
-      console.error("Generate OTP error:", error);
-      res.status(500).json({ success: false, error: "OTP generation failed" });
+      next(error);
     }
   }
 
@@ -66,8 +61,7 @@ export class VendorAuthController {
           res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.OTP_VERIFIED})
     
     } catch (error) {
-      logger.error({error:error},"OTP verification for vendor had failed in the controller");
-      return res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.OTP_VERIFICATION_FAILED})
+      next(error);
     }
   }
 
@@ -86,9 +80,9 @@ export class VendorAuthController {
       accessToken,
       vendor
     })
-  } catch (error) {
-    res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,message:MESSAGES.INVALID_CREDENTIALS});
-  }
+    } catch (error) {
+      next(error);
+    }
   
 }
 async refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -126,8 +120,10 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
     try {
 
       const email = req.body.email;
-      if(!email){
-        return res.status(STATUS_CODES.NOT_FOUND).json({success:false,message:"Email not required for forget password"})
+      if (!email) {
+        return res
+          .status(STATUS_CODES.BAD_REQUEST)
+          .json({ success: false, message: "Email is required for forget password" });
       }
 
       const result = await this._IvendorAuthService.forgetVendorPassword(email);
@@ -137,8 +133,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
 
       
     } catch (error) {
-      logger.error({err:error},"Forget password failed");
-      
+      next(error);
     }
   }
 
@@ -179,9 +174,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       res.status(STATUS_CODES.SUCCESS).json({message:result})
       
     } catch (error) {
-      console.error("Reset password error:",error);
-      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({message:error || MESSAGES.PASSWORD_RESET_FAILED})
-      
+      next(error);
     }
   }
 
@@ -193,12 +186,12 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
         throw new CustomError("Google token not required for vendor")
       }
 
-      const {accessToken,refreshToken,vendor} = await this._IvendorAuthService.googleLogin(token)
+      const { accessToken,refreshToken, vendor } = await this._IvendorAuthService.googleLogin(token)
 
       const cookieOptions = getCookieOptions();
       res.cookie("refreshToken",refreshToken,cookieOptions.refreshToken);
 
-      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.LOGIN_SUCCESS,vendor})
+      res.status(STATUS_CODES.SUCCESS).json({success:true,message:MESSAGES.LOGIN_SUCCESS,vendor,accessToken})
     } catch (error) {
       next(error)
     }
@@ -220,7 +213,7 @@ async forgetPassword(req:Request,res:Response,next:NextFunction){
       .json({success:true,message:MESSAGES.LOGOUT_SUCCESS})
       
     } catch (error) {
-      res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.LOGOUT_FAILED})
+      next(error);
     }
   }
 

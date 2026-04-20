@@ -10,7 +10,6 @@ import {
   NotificationType,
   VendorNotificationType,
 } from "@/models/enums/enum";
-import { application } from "express";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
@@ -146,7 +145,7 @@ export class EmiNotificationCronService implements IEmiNotificationCronService {
       // 1. Mark as OVERDUE if at least 1 day late
       if (overdueDays >= 1 && emi.status !== EmiStatus.OVERDUE) {
         emi.status = EmiStatus.OVERDUE;
-        await (emi as any).save(); // Using any to bypass potential document property issues in this context
+        await (emi as typeof emi & Document).save(); // Using any to bypass potential document property issues in this context
       }
 
       // 2. Penalty Logic: Day 3 (overdueDays 2) = 500, Days 4-8 = +100/day (Max 1000)

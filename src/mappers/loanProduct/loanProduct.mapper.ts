@@ -6,7 +6,7 @@ import {
 } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
 import { IVendor } from "@/models/vendor/vendor.model";
-import mongoose, { HydratedDocument } from "mongoose";
+import mongoose from "mongoose";
 
 export class LoanProductMapper {
   static toEntity(

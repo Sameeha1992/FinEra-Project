@@ -22,6 +22,7 @@ export class VendorVerificationService implements IVendorVerificationService {
   async getVendorList(
     page: number,
     limit: number,
+    search?:string,
   ): Promise<{
     vendors: VendorVerificationListDto[];
     total: number;
@@ -31,6 +32,7 @@ export class VendorVerificationService implements IVendorVerificationService {
     const { vendors, total } = await this._IvendorVerificationRepo.getAllVendor(
       page,
       limit,
+      search
     );
 
     const vendorDTO: VendorVerificationListDto[] = vendors.map((vendor) => ({

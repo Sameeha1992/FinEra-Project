@@ -2,7 +2,7 @@ import { MESSAGES } from "../../config/constants/message";
 import { IChatService } from "../../interfaces/services/chat/chat.service.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { Role } from "../../models/enums/enum";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../config/constants/statusCode";
 import { inject, injectable } from "tsyringe";
 import { AuthenticateRequest } from "../../types/express/authenticateRequest.interface";

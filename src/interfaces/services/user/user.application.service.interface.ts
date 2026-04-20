@@ -5,6 +5,7 @@ export interface IUserApplicationsService {
     userId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<IUserApplicationsListResponseDto>;
   getuserApplicationDetails(
     applicationId: string,

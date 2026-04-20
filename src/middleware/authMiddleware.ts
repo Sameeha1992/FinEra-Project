@@ -11,11 +11,8 @@ import { IJwtService } from "@/interfaces/helper/jwt.service.interface";
 import { IUserRepository } from "@/interfaces/repositories/user/userRepository.interface";
 import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { Role } from "@/models/enums/enum";
-import { UserModel } from "@/models/user/user.model";
-import { VendorModel } from "@/models/vendor/vendor.model";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
-import { Request, Response, NextFunction } from "express";
-import { JwtPayload } from "jsonwebtoken";
+import { Response,NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 
 // export interface AuthenticatedRequest extends Request{
@@ -75,11 +72,17 @@ export class AuthMiddleware {
       const decode = this._jwtService.verifyToken(
         token,
         "access",
-      ) as JwtPayload & { _id: string; role: Role; email?: string };
+      );
+
+      if (!decode) {
+         return res
+        .status(STATUS_CODES.UNAUTHORIZED)
+        .json({ success: false, message: MESSAGES.INVALID_ACCESS_TOKEN });
+      }
 
       req.user = {
         id: decode._id,
-        role: decode.role,
+        role: decode.role as Role,
         email: decode.email,
       };
       console.log("Token User", req.user);
@@ -88,7 +91,7 @@ export class AuthMiddleware {
     } catch (error) {
       return res
         .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.INVALID_ACCESS_TOKEN });
+        .json({ success: false, message: MESSAGES.INVALID_ACCESS_TOKEN,error:error });
     }
   };
 
@@ -126,7 +129,6 @@ export class AuthMiddleware {
         .json({ success: false, message: MESSAGES.UNAUTHORIZED_ACCESS });
     }
 
-    const model = role === Role.Vendor ? VendorModel : UserModel;
 
     let entity;
 

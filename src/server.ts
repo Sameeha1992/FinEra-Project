@@ -12,7 +12,7 @@ import { connectRedis } from "./config/redis/redis.connect";
 import logger from "./middleware/loggerMiddleware";
 import {env} from "@/validations/envValidation"
 const appInstance = new App();
-import { startCronJobs } from "./crone";
+import { startCronJobs } from "./cron";
 import { container } from "tsyringe";
 
 // const startServer = async ()=>{

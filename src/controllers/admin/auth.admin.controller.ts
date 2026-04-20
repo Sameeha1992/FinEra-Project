@@ -8,7 +8,7 @@ import { env } from "../../validations/envValidation";
 import { clearAuthCookies } from "../../utils/clearAuthCookies";
 import { isProduction } from "../../utils/setAuthCookies";
 import { Role } from "../../models/enums/enum";
-import { success } from "zod";
+
 
 @injectable()
 export class AdminAuthController {
@@ -40,6 +40,7 @@ export class AdminAuthController {
       res
         .status(STATUS_CODES.UNAUTHORIZED)
         .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS, error });
+        next(error)
     }
   }
   async refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -83,7 +84,7 @@ export class AdminAuthController {
     }
   }
 
-  async logout(req: Request, res: Response, NEXT: NextFunction) {
+  async logout(req: Request, res: Response, next: NextFunction) {
     try {
       const refreshToken = req.cookies?.refreshToken;
 
@@ -102,6 +103,7 @@ export class AdminAuthController {
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: MESSAGES.LOGOUT_FAILED, error });
+        next(error)
     }
   }
 }

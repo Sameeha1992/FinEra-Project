@@ -23,23 +23,18 @@ adminRouter.post(
     authAdminController.login(req, res, next);
   },
 );
-
 adminRouter.get(
   "/accounts",
-  (req: Request, res: Response, next: NextFunction) => {
-    (authMiddleware.auntenticate,
-      authMiddleware.allowRoles(Role.Admin),
-      adminAccountController.getAccounts(req, res, next));
-  },
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Admin),
+  adminAccountController.getAccounts.bind(adminAccountController),
 );
 
 adminRouter.patch(
   "/accounts/:id/accountStatus",
-  (req: Request, res: Response, next: NextFunction) => {
-    (authMiddleware.auntenticate,
-      authMiddleware.allowRoles(Role.Admin),
-      adminAccountController.updatedStatus(req, res, next));
-  },
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.Admin),
+  adminAccountController.updatedStatus.bind(adminAccountController),
 );
 
 adminRouter.post(

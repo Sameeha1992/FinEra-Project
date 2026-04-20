@@ -1,11 +1,9 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
-import { CreateLoanApplicationDTO } from "@/dto/loanApplication/loanApplication.dto";
 import { ILoanApplicationService } from "@/interfaces/services/loanApplication/loan.application.service.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
 import {
   AuthenticateApplicationRequest,
-  AuthenticateFileRequest,
 } from "@/types/express/authenticateRequest.interface";
 import { createLoanApplicationSchema } from "@/validations/loanApplication/loanApplication.validator";
 import { Request, Response, NextFunction } from "express";
@@ -57,7 +55,7 @@ export class LoanApplicationController {
       const result = await this._iLoanApplicationService.createLoanApplication(
         {
           ...validatedData,
-          userId: req.user?.id,
+          userId: userId,
         },
         files,
       );

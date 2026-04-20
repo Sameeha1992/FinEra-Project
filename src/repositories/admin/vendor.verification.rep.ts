@@ -3,6 +3,7 @@ import { IVendor, VendorModel } from "@/models/vendor/vendor.model";
 import { BaseRepository } from "../base_repository";
 import { injectable } from "tsyringe";
 import { Status } from "@/models/enums/enum";
+import { FilterQuery } from "mongoose";
 
 @injectable()
 export class VendorVerifcationRepository
@@ -15,9 +16,20 @@ export class VendorVerifcationRepository
   async getAllVendor(
     page: number,
     limit: number,
+    search?: string,
   ): Promise<{ vendors: IVendor[]; total: number }> {
     const skip = (page - 1) * limit;
-    const vendors = await VendorModel.find()
+
+    const query: FilterQuery<IVendor> = {};
+
+    if (search && search.trim() !== "") {
+      query.$or = [
+        { vendorName: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { vendorId: { $regex: search, $options: "i" } },
+      ];
+    }
+    const vendors = await VendorModel.find(query)
       .select("vendorId vendorName email status accountStatus createdAt")
       .skip(skip)
       .limit(limit)

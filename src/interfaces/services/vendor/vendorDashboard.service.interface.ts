@@ -1,6 +1,6 @@
-import { VendorDashboardDto } from "@/dto/vendorDto/vendorDashboard.dto";
+import { VendorDashboardDto, VendorDashboardExportDto, VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 export interface IVendorDashboardService {
     getDashboardData(vendorId: string): Promise<VendorDashboardDto>;
-    getExportCSVPayload(vendorId: string): Promise<string>;
+    getExportData(vendorId: string,filters:VendorReportFilterDto): Promise<VendorDashboardExportDto[]> 
 }

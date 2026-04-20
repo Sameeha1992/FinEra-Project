@@ -2,7 +2,6 @@ import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import {
   VendorCompleteProfileDto,
-  VendorCompleteUpdateDto,
 } from "@/dto/vendorDto/vendor.profile.dto";
 import { IVendorProfileService } from "@/interfaces/services/vendor/vendor.profile.interface";
 import { CustomError } from "@/middleware/errorMiddleware";
@@ -12,7 +11,7 @@ import {
 } from "@/types/express/authenticateRequest.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import { success } from "zod";
+
 
 @injectable()
 export class VendorProfileController {
@@ -41,22 +40,26 @@ export class VendorProfileController {
   };
 
   completeProfile = async (req: Request, res: Response, next: NextFunction) => {
-    const typedReq = req as AuthenticateFileRequest;
+    try {
+      const typedReq = req as AuthenticateFileRequest;
 
-    const vendorId = typedReq.user!.id;
+      const vendorId = typedReq.user!.id;
 
-    const result = await this._ivendorProfileService.completeProfile(
-      vendorId,
-      typedReq.body,
-      {
-        registrationDoc: typedReq.files?.registrationDoc?.[0],
-        licenceDoc: typedReq.files?.licenceDoc?.[0],
-      },
-    );
+      const result = await this._ivendorProfileService.completeProfile(
+        vendorId,
+        typedReq.body,
+        {
+          registrationDoc: typedReq.files?.registrationDoc?.[0],
+          licenceDoc: typedReq.files?.licenceDoc?.[0],
+        },
+      );
 
-    return res
-      .status(STATUS_CODES.SUCCESS)
-      .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });
+      return res
+        .status(STATUS_CODES.SUCCESS)
+        .json({ success: true, message: MESSAGES.PROFILE_UPDATED, data: result });
+    } catch (error) {
+      next(error);
+    }
   };
 
   getCompleteProfile = async (

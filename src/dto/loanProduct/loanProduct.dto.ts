@@ -1,5 +1,5 @@
 import { LoanStatus, LoanType } from "../../models/enums/enum";
-import  {Types, ObjectId } from "mongoose";
+import  {Types} from "mongoose";
 
 export interface EligibilityDto {
   minAge?: number;

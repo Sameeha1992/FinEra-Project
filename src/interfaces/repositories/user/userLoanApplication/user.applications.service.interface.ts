@@ -2,7 +2,6 @@ import { ILoanApplication } from "@/models/applications/application.model";
 import { IBaseRepository } from "../../baseRepository.interface";
 import {
   IUserApplicationsListResult,
-  UserApplicationDetailsDTO,
 } from "@/dto/user/userAppliaction/user.application.dto";
 
 export interface IUserApplicationsRepository extends IBaseRepository<ILoanApplication> {
@@ -10,6 +9,7 @@ export interface IUserApplicationsRepository extends IBaseRepository<ILoanApplic
     userId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<IUserApplicationsListResult>;
   getUserApplicationDetails(
     applicationId: string,

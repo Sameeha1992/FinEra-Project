@@ -29,6 +29,7 @@ export class UserVerificationRepo
     total: number;
     page: number;
     totalPages: number;
+    
   }> {
     const { vendorId, page, limit, search } = query;
     const skip = (page - 1) * limit;

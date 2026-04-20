@@ -7,7 +7,6 @@ import { IPasswordService } from "../../interfaces/helper/passwordhashService.in
 import { IEmailService } from "../../interfaces/helper/email.sevice.interface";
 import { IOtp } from "../../interfaces/helper/otp.Interface";
 import {
-  otpgenerateDto,
   OtpVerifyDto,
   OtpVerifyForgetDto,
 } from "../../dto/user/auth/otp-generation.dto";
@@ -20,7 +19,6 @@ import { IRedisService } from "../../interfaces/helper/redis.interface";
 import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { Role } from "../../models/enums/enum";
 import { STATUS_CODES } from "../../config/constants/statusCode";
-import { error } from "console";
 import { OAuth2Client } from "google-auth-library";
 import { env } from "process";
 
@@ -32,17 +30,16 @@ export class AuthUserService implements IAuthUserService {
     @inject("IPasswordService") private _passwordService: IPasswordService,
     @inject("IRedisService") private _redisService: IRedisService,
     @inject("IEmailService") private _emailService: IEmailService,
-    @inject("IJwtService") private _jwtService: IJwtService
+    @inject("IJwtService") private _jwtService: IJwtService,
   ) {}
 
   async registerUser(
-    userData: Omit<UserRegisterDTO, "customerId">
+    userData: Omit<UserRegisterDTO, "customerId">,
   ): Promise<IUser> {
     const email = userData.email;
 
     const existingUser = await this._userRepository.findByEmail(email);
     if (existingUser) {
-
       throw new CustomError(MESSAGES.EMAIL_ALREADY_USED);
     }
     const isVerified = await this._redisService.get(`verified:user:${email}`);
@@ -55,7 +52,7 @@ export class AuthUserService implements IAuthUserService {
     }
 
     const hashedPassword = await this._passwordService.hashPassword(
-      userData.password
+      userData.password,
     );
 
     const userRegisterData: UserRegisterDTO = {
@@ -65,7 +62,7 @@ export class AuthUserService implements IAuthUserService {
       customerId: Math.random().toString(36).substring(2, 9),
     };
 
-    await this._redisService.delete(`verified:${email}`);
+    await this._redisService.delete(`verified:user:${email}`);
 
     return this._userRepository.create(userRegisterData);
   }
@@ -90,17 +87,22 @@ export class AuthUserService implements IAuthUserService {
       const subject = "Your OTP Code";
       await this._emailService.sendEmail(normalizedEmail, subject, content);
 
-      logger.debug({normalizedEmail,otp},"OTP generated and sent successfully");
-      logger.info({normalizedEmail},`OTP generated and sent to`);
+      logger.debug(
+        { normalizedEmail, otp },
+        "OTP generated and sent successfully",
+      );
+      logger.info({ normalizedEmail }, `OTP generated and sent to`);
 
       return {
         email: normalizedEmail,
         otp: otp,
         expireAt,
       };
-    } catch (error: any) {
-      logger.error({err:error,email},"Failed to generate OTP")
-
+    } catch (error: unknown) {
+      logger.error(
+        { err: error instanceof Error ? error.message : error, email },
+        "Failed to generate OTP",
+      );
       throw new CustomError(MESSAGES.OTP_SENDING_FAILED);
     }
   }
@@ -127,7 +129,6 @@ export class AuthUserService implements IAuthUserService {
       const storedOTP = await this._redisService.get(`otp:${normalizedEmail}`);
       console.log("store otp chythu", storedOTP);
       if (!storedOTP) {
-
         throw new Error("OTP expired or invalid");
       }
 
@@ -139,12 +140,15 @@ export class AuthUserService implements IAuthUserService {
       await this._redisService.markUserVerified(
         normalizedEmail,
         "user",
-        this.OTP_TTLSECONDS
+        this.OTP_TTLSECONDS,
       );
 
-      logger.info({normalizedEmail},`OTP verified successfully`);
-    } catch (error: any) {
-      logger.error({err:error,email},`OTP verification failed`);
+      logger.info({ normalizedEmail }, `OTP verified successfully`);
+    } catch (error: unknown) {
+      logger.error(
+        { err: error instanceof Error ? error.message : error, email },
+        "OTP verification failed",
+      );
       throw error;
     }
   }
@@ -157,7 +161,7 @@ export class AuthUserService implements IAuthUserService {
     refreshToken: string;
   }> {
     const userData: IUser | null = await this._userRepository.findByEmail(
-      credentials.email
+      credentials.email,
     );
 
     if (!userData) {
@@ -170,198 +174,222 @@ export class AuthUserService implements IAuthUserService {
 
     const isPassword: boolean = await this._passwordService.comparePassword(
       credentials.password,
-      userData.password
+      userData.password,
     );
 
     if (!isPassword) {
-      logger.error({err:error},"Password does not math")
+      logger.error("Password does not match");
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
     }
-    
 
     const loginResponse: LoginResponseDto = UserMapper.UserResponse(userData);
 
     const accessToken = this._jwtService.generateAccessToken(
       userData._id,
-      "user"
+      "user",
     );
     const refreshToken = this._jwtService.generateRefreshToken(
       userData._id,
-      "user"
+      "user",
     );
     return { user: loginResponse, accessToken, refreshToken };
   }
 
   //Refresh Token:-
 
-  async refreshToken(refreshToken: string): Promise<{accessToken:string,refreshToken:string}> {
-    const decoded = await this._jwtService.verifyToken(refreshToken, "refresh");
+  async refreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const decoded = this._jwtService.verifyToken(refreshToken, "refresh");
 
-    if (!decoded) {
+    if (!decoded || !decoded.jti) {
       throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
     }
 
-    const isBlacklisted = await this._redisService.isRefreshTokenBlacklisted(decoded.jti);
+    const isBlacklisted = await this._redisService.isRefreshTokenBlacklisted(
+      decoded.jti,
+    );
 
-    if(isBlacklisted){
-      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED)
+    if (isBlacklisted) {
+      throw new CustomError(MESSAGES.REFRESH_TOKEN_REVOKED);
     }
 
-    const ttlSeconds = decoded.exp - Math.floor(Date.now() /1000);
+    const ttlSeconds = decoded.exp - Math.floor(Date.now() / 1000);
 
-    if(ttlSeconds >0){
-      await this._redisService.blacklistRefreshToken(decoded.jti,ttlSeconds);
+    if (ttlSeconds > 0) {
+      await this._redisService.blacklistRefreshToken(decoded.jti, ttlSeconds);
     }
 
-    const newAccessToken = this._jwtService.generateAccessToken(decoded._id,decoded.role)
-    const newRefreshToken = this._jwtService.generateRefreshToken(decoded._id,decoded.role)
-    
+    const newAccessToken = this._jwtService.generateAccessToken(
+      decoded._id,
+      decoded.role,
+    );
+    const newRefreshToken = this._jwtService.generateRefreshToken(
+      decoded._id,
+      decoded.role,
+    );
 
     return {
-      accessToken:newAccessToken,
-      refreshToken:newRefreshToken
-    }
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
   }
 
   //Forget Password:-
 
-  async forgetPassword(email:string):Promise<string>{
+  async forgetPassword(email: string): Promise<string> {
     const user = await this._userRepository.findByEmail(email);
-    if(!user){
-      logger.error("User not found in forget password")
-      throw new CustomError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+    if (!user) {
+      logger.error("User not found in forget password");
+      throw new CustomError(MESSAGES.NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
 
-    const otp = Math.floor(100000 +Math.random() * 900000).toString();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const redisKey = `forgetotp:user:${email}`
+    const redisKey = `forgetotp:user:${email}`;
 
-    await this._redisService.set(redisKey,otp,this.OTP_TTLSECONDS);
+    await this._redisService.set(redisKey, otp, this.OTP_TTLSECONDS);
 
-    const content = this._emailService.generateOtpEmailContent(Number(otp)) 
-    const subject = "Your OTP is here"
-    await this._emailService.sendEmail(email,subject,content,)
+    const content = this._emailService.generateOtpEmailContent(Number(otp));
+    const subject = "Your OTP is here";
+    await this._emailService.sendEmail(email, subject, content);
 
-
-    logger.info({email,otp},"Otp generated for forget password")
-    return "OTP send successfully"
-                       
+    logger.info({ email, otp }, "Otp generated for forget password");
+    return "OTP send successfully";
   }
 
-  async verifyforgetOtp(data:OtpVerifyForgetDto):Promise<void>{
-    const {email,otp} = data;
-    const normaliseEmail = email.toLowerCase().trim()
-    const redisKey = `forgetotp:user:${normaliseEmail}`
+  async verifyforgetOtp(data: OtpVerifyForgetDto): Promise<void> {
+    const { email, otp } = data;
+    const normaliseEmail = email.toLowerCase().trim();
+    const redisKey = `forgetotp:user:${normaliseEmail}`;
     const storedOtp = await this._redisService.get(redisKey);
-    if(!storedOtp){
-      logger.error({err:error},"No OTP stored in forget password functionality")
-      throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.BAD_REQUEST)
+    if (!storedOtp) {
+      logger.error("No OTP stored in forget password functionality");
+      throw new CustomError(MESSAGES.OTP_INVALID, STATUS_CODES.BAD_REQUEST);
     }
 
-    if(storedOtp!==otp){
-      logger.error({err:error},"OTP does not match-forget password")
-     throw new CustomError(MESSAGES.OTP_INVALID,STATUS_CODES.UNAUTHORIZED)
+    if (storedOtp !== otp) {
+      logger.error("OTP does not match-forget password");
+      throw new CustomError(MESSAGES.OTP_INVALID, STATUS_CODES.UNAUTHORIZED);
     }
 
     await this._redisService.delete(redisKey);
-    await this._redisService.set(`verified-reset:user:${email}`,"true",this.OTP_TTLSECONDS)
-  logger.info({email:normaliseEmail},"Forget-password OTP verified successfully")
-
+    await this._redisService.set(
+      `verified-reset:user:${email}`,
+      "true",
+      this.OTP_TTLSECONDS,
+    );
+    logger.info(
+      { email: normaliseEmail },
+      "Forget-password OTP verified successfully",
+    );
   }
 
   async resetPassword(email: string, password: string): Promise<string> {
     const user = await this._userRepository.findByEmail(email);
-    if(!user){
-      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    if (!user) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
 
-   const hashedPassword = await this._passwordService.hashPassword(password);
-   
-   await this._userRepository.updatePassword(email,hashedPassword)
-   return "Password reset successfully"
+    const hashedPassword = await this._passwordService.hashPassword(password);
+
+    await this._userRepository.updatePassword(email, hashedPassword);
+    return "Password reset successfully";
   }
 
-  async googleLogin(googleToken:string):Promise<{accessToken:string,refreshToken:string,user:LoginResponseDto}>{
-     const client = new OAuth2Client(env.GOOGLE_CLIENT_ID)
-     const ticket = await client.verifyIdToken({idToken:googleToken,audience:env.GOOGLE_CLIENT_ID})
-     const payload= ticket.getPayload()
+  async googleLogin(googleToken: string): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: LoginResponseDto;
+  }> {
+    const client = new OAuth2Client(env.GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: googleToken,
+      audience: env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
 
-     if(!payload || !payload.email){
-      throw new CustomError(MESSAGES.EMAIL_NOT_FOUND)
-     }
+    if (!payload || !payload.email) {
+      throw new CustomError(MESSAGES.EMAIL_NOT_FOUND);
+    }
 
-     const {email,name} = payload
+    const email = payload.email;
+    const name = payload.name ?? "No name";
 
-     let user:IUser |null = await this._userRepository.findByEmail(email)
-     if(!user){
-      const UserData:UserRegisterDTO = {
-        name:name||"No name",
-        email:email,
-        customerId:Math.random().toString(36).substring(2,9),
-     }
+    let user: IUser | null = await this._userRepository.findByEmail(email);
+    if (!user) {
+      const UserData: UserRegisterDTO = {
+        name: name || "No name",
+        email: email,
+        customerId: Math.random().toString(36).substring(2, 9),
+      };
 
-const userModel:Partial<IUser>={
-  name:UserData.name,
-  email:UserData.email,
-  customerId:UserData.customerId,
-  role:Role.User                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-}
+      const userModel: Partial<IUser> = {
+        name: UserData.name,
+        email: UserData.email,
+        customerId: UserData.customerId,
+        role: Role.User,
+      };
 
-user = await this._userRepository.create(userModel)
+      user = await this._userRepository.create(userModel);
+    }
+
+    const userResponse = UserMapper.UserResponse(user);
+    const accessToken = this._jwtService.generateAccessToken(user._id, "user");
+    const refreshToken = this._jwtService.generateRefreshToken(
+      user._id,
+      "user",
+    );
+
+    return { accessToken, refreshToken, user: userResponse };
   }
 
-  const userResponse = UserMapper.UserResponse(user)
-  const accessToken = this._jwtService.generateAccessToken(user._id,"user");
-  const refreshToken = this._jwtService.generateRefreshToken(user._id,"user");
+  async logout(refreshToken: string): Promise<void> {
+    const payload = this._jwtService.verifyToken(refreshToken, "refresh");
+    if (!payload || !payload.jti) {
+      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
+    }
 
-  return {accessToken,refreshToken,user:userResponse}
+    const ttlSeconds = payload.exp - Math.floor(Date.now() / 1000);
 
-}
-
-
-async logout(refreshToken:string):Promise<void>{
-  const payload = this._jwtService.verifyToken(refreshToken,"refresh")
-  if(!payload){
-    throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
+    await this._redisService.blacklistRefreshToken(payload.jti, ttlSeconds);
   }
 
-  const ttlSeconds = payload.exp - Math.floor(Date.now() /1000);
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
+    }
 
-  await this._redisService.blacklistRefreshToken(payload.jti,ttlSeconds)
-}
+    if (!user.password) {
+      throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED);
+    }
 
+    const isMatch = await this._passwordService.comparePassword(
+      currentPassword,
+      user.password,
+    );
 
+    if (!isMatch) {
+      throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
+    }
 
-async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
-  
-  const user = await this._userRepository.findById(userId);
-  if(!user){
-    throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    const isSamePassword = await this._passwordService.comparePassword(
+      newPassword,
+      user.password,
+    );
+
+    if (isSamePassword) {
+      throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT);
+    }
+
+    const hashedPassword =
+      await this._passwordService.hashPassword(newPassword);
+
+    await this._userRepository.updateById(userId, { password: hashedPassword });
   }
-
-  if(!user.password){
-    throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED)
-  }
-
-  const isMatch = await this._passwordService.comparePassword(currentPassword,user.password)
-
-  if(!isMatch){
-    throw new CustomError(MESSAGES.PASSWORD_MISMATCH)
-  }
-
-
-  const isSamePassword = await this._passwordService.comparePassword(newPassword,user.password)
-
-  if(isSamePassword){
-    throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT)
-  }
-
-  const hashedPassword = await this._passwordService.hashPassword(newPassword);
-
-
-  await this._userRepository.updateById(userId,{password:hashedPassword})
-
-
-}
-
 }

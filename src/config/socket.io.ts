@@ -5,6 +5,7 @@ import { IChatService } from "../interfaces/services/chat/chat.service.interface
 import { Role } from "../models/enums/enum";
 import { IJwtService } from "../interfaces/helper/jwt.service.interface";
 import { JwtPayload } from "jsonwebtoken";
+import logger from "@/middleware/loggerMiddleware";
 
 export const registerChatSocket = (io: Server) => {
   //  Socket auth middleware — verifies JWT before any connection is accepted
@@ -49,7 +50,7 @@ export const registerChatSocket = (io: Server) => {
         `Socket.IO: Vendor ${accountId} joined room vendor_${accountId}`,
       );
     }
-    // Join one chat room using conversation id 
+    // Join one chat room using conversation id
     socket.on("join_conversation", async (conversationId: string) => {
       try {
         const chatService = container.resolve<IChatService>("IChatService");
@@ -61,6 +62,11 @@ export const registerChatSocket = (io: Server) => {
 
         socket.join(conversationId);
       } catch (error) {
+        logger.error(
+          `join conversation error: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         socket.emit("chat_error", {
           message: "Unauthorized to join this conversation",
         });
@@ -72,7 +78,7 @@ export const registerChatSocket = (io: Server) => {
       try {
         const { conversationId, text } = payload;
 
-        // ✅ Use verified user from socket.data — NOT from client payload
+        // Use verified user from socket.data — NOT from client payload
         const senderId = socket.data.user.id;
         const role = socket.data.user.role as Role;
 
@@ -85,7 +91,6 @@ export const registerChatSocket = (io: Server) => {
           text,
         );
 
-        // Emit message to all users in this conversation room
         io.to(conversationId).emit("receive_message", savedMessage);
       } catch (error) {
         console.error("Socket send_message error:", error);

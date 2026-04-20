@@ -1,14 +1,12 @@
 import {
   IUserApplicationsListResult,
-  UserApplicationDetailsDTO,
 } from "@/dto/user/userAppliaction/user.application.dto";
 import { IUserApplicationsRepository } from "@/interfaces/repositories/user/userLoanApplication/user.applications.service.interface";
-import { userApplicationListMapper } from "@/mappers/user/userApplication/user.application.mappers";
-import { userApplicationMapper } from "@/mappers/vendor/application.mapper";
 import loanApplication, {
   ILoanApplication,
 } from "@/models/applications/application.model";
 import { BaseRepository } from "@/repositories/base_repository";
+import { FilterQuery } from "mongoose";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -24,9 +22,20 @@ export class UserApplicationsRepository
     userId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<IUserApplicationsListResult> {
     const skip = (page - 1) * limit;
-    const filter = { userId };
+    const filter: FilterQuery<ILoanApplication>= { userId };
+
+
+  if (search && search.trim() !== "") {
+    filter.$or = [
+      { applicationNumber: { $regex: search, $options: "i" } },
+      { loanType: { $regex: search, $options: "i" } },
+      { phoneNumber: { $regex: search, $options: "i" } },
+    ];
+  }
+
 
     const total = await loanApplication.countDocuments(filter);
 

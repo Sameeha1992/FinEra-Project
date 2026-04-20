@@ -18,20 +18,12 @@ import {
   OtpVerifyForgetDto,
 } from "../../dto/user/auth/otp-generation.dto";
 import { LoginDto, LoginResponseDto } from "../../dto/shared/login.dto";
-import { IVendor, VendorModel } from "../../models/vendor/vendor.model";
-import {
-  UserMapper,
-  VendorMapper,
-} from "../../mappers/sharedMappers/response.loginDto";
-import { IVendorLoginService } from "../../interfaces/services/share/auth.vendor.interface";
-import { IUserRepository } from "../../interfaces/repositories/user/userRepository.interface";
+import { IVendor } from "../../models/vendor/vendor.model";
+import { VendorMapper } from "../../mappers/sharedMappers/response.loginDto";
 import { STATUS_CODES } from "../../config/constants/statusCode";
 import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
 import { Role } from "../../models/enums/enum";
-import { normalize } from "path";
-import { error } from "console";
 import { OAuth2Client } from "google-auth-library";
-import { UserRegisterDTO } from "@/dto/user/auth/userRegisterDTO";
 import { env } from "process";
 @injectable()
 export class VendorAuthService implements IVendorAuthService {
@@ -47,6 +39,7 @@ export class VendorAuthService implements IVendorAuthService {
   async vendorRegister(dto: VendorRegisterDto): Promise<VendorResponseDto> {
     try {
       const email = dto.email.toLowerCase().trim();
+      dto.email = email; // Ensure normalized email is passed to mapper and stored in DB
       const existingVendor = await this._vendorRepository.findByEmail(email);
 
       if (existingVendor) {
@@ -97,10 +90,9 @@ export class VendorAuthService implements IVendorAuthService {
       const redisKey = `otp:vendor:${normalizedEmail}`;
       await this._redisService.set(redisKey, otp, this.OTP_TTLSECONDS);
       const content = this._emailService.generateOtpEmailContent(Number(otp));
-      const subject = "Vendor OTP Code";
       await this._emailService.sendEmail(
         normalizedEmail,
-        "Vendor OTP Code",
+        "Your OTP Code",
         content,
       );
 
@@ -108,11 +100,13 @@ export class VendorAuthService implements IVendorAuthService {
       logger.info({ normalizedEmail }, `Otp generated and send to you email`);
 
       return { email: normalizedEmail, otp: otp, expireAt };
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error(
-        { email, message: error.message },
-        `Failed to generate OTP`,
-        {},
+        {
+          email,
+          err: error instanceof Error ? error.message : error,
+        },
+        "Failed to generate OTP",
       );
 
       throw new CustomError(MESSAGES.OTP_SENDING_FAILED);
@@ -149,12 +143,11 @@ export class VendorAuthService implements IVendorAuthService {
       );
       logger.info({ normalizedEmail }, `OTP verified for the email`);
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error(
         {
           email: vendorData.email,
-          error: error.message,
-          stack: error.stack,
+          err: error instanceof Error ? error.message : error,
         },
         "OTP verification failed",
       );
@@ -162,15 +155,14 @@ export class VendorAuthService implements IVendorAuthService {
     }
   }
 
-  async vendorLogin(
-    credentials: LoginDto,
-  ): Promise<{
+  async vendorLogin(credentials: LoginDto): Promise<{
     vendor: LoginResponseDto;
     accessToken: string;
     refreshToken: string;
   }> {
+    const normalizedEmail = credentials.email.toLowerCase().trim();
     const vendorData: IVendor | null = await this._vendorRepository.findByEmail(
-      credentials.email,
+      normalizedEmail,
     );
 
     if (!vendorData) {
@@ -208,22 +200,16 @@ export class VendorAuthService implements IVendorAuthService {
     return { vendor: loginResponse, accessToken, refreshToken };
   }
 
-
-
-
   async refreshToken(
     refreshToken: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const decode = await this._IJwtService.verifyToken(refreshToken, "refresh");
-    if (!decode) {
+    if (!decode || !decode.jti) {
       throw new CustomError(
         MESSAGES.INVALID_REFRESH_TOKEN,
         STATUS_CODES.NOT_FOUND,
       );
     }
-
-    const vendorId = decode.id;
-    const role = decode.role;
 
     const isBlacklisted = await this._redisService.isRefreshTokenBlacklisted(
       decode.jti,
@@ -252,11 +238,9 @@ export class VendorAuthService implements IVendorAuthService {
     };
   }
 
-
-
-
   async forgetVendorPassword(email: string): Promise<string> {
-    const vendor = await this._vendorRepository.findByEmail(email);
+    const normalizedEmail = email.toLowerCase().trim();
+    const vendor = await this._vendorRepository.findByEmail(normalizedEmail);
     if (!vendor) {
       logger.error("Vendor not found in the forget password");
       throw new CustomError(MESSAGES.NOT_FOUND, STATUS_CODES.NOT_FOUND);
@@ -264,23 +248,20 @@ export class VendorAuthService implements IVendorAuthService {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const redisKey = `forgetotp:vendor:${email}`;
+    const redisKey = `forgetotp:vendor:${normalizedEmail}`;
     await this._redisService.set(redisKey, otp, this.OTP_TTLSECONDS);
 
     const content = this._emailService.generateOtpEmailContent(Number(otp));
     const subject = "Your OTP is here";
 
-    await this._emailService.sendEmail(email, subject, content);
+    await this._emailService.sendEmail(normalizedEmail, subject, content);
 
     logger.info(
-      { email, otp },
+      { email: normalizedEmail, otp },
       "Otp generated for forget password on the vendor side",
     );
     return "Otp send successfully";
   }
-
-
-
 
   async verifyVendorForgetOtp(data: OtpVerifyForgetDto): Promise<void> {
     const { email, otp } = data;
@@ -289,24 +270,18 @@ export class VendorAuthService implements IVendorAuthService {
     const storedOtp = await this._redisService.get(redisKey);
 
     if (!storedOtp) {
-      logger.error(
-        { err: error },
-        "No otp storde in the forget password functionality",
-      );
+      logger.error("No otp storde in the forget password functionality");
       throw new CustomError(MESSAGES.OTP_INVALID, STATUS_CODES.BAD_REQUEST);
     }
 
     if (storedOtp !== otp) {
-      logger.error(
-        { err: error },
-        "OTP of vendor doesnot match forget password",
-      );
+      logger.error("OTP of vendor doesnot match forget password");
       throw new CustomError(MESSAGES.OTP_INVALID, STATUS_CODES.UNAUTHORIZED);
     }
 
     await this._redisService.delete(redisKey);
     await this._redisService.set(
-      `verified-reset:vendor:${email}`,
+      `verified-reset:vendor:${normalizeEmail}`,
       "true",
       this.OTP_TTLSECONDS,
     );
@@ -316,24 +291,23 @@ export class VendorAuthService implements IVendorAuthService {
     );
   }
 
-
-  
-
   async resetPassword(email: string, password: string): Promise<string> {
-    const vendor = await this._vendorRepository.findByEmail(email);
+    const normalizedEmail = email.toLowerCase().trim();
+    const vendor = await this._vendorRepository.findByEmail(normalizedEmail);
     if (!vendor) {
       throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
 
     const hashedPassword = await this._IpasswordService.hashPassword(password);
 
-    await this._vendorRepository.updateVendorPassword(email, hashedPassword);
+    await this._vendorRepository.updateVendorPassword(
+      normalizedEmail,
+      hashedPassword,
+    );
     return "Password reset successfully";
   }
 
-  async googleLogin(
-    googleToken: string,
-  ): Promise<{
+  async googleLogin(googleToken: string): Promise<{
     accessToken: string;
     refreshToken: string;
     vendor: LoginResponseDto;
@@ -386,40 +360,51 @@ export class VendorAuthService implements IVendorAuthService {
 
   async logout(refreshToken: string): Promise<void> {
     const payload = this._IJwtService.verifyToken(refreshToken, "refresh");
-    if (!payload) {
+    if (!payload || !payload.jti) {
       throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
     }
 
     const ttlSeconds = payload.exp - Math.floor(Date.now() / 1000);
 
-    await this._redisService.blacklistRefreshToken(payload, ttlSeconds);
+    await this._redisService.blacklistRefreshToken(payload.jti, ttlSeconds);
   }
 
-
-  async changePassword(vendorId:string,currentPassword:string,newPassword:string):Promise<void>{
-
+  async changePassword(
+    vendorId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
     const vendor = await this._vendorRepository.findById(vendorId);
-    if(!vendor){
-      throw new CustomError(MESSAGES.USER_NOT_FOUND)
+    if (!vendor) {
+      throw new CustomError(MESSAGES.USER_NOT_FOUND);
     }
 
-    if(!vendor.password){
+    if (!vendor.password) {
       throw new CustomError(MESSAGES.PASSWORD_NOT_REQUIRED);
     }
 
-    const isMatch = await this._IpasswordService.comparePassword(currentPassword,vendor.password);
-    if(!isMatch){
-      throw new CustomError(MESSAGES.PASSWORD_MISMATCH)
+    const isMatch = await this._IpasswordService.comparePassword(
+      currentPassword,
+      vendor.password,
+    );
+    if (!isMatch) {
+      throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
     }
 
-    const isSamePassword = await this._IpasswordService.comparePassword(newPassword,vendor.password);
+    const isSamePassword = await this._IpasswordService.comparePassword(
+      newPassword,
+      vendor.password,
+    );
 
-    if(isSamePassword){
-      throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT)
+    if (isSamePassword) {
+      throw new CustomError(MESSAGES.PASSWORD_MUST_BE_DIFFERENT);
     }
 
-    const hashedPassword = await this._IpasswordService.hashPassword(newPassword);
+    const hashedPassword =
+      await this._IpasswordService.hashPassword(newPassword);
 
-    await this._vendorRepository.updateById(vendorId,{password:hashedPassword})
+    await this._vendorRepository.updateById(vendorId, {
+      password: hashedPassword,
+    });
   }
 }

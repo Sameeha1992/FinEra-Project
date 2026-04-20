@@ -200,7 +200,7 @@ export class EmiPaymentSerive implements IEmiPaymentService {
       emi.lastPenaltyAppliedAt >= todayStart &&
       emi.lastPenaltyAppliedAt <= todayEnd;
 
-    let finalStatus = EmiStatus.OVERDUE;
+    const finalStatus = EmiStatus.OVERDUE;
     let finalPenalty = emi.penalty ?? 0;
     let needsUpdate = false;
 

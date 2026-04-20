@@ -1,5 +1,5 @@
 import { PaymentStatus } from "../../models/enums/enum";
-import mongoose from "mongoose";
+
 
 export interface TransactionResponseDto {
   id:string

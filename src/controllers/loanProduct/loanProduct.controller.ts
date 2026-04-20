@@ -10,7 +10,7 @@ import { LoanType } from "../../models/enums/enum";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import { success } from "zod";
+
 
 @injectable()
 export class LoanProductController {

@@ -29,6 +29,20 @@ export class NotificationService implements INotificationService {
       throw new CustomError(MESSAGES.INVALID_REQUEST, STATUS_CODES.BAD_REQUEST);
     }
 
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new CustomError(
+        "Invalid userId passed while creating notification",
+        STATUS_CODES.BAD_REQUEST,
+      );
+    }
+
+    if (emiId && !Types.ObjectId.isValid(emiId)) {
+      throw new CustomError(
+        "Invalid emiId passed while creating notification",
+        STATUS_CODES.BAD_REQUEST,
+      );
+    }
+
     const notification = await this._iNotificationRepository.createNotification(
       {
         userId: new Types.ObjectId(userId),

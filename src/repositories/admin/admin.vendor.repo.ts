@@ -2,12 +2,13 @@ import { IAdminVendorMgtRepo } from "@/interfaces/repositories/admin/admin.vendo
 import { IVendor, VendorModel } from "@/models/vendor/vendor.model";
 import { BaseRepository } from "../base_repository";
 import { injectable } from "tsyringe";
+import { FilterQuery } from "mongoose";
 import {
   PaginatedResult,
   PaginationQuery,
 } from "@/interfaces/shared/pagination.interface";
 import { IUser, UserModel } from "@/models/user/user.model";
-import { AccountStatus, Status } from "@/models/enums/enum";
+import { AccountStatus} from "@/models/enums/enum";
 
 type RoleModel = "vendor" | "user";
 
@@ -16,9 +17,7 @@ export class AdminVendorMgtRepo
   extends BaseRepository<IVendor | IUser>
   implements IAdminVendorMgtRepo
 {
-  constructor() {
-    super(undefined as any);
-  }
+  
 
   async findAllVendors(
     query: PaginationQuery & { role: RoleModel },
@@ -27,7 +26,7 @@ export class AdminVendorMgtRepo
     const skip = (page - 1) * limit;
 
     if (role === "vendor") {
-      const filter: any = { role: "vendor" };
+      const filter: FilterQuery<IVendor> = { role: "vendor" };
 
       if (search) {
         filter.$or = [
@@ -50,7 +49,7 @@ export class AdminVendorMgtRepo
 
     // role === "user"
 
-    const filter: any = { role: "user" };
+    const filter: FilterQuery<IUser> = { role: "user" };
 
     if (search) {
       filter.$or = [

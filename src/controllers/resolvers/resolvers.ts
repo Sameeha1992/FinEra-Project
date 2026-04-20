@@ -55,3 +55,7 @@ export const vendorDashboardController = container.resolve(
 
 export const transactionController = container.resolve(TransactionController);
 //Admin:-
+
+//User Dashboard:-
+import { UserDashboardController } from "../user/user.dashboard.controller";
+export const userDashboardController = container.resolve(UserDashboardController);

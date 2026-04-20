@@ -9,6 +9,7 @@ export interface IVendorVerificationService {
   getVendorList(
     page: number,
     limit: number,
+    search?:string,
   ): Promise<{
     vendors: VendorVerificationListDto[];
     total: number;

@@ -1,4 +1,4 @@
-import { LoanType } from "@/models/enums/enum";
+import { MonthlyApplicationTrendDto, VendorDashboardExportDto, VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 export interface IVendorDashboardRepository {
   getLoanApplicationCounts(vendorId: string): Promise<{
@@ -18,9 +18,9 @@ export interface IVendorDashboardRepository {
 
   getOutstandingPenaltySum(vendorId: string): Promise<number>;
 
-  getMonthlyApplicationTrend(vendorId: string): Promise<any[]>;
+  getMonthlyApplicationTrend(vendorId: string): Promise<MonthlyApplicationTrendDto[]>;
 
-  getExportData(vendorId: string): Promise<any[]>;
+  getExportData(vendorId: string,filters:VendorReportFilterDto): Promise<VendorDashboardExportDto[]>;
 
   getLoanTypeDistribution(
     vendorId: string,

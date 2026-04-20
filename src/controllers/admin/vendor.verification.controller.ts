@@ -1,11 +1,9 @@
 import { MESSAGES } from "../../config/constants/message";
 import { STATUS_CODES } from "../../config/constants/statusCode";
-import { UpdateVendorStatusDto } from "../../dto/admin/vendor.verification.dto";
 import { IVendorVerificationService } from "../../interfaces/services/admin/vendor.verification.service.interface";
 import { Status } from "../../models/enums/enum";
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
-import { success } from "zod";
 
 @injectable()
 export class VendorVerificationController {
@@ -18,10 +16,11 @@ export class VendorVerificationController {
     try {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
-
+      const search = typeof req.query.search === "string" ? req.query.search : "";
       const result = await this._IvendorVerificationService.getVendorList(
         page,
         limit,
+        search
       );
 
       return res.status(STATUS_CODES.SUCCESS).json({

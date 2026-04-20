@@ -1,7 +1,6 @@
 import { ILoanProduct } from "@/models/loan/loanProduct.model";
 import { IBaseRepository } from "../baseRepository.interface";
 import {
-  ILoanProductEntityDto,
   LoanListingDto,
   UpdateLoanDto,
 } from "@/dto/loanProduct/loanProduct.dto";
@@ -10,7 +9,7 @@ import { LoanListingResult } from "@/dto/loanProduct/loanListingUser";
 import { IVendor } from "@/models/vendor/vendor.model";
 
 export interface ILoanProductRepository extends IBaseRepository<ILoanProduct> {
-  findByNameAndVendor(name: string, vendorId: string): Promise<any | null>;
+  findByNameAndVendor(name: string, vendorId: string): Promise<ILoanProduct | null>;
   getLoanByVendor(
     vendorId: string,
     search: string,

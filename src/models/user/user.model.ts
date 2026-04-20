@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { AccountStatus, Role, Status } from "../enums/enum";
-import { boolean } from "zod";
 
 export interface IUser extends Document {
   _id: string;

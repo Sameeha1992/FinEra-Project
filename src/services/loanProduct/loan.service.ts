@@ -1,7 +1,7 @@
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
 import { LoanDetailForUserDto, LoanListingResult } from "@/dto/loanProduct/loanListingUser";
-import { ILoanProductDto, ILoanProductEntityDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
+import { ILoanProductDto, ILoanProductResponseDto, LoanListingDto, UpdateLoanDto } from "@/dto/loanProduct/loanProduct.dto";
 import { ILoanProductRepository } from "@/interfaces/repositories/loanProduct/loanProduct.repository";
 import { IVendorRepository } from "@/interfaces/repositories/vendor/vendor.auth";
 import { ILoanProductService } from "@/interfaces/services/loanProduct/loanProduct.service";

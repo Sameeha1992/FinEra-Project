@@ -4,6 +4,11 @@ import {
 } from "@/dto/transaction/transaction.dto";
 import { ITransaction } from "@/models/transactions/transactions.model";
 
+
+type PopulatedTransactionUser={
+  name?:string;
+  email?:string;
+}
 export class TransactionMapper {
   // 👤 USER SIDE
   static toUserTransactionDto(
@@ -24,7 +29,7 @@ export class TransactionMapper {
   static toVendorTransactionDto(
     transaction: ITransaction,
   ): VendorTransactionResponseDto {
-    const user = transaction.userId as any; // because of populate
+    const user = transaction.userId as PopulatedTransactionUser; // because of populate
 
     return {
       id: transaction._id.toString(),

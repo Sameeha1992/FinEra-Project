@@ -2,7 +2,7 @@ import { ILoanApplicationRepository } from "@/interfaces/repositories/loanApplic
 import LoanApplication, {
   ILoanApplication,
 } from "@/models/applications/application.model";
-import { inject, injectable } from "tsyringe";
+import {injectable } from "tsyringe";
 import { BaseRepository } from "../base_repository";
 import { LoanApplicationStatus, LoanType } from "@/models/enums/enum";
 

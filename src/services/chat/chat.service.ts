@@ -9,11 +9,11 @@ import { ChatMapper } from "@/mappers/chat/chat.mapper";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { Role } from "@/models/enums/enum";
 import { SenderRole } from "@/models/message/message.schema";
-import { Type } from "@aws-sdk/client-s3";
 import { INotificationService } from "@/interfaces/services/notifications/notification.service.interface";
 import { NotificationType } from "@/models/enums/enum";
 import { Types } from "mongoose";
 import { inject, injectable } from "tsyringe";
+import { getId } from "../shared/chat/chat.helper.service";
 
 @injectable()
 export class ChatService implements IChatService {
@@ -44,7 +44,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.User) {
-      const applicantId = (application.userId as any)._id?.toString() || application.userId.toString();
+      const applicantId = getId(application.userId)
       if (applicantId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -54,7 +54,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.Vendor) {
-      const vendorId = (application.vendorId as any)._id?.toString() || application.vendorId.toString();
+      const vendorId = getId(application.vendorId)
       if (vendorId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -115,7 +115,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.User) {
-      const participantId = (conversation.userId as any)._id?.toString() || conversation.userId.toString();
+      const participantId = getId(conversation.userId)
       if (participantId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -125,7 +125,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.Vendor) {
-      const participantId = (conversation.vendorId as any)._id?.toString() || conversation.vendorId.toString();
+      const participantId = getId(conversation.vendorId)
       if (participantId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -154,7 +154,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.User) {
-      const participantId = (conversation.userId as any)._id?.toString() || conversation.userId.toString();
+      const participantId = getId(conversation.userId);
       if (participantId !== senderId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -164,7 +164,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.Vendor) {
-      const participantId = (conversation.vendorId as any)._id?.toString() || conversation.vendorId.toString();
+      const participantId = getId(conversation.vendorId);
       if (participantId !== senderId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -194,7 +194,7 @@ export class ChatService implements IChatService {
     if (role === Role.Vendor) {
       console.log(`ChatService: Vendor ${senderId} sent a message. Creating notification for user`, conversation.userId);
       try {
-        const participantId = (conversation.userId as any)._id?.toString() || conversation.userId.toString();
+        const participantId = getId(conversation.userId);
         
         const notification = await this._notificationService.createNotification({
           userId: participantId,
@@ -224,7 +224,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.User) {
-      const participantId = (conversation.userId as any)._id?.toString() || conversation.userId.toString();
+      const participantId = getId(conversation.userId);
       if (participantId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,
@@ -234,7 +234,7 @@ export class ChatService implements IChatService {
     }
 
     if (role === Role.Vendor) {
-      const participantId = (conversation.vendorId as any)._id?.toString() || conversation.vendorId.toString();
+      const participantId = getId(conversation.vendorId);
       if (participantId !== loggedInId) {
         throw new CustomError(
           MESSAGES.UNAUTHORIZED_ACCESS,

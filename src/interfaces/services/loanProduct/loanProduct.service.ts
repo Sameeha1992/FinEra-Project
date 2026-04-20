@@ -1,13 +1,11 @@
 import { LoanDetailForUserDto } from "@/dto/loanProduct/loanListingUser";
 import {
   ILoanProductDto,
-  ILoanProductEntityDto,
   ILoanProductResponseDto,
   LoanListingDto,
   UpdateLoanDto,
 } from "@/dto/loanProduct/loanProduct.dto";
-import { LoanType, Status } from "@/models/enums/enum";
-import { ILoanProduct } from "@/models/loan/loanProduct.model";
+import { LoanType } from "@/models/enums/enum";
 import { PopulatedLoanProduct } from "@/types/populate.loan.type";
 
 export interface ILoanProductService {

@@ -3,7 +3,6 @@ import { BaseRepository } from "../base_repository";
 import loanProduct, { ILoanProduct } from "@/models/loan/loanProduct.model";
 import { ILoanProductRepository } from "@/interfaces/repositories/loanProduct/loanProduct.repository";
 import {
-  ILoanProductEntityDto,
   LoanItemDto,
   LoanListingDto,
   UpdateLoanDto,
@@ -12,7 +11,6 @@ import { FilterQuery } from "mongoose";
 import { CustomError } from "@/middleware/errorMiddleware";
 import { MESSAGES } from "@/config/constants/message";
 import { STATUS_CODES } from "@/config/constants/statusCode";
-import loanModel from "@/models/loan/loan.model";
 import { LoanStatus, LoanType } from "@/models/enums/enum";
 import { LoanListingResult } from "@/dto/loanProduct/loanListingUser";
 import { IVendor } from "@/models/vendor/vendor.model";
@@ -27,7 +25,7 @@ export class LoanProductRepository
   async findByNameAndVendor(
     name: string,
     vendorId: string,
-  ): Promise<any | null> {
+  ): Promise<ILoanProduct | null> {
     return await loanProduct.findOne({ name, vendor: vendorId });
   }
 
@@ -35,7 +33,7 @@ export class LoanProductRepository
     vendorId: string,
     search: string = "",
     page: number = 1,
-    limit: number = 1,
+    limit: number = 10,
   ): Promise<LoanListingDto> {
     if (!vendorId) {
       throw new CustomError(
@@ -51,9 +49,6 @@ export class LoanProductRepository
 
     const total = await loanProduct.countDocuments(query);
 
-    if (total === 0) {
-      throw new CustomError(MESSAGES.LOAN_NOT_FOUND, STATUS_CODES.NOT_FOUND);
-    }
 
     const loans = await loanProduct
       .find(query)

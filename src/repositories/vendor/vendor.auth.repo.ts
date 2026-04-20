@@ -1,7 +1,7 @@
  import { IVendor, VendorModel } from "../../models/vendor/vendor.model"
 import { BaseRepository } from "../base_repository"
 import { IVendorRepository } from "../../interfaces/repositories/vendor/vendor.auth"
-import { AccountStatus, Status } from "@/models/enums/enum"
+import { Status } from "@/models/enums/enum"
  
  
 export class VendorRepository extends BaseRepository<IVendor> implements IVendorRepository{

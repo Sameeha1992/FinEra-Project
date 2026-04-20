@@ -1,4 +1,4 @@
-import { positive, z } from "zod";
+import { z } from "zod";
 import { Errors } from "@/config/constants/envError";
 
 const envSchema = z.object({

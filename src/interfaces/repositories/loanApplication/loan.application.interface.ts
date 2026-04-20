@@ -12,4 +12,5 @@ export interface ILoanApplicationRepository extends IBaseRepository<ILoanApplica
   countApprovedLoans(): Promise<number>;
   countPendingLoans(): Promise<number>;
   countRejectedLoans(): Promise<number>;
+
 }

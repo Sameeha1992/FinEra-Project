@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IJwtService } from "../../interfaces/helper/jwt.service.interface";
+import { IJwtService, IDecodedToken } from "../../interfaces/helper/jwt.service.interface";
 import jwt from "jsonwebtoken";
 import ms from "ms";
 import { env } from "process";
@@ -22,14 +22,15 @@ export class JwtService implements IJwtService {
     });
   }
 
-  verifyToken(token: string, type: "access" | "refresh"): any {
+  verifyToken(token: string, type: "access" | "refresh"): IDecodedToken | null {
     try {
       const secret =
         type === "access"
           ? env.JWT_ACCESS_SECRET
           : env.JWT_REFRESH_SECRET;
-      return jwt.verify(token, secret as string);
+      return jwt.verify(token, secret as string) as IDecodedToken;
     } catch (error) {
+      console.error(error)
       return null;
     }
   }

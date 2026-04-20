@@ -1,6 +1,5 @@
 import { MESSAGES } from "@/config/constants/message";
 import { PROCESSING_FEE } from "@/config/constants/loan";
-import { CreateEmiDTO } from "@/dto/emi/create.emi.dto";
 import {
   VendorApplicationQueryDTO,
   VendorApplicationListItemDTO,
@@ -284,12 +283,22 @@ export class UserVerificationService implements IUserVerificationService {
       rejectionReason,
     );
 
-    await this._iNotificationService.createNotification({userId:application.user.toString(), title: "Loan Rejected",
-    message: `Your loan application has been rejected. Reason: ${rejectionReason}`,
-    type: NotificationType.LOAN_REJECTED})
-
     if (!rejectedLoan) {
       throw new CustomError(MESSAGES.LOAN_APPLICATION_NOT_FOUND);
+    }
+
+    try {
+      await this._iNotificationService.createNotification({
+        userId: rejectedLoan.userId.toString(),
+        title: "Loan Rejected",
+        message: `Your loan application has been rejected. Reason: ${rejectionReason}`,
+        type: NotificationType.LOAN_REJECTED,
+      });
+    } catch (error) {
+      console.error(
+        "Notification failed after application rejection:",
+        error,
+      );
     }
 
     const updatedApplication = await this.getApplicationDetail(

@@ -25,7 +25,7 @@ export class UserProfileService implements IUserprofileService {
   ) {}
 
   async getProfile(userId: string): Promise<UserProfileResponseDTO> {
-    let user = await this._iUserRepository.findById(userId);
+    const user = await this._iUserRepository.findById(userId);
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
     return UserProfileMapper.toResponse(user);
@@ -95,9 +95,9 @@ export class UserProfileService implements IUserprofileService {
 
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND);
 
-    let extensions = image.mimetype.split("/")[1];
+    const extensions = image.mimetype.split("/")[1];
 
-    let key = `profiles/${userId}.${extensions}`;
+    const key = `profiles/${userId}.${extensions}`;
 
     const updateUser = await this._iUserRepository.updateById(userId, {
       profileImage: key,

@@ -40,6 +40,7 @@ export class AdminVendorMgtController {
         limit: result.limit,
       });
     } catch (error) {
+      next(error)
       return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: MESSAGES.FAILURE,
@@ -85,6 +86,7 @@ export class AdminVendorMgtController {
         message: MESSAGES.FAILURE,
         error: (error as Error).message,
       });
+      next(error)
     }
   }
 }

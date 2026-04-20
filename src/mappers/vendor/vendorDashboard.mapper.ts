@@ -1,4 +1,4 @@
-import { VendorDashboardDto } from "@/dto/vendorDto/vendorDashboard.dto";
+import { MonthlyApplicationTrendDto, VendorDashboardDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 export class VendorDashboardMapper {
   static toDto(data: {
@@ -13,7 +13,7 @@ export class VendorDashboardMapper {
     repaymentsSum: number;
     productCount: number;
     penaltySum: number;
-    appTrend: any[];
+    appTrend: MonthlyApplicationTrendDto[];
     typeDistribution: { label: string; value: number }[];
   }): VendorDashboardDto {
     const monthsShort = [

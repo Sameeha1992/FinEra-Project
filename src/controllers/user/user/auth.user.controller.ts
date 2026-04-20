@@ -11,7 +11,6 @@ import { OtpVerifyForgetDto } from "../../../dto/user/auth/otp-generation.dto";
 import { getCookieOptions, isProduction } from "../../../utils/setAuthCookies";
 import { env } from "@/validations/envValidation";
 import { clearAuthCookies } from "@/utils/clearAuthCookies";
-import { success } from "zod";
 import { Role } from "../../../models/enums/enum";
 import { AuthenticateRequest } from "@/types/express/authenticateRequest.interface";
 
@@ -21,7 +20,7 @@ export class AuthUserController {
     @inject("IAuthUserService") private _authUserService: IAuthUserService,
   ) {}
 
-  async register(req: Request, res: Response, next: NextFunction) {
+  async register(req: Request, res: Response) {
     try {
       const userData: UserRegisterDTO = req.body;
       const createUser = await this._authUserService.registerUser(userData);
@@ -56,6 +55,7 @@ export class AuthUserController {
         success: false,
         error: "OTP generation failed",
       });
+      next(error);
     }
   }
 
@@ -71,6 +71,7 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: MESSAGES.OTP_NOT_VERIFIED });
+      next(error);
     }
   }
 
@@ -97,6 +98,7 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.UNAUTHORIZED)
         .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS, error });
+      next(error);
     }
   }
 
@@ -133,6 +135,8 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: "no access token available" });
+      logger.error("no access token available");
+      next(error);
     }
   }
 
@@ -198,6 +202,7 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({ message: error || "Something went wrong in reset password" });
+      next(error);
     }
   }
 
@@ -205,7 +210,7 @@ export class AuthUserController {
     try {
       const token = req.body.token;
 
-      console.log("tokewn nkjhjkb",token)
+      console.log("tokewn nkjhjkb", token);
 
       if (!token) {
         throw new CustomError(
@@ -227,7 +232,7 @@ export class AuthUserController {
         accessToken,
       });
     } catch (error) {
-      console.log("google auth issue",error)
+      console.log("google auth issue", error);
       next(error);
     }
   }
@@ -252,15 +257,19 @@ export class AuthUserController {
       res
         .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: MESSAGES.LOGOUT_FAILED });
+      next(error);
     }
   }
 
-  async changePassword(req: AuthenticateRequest, res: Response, next: NextFunction) {
+  async changePassword(
+    req: AuthenticateRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const userId = req.user?.id;
 
       const { currentPassword, newPassword } = req.body;
-
 
       if (!userId) {
         throw new CustomError(MESSAGES.UNAUTHORIZED_ACCESS);

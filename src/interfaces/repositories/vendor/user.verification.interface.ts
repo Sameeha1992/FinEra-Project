@@ -12,6 +12,7 @@ export interface IUserVerificationRepo extends IBaseRepository<ILoanApplication>
     total: number;
     page: number;
     totalPages: number;
+    search?:string;
   }>;
   getApplicationDetails(
     applicationId: string,

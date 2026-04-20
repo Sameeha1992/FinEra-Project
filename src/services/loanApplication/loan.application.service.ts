@@ -10,7 +10,6 @@ import { ILoanApplication } from "@/models/applications/application.model";
 import {
   LoanApplicationStatus,
   LoanType,
-  Status,
   VendorNotificationType,
 } from "@/models/enums/enum";
 import { Types } from "mongoose";

@@ -6,7 +6,6 @@ import { IAdminAuthRepo } from "../../interfaces/repositories/admin/admin.auth.r
 import { CustomError } from "../../middleware/errorMiddleware";
 import { MESSAGES } from "../../config/constants/message";
 import { UserMapper } from "../../mappers/sharedMappers/response.loginDto";
-import { Role } from "../../models/enums/enum";
 import { IUser } from "../../models/user/user.model";
 import { IPasswordService } from "../../interfaces/helper/passwordhashService.interface";
 import { IRedisService } from "@/interfaces/helper/redis.interface";
@@ -72,7 +71,7 @@ export class AdminAuthService implements IAdminAuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const decode = await this._IJwtService.verifyToken(refreshToken, "refresh");
 
-    if (!decode) {
+    if (!decode || !decode.jti) {
       throw new CustomError("Refresh token not valid");
     }
 
@@ -111,6 +110,9 @@ export class AdminAuthService implements IAdminAuthService {
       throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
     }
     const ttlSeconds = payload.exp - Math.floor(Date.now() / 1000);
+    if (!payload.jti) {
+      throw new CustomError(MESSAGES.INVALID_REFRESH_TOKEN);
+    }
 
     await this._IRedisService.blacklistRefreshToken(payload.jti, ttlSeconds);
   }

@@ -1,14 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 import { CustomError } from "./errorMiddleware";
-import { success } from "zod";
 import { MESSAGES } from "@/config/constants/message";
+import logger from "./loggerMiddleware";
 
 export const errorHandlers = (
-  err: any,
+  err: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
+  logger.error(
+    `Error in ${req.method} ${req.originalUrl}: ${
+      err instanceof Error ? err.message : String(err)
+    }`,
+  );
   if (err instanceof CustomError) {
     return res
       .status(err.statusCode)

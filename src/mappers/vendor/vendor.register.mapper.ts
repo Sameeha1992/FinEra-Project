@@ -5,6 +5,17 @@ import {
 import { Role, Status } from "../../models/enums/enum";
 import { IVendor } from "../../models/vendor/vendor.model";
 import { randomUUID } from "crypto"; // Built-in Node.js
+
+type VendorRegisterEntity = {
+  vendorId: string;
+  vendorName: string;
+  email: string;
+  registrationNumber: string;
+  role: Role;
+  password: string;
+  status: Status;
+};
+
 export class vendorRegisterMapper {
   static toResponse(vendor: IVendor): VendorResponseDto {
     return {
@@ -16,7 +27,13 @@ export class vendorRegisterMapper {
     };
   }
 
-  static toEntity(dto: VendorRegisterDto, passwordHash: string): any {
+  static toEntity(
+    dto: VendorRegisterDto,
+    passwordHash: string,
+  ): VendorRegisterEntity {
+    if (!dto.name || !dto.email || !dto.registerNumber) {
+      throw new Error("Missing required vendor registration fields");
+    }
     return {
       vendorId: `VEND-${randomUUID().slice(0, 8).toUpperCase()}`, // AUTO
       vendorName: dto.name,

@@ -3,7 +3,7 @@ import { STATUS_CODES } from "../../config/constants/statusCode";
 import { IEmiPaymentService } from "../../interfaces/services/emi/emi.payment.interface";
 import { CustomError } from "../../middleware/errorMiddleware";
 import { AuthenticateRequest } from "../../types/express/authenticateRequest.interface";
-import { Request, NextFunction, Response } from "express";
+import {NextFunction, Response } from "express";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

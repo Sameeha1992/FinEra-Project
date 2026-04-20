@@ -8,7 +8,6 @@ export class userApplicationMapper {
     app: ILoanApplication & { userId: IUser; loanProductId: ILoanProduct },
   ): VendorApplicationDetailsDTO {
     const user = app.userId;
-    const loanProduct = app.loanProductId;
 
     return {
       applicationId: app.id.toString(),

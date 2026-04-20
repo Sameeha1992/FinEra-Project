@@ -1,6 +1,5 @@
 import { MESSAGES } from "@/config/constants/message";
 import {
-  PaginatedTransactionResponseDto,
   PaginatedUserTransactionResponseDto,
   PaginatedVendorTransactionResponseDto,
 } from "@/dto/transaction/transaction.dto";
@@ -12,8 +11,8 @@ import { ITransactionRepository } from "@/interfaces/repositories/transactions/t
 import { TransactionMapper } from "@/mappers/transaction/transaction.mappers";
 import {
   VendorTransactionPdfItemDto,
-  VendorTransactionReportEntity,
 } from "@/dto/transaction/vendor.transaction.pdf";
+import { VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 @injectable()
 export class TransactionService implements ITransactionService {
@@ -55,6 +54,7 @@ export class TransactionService implements ITransactionService {
     vendorId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<PaginatedVendorTransactionResponseDto> {
     if (!vendorId) {
       throw new CustomError(
@@ -72,6 +72,7 @@ export class TransactionService implements ITransactionService {
         vendorId,
         skip,
         perPage,
+        search,
       );
 
     return {
@@ -84,40 +85,41 @@ export class TransactionService implements ITransactionService {
     };
   }
 
-  async getVendorTransactionReportData(
-    vendorId: string,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<VendorTransactionPdfItemDto[]> {
-    if (!vendorId) {
-      throw new CustomError(
-        MESSAGES.VENDOR_NOT_FOUND,
-        STATUS_CODES.BAD_REQUEST,
-      );
-    }
-
-    const transactions =
-      (await this._iTransactionRepository.getVendorTransactionsForReport(
-        vendorId,
-        startDate,
-        endDate,
-      )) as unknown as VendorTransactionReportEntity[];
-
-    return transactions.map((transaction) => ({
-      transactionId: transaction.transactionId,
-      userName:
-        transaction.userId?.fullName ??
-        transaction.userId?.name ??
-        "Unknown User",
-      loanType: transaction.loanId
-        .loanType as VendorTransactionPdfItemDto["loanType"],
-      loanAmount: transaction.loanId.amount,
-      interestRate: transaction.loanId.interestRate,
-      penaltyAmount: transaction.penaltyAmount ?? 0,
-      totalPaidAmount: transaction.totalAmount,
-      paymentStatus:
-        transaction.paymentStatus as VendorTransactionPdfItemDto["paymentStatus"],
-      paidAt: transaction.paidAt,
-    }));
+ async getVendorTransactionReportData(
+  vendorId: string,
+  filters: VendorReportFilterDto,
+): Promise<VendorTransactionPdfItemDto[]> {
+  if (!vendorId) {
+    throw new CustomError(
+      MESSAGES.VENDOR_NOT_FOUND,
+      STATUS_CODES.BAD_REQUEST,
+    );
   }
+
+  if (filters.month && !filters.year) {
+    throw new CustomError(
+      "Year is required when month is provided",
+      STATUS_CODES.BAD_REQUEST,
+    );
+  }
+
+  const transactions =
+    await this._iTransactionRepository.getVendorTransactionsForReport(
+      vendorId,
+      filters,
+    );
+
+  return transactions.map((transaction) => ({
+    transactionId: transaction.transactionId,
+    userName: transaction.userName ?? "Unknown User",
+    loanType: transaction.loanType as VendorTransactionPdfItemDto["loanType"],
+    loanAmount: transaction.loanAmount ?? 0,
+    interestRate: transaction.interestRate ?? 0,
+    penaltyAmount: transaction.penaltyPaid ?? 0,
+    totalPaidAmount: transaction.totalPaid ?? 0,
+    paymentStatus:
+      transaction.paymentStatus as VendorTransactionPdfItemDto["paymentStatus"],
+    paidAt: transaction.paidAt,
+  }));
+}
 }

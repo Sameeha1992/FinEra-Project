@@ -8,10 +8,17 @@ import { CustomError } from "../../../middleware/errorMiddleware";
 import { Role } from "../../../models/enums/enum";
 import { inject } from "tsyringe";
 
+
+export type BaseLoginEntity = {
+  _id: { toString(): string };
+  password?: string;
+};
+
+
 export abstract class BaseLoginService implements IBaseLoginService {
   protected abstract readonly role: Role;
-  protected abstract findByEmail(email: string): Promise<any>;
-  protected abstract toLoginResponse(entity: any): LoginResponseDto;
+  protected abstract findByEmail(email: string): Promise<BaseLoginEntity | null>;
+  protected abstract toLoginResponse(entity: BaseLoginEntity): LoginResponseDto;
 
   constructor(
     @inject("IPasswordService") protected _passwordService: IPasswordService,
@@ -53,11 +60,11 @@ export abstract class BaseLoginService implements IBaseLoginService {
     const loginResponse = this.toLoginResponse(entity);
 
     const accessToken = this._IjwtService.generateAccessToken(
-      entity._id,
+      entity._id.toString(),
       this.role
     );
     const refreshToken = this._IjwtService.generateRefreshToken(
-      entity._id,
+      entity._id.toString(),
       this.role
     );
 

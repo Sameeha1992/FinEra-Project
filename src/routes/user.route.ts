@@ -3,7 +3,6 @@ import express, { Request, Response, NextFunction } from "express";
 import { AuthMiddleware } from "@/middleware/authMiddleware";
 import { uploadImageMiddleware } from "@/middleware/multer.middleware";
 import { Role } from "@/models/enums/enum";
-import multer from "multer";
 import {
   emiPaymentController,
   loanApplicationController,
@@ -12,8 +11,8 @@ import {
   userApplicationController,
   userEmiController,
   userNotificationController,
+  userDashboardController,
 } from "@/controllers/resolvers/resolvers";
-import { EmiController } from "@/controllers/emi/emi.controller";
 import { loginUserSchema } from "@/validations/user/auth/user.login.validation";
 import { completeProfileSchema } from "@/validations/user/auth/complete.profile.validation";
 import { createEmiPaymentSessionSchema } from "@/validations/emi/emi.payment.validation";
@@ -142,6 +141,15 @@ router.put(
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   authUserController.logout(req, res, next);
 });
+
+// User Dashboard:
+router.get(
+  "/dashboard",
+  authMiddleware.auntenticate,
+  authMiddleware.allowRoles(Role.User),
+  authMiddleware.checkBlocked,
+  userDashboardController.getDashboard.bind(userDashboardController),
+);
 
 router.get(
   "/loans",

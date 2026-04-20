@@ -1,7 +1,14 @@
 import PDFDocument from "pdfkit";
 import { Response } from "express";
 
-export const generateTransactionPDF = (transactions: any[], res: Response) => {
+type TransactionPdfRow = {
+  transactionId: string;
+  totalAmount: number;
+  paymentStatus: string;
+  paidAt: Date | string;
+};
+
+export const generateTransactionPDF = (transactions: TransactionPdfRow[], res: Response) => {
   const doc = new PDFDocument();
 
   res.setHeader("Content-Type", "application/pdf");

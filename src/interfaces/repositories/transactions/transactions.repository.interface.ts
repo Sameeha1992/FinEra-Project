@@ -1,5 +1,6 @@
 import { ITransaction } from "@/models/transactions/transactions.model";
 import { IBaseRepository } from "../baseRepository.interface";
+import { VendorDashboardExportDto, VendorReportFilterDto } from "@/dto/vendorDto/vendorDashboard.dto";
 
 export interface ITransactionRepository extends IBaseRepository<ITransaction> {
   createTransaction(data: Partial<ITransaction>): Promise<ITransaction>;
@@ -19,6 +20,7 @@ export interface ITransactionRepository extends IBaseRepository<ITransaction> {
     vendorId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<{
     transactions: ITransaction[];
     total: number;
@@ -29,8 +31,7 @@ export interface ITransactionRepository extends IBaseRepository<ITransaction> {
   countTransactionsByVendorId(vendorId: string): Promise<number>;
 
   getVendorTransactionsForReport(
-    vendorId: string,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<ITransaction[]>;
+   vendorId: string,
+   filters: VendorReportFilterDto,
+ ): Promise<VendorDashboardExportDto[]>
 }

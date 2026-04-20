@@ -1,4 +1,3 @@
-import { ChatController } from "@/controllers/chat/chat.controller";
 import {
   authMiddleware,
   chatController,

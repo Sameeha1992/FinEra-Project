@@ -2,19 +2,31 @@ import { ChatConversationDto, ChatMessageDto } from "@/dto/chat/chat.dto";
 import { IChat } from "@/models/chat/chat.schema";
 import { IMessage } from "@/models/message/message.schema";
 
+
+type PopulatedUser={
+  _id:{toString():string};
+  name:string
+}
+
+type PopulatedVendor={
+  _id:{toString():string};
+  vendorName:string
+}
 export class ChatMapper {
   static toConversationDto(chat: IChat): ChatConversationDto {
+
+    const user = chat.userId as typeof chat.userId & Partial<PopulatedUser>;
+    const vendor = chat.vendorId as typeof chat.vendorId & Partial<PopulatedVendor>;
+
     return {
       conversationId: chat._id.toString(),
-      userId: chat.userId._id
+      userId: user._id 
         ? chat.userId._id.toString()
         : chat.userId.toString(),
-      vendorId: chat.vendorId._id
-        ? chat.vendorId._id.toString()
-        : chat.vendorId.toString(),
+      vendorId: vendor._id ? vendor._id.toString() : chat.vendorId.toString(),
       applicationId: chat.applicationId.toString(),
-      userName: (chat.userId as any).name,
-      vendorName: (chat.vendorId as any).vendorName,
+      userName: user.name,
+      vendorName: vendor.vendorName,
       lastMessage: chat.lastMessage,
       lastMessageAt: chat.lastMessageAt,
       createdAt: chat.createdAt,

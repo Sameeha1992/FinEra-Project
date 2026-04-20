@@ -5,6 +5,7 @@ export interface IVendorVerifcationRepository {
   getAllVendor(
     page: number,
     limit: number,
+    serach?:string,
   ): Promise<{ vendors: IVendor[]; total: number }>;
   findByVendorId(vendorId: string): Promise<IVendor | null>;
   updateVendorStatus(

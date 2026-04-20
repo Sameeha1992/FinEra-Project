@@ -3,7 +3,7 @@ import Notification, {
 } from "@/models/notification/emi.notification.schema";
 import { BaseRepository } from "../base_repository";
 import { INotificationRepository } from "@/interfaces/repositories/notification/user.notification.repository.interface";
-import { inject, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 import { createReposNotificationDto } from "@/dto/notification/notification.dto";
 
 @injectable()

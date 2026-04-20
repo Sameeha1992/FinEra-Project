@@ -1,9 +1,7 @@
 import { MESSAGES } from "@/config/constants/message";
 import {
   IUserApplicationsListResponseDto,
-  IUserApplicationsListResult,
   UserApplicationDetailsDTO,
-  UserApplicationListItemDTO,
 } from "@/dto/user/userAppliaction/user.application.dto";
 import { IStorageService } from "@/interfaces/helper/storageService.interface";
 import { ILoanRepository } from "@/interfaces/repositories/loan/loan.repository.interface";
@@ -25,6 +23,7 @@ export class UserApplicationService implements IUserApplicationsService {
     userId: string,
     page: number,
     limit: number,
+    search?:string,
   ): Promise<IUserApplicationsListResponseDto> {
     if (!userId) {
       throw new CustomError(MESSAGES.USER_NOT_FOUND);
@@ -34,6 +33,7 @@ export class UserApplicationService implements IUserApplicationsService {
       userId,
       page,
       limit,
+      search
     );
     return {
       applications: result.applications.map((app) =>

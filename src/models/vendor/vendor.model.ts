@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { AccountStatus, Role, Status, verificationStatus } from "../enums/enum";
+import { AccountStatus, Role, Status } from "../enums/enum";
 
 export interface IVendor extends Document {
   _id: mongoose.Types.ObjectId;

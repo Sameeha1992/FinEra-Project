@@ -14,7 +14,7 @@ export class VendorProfileService implements IVendorProfileService{
     constructor(@inject("IVendorRepository") private _vendorRepository:IVendorRepository,
                 @inject("IStorageService") private _IStorageService:IStorageService){}
     async getProfile(vendorid: string): Promise<VendorProfileResponseDTO> {
-        let user = await this._vendorRepository.findById(vendorid);
+        const user = await this._vendorRepository.findById(vendorid);
         if(!user){
             throw new CustomError(MESSAGES.USER_NOT_FOUND);
         }
