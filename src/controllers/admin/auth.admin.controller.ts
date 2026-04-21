@@ -38,6 +38,7 @@ export class AdminAuthController {
         message: MESSAGES.LOGIN_SUCCESS,
       });
     } catch (error) {
+      logger.error({err:error},"Somthing went wrong in login")
       next(error);
     }
   }
@@ -75,6 +76,7 @@ export class AdminAuthController {
         .status(STATUS_CODES.ACCEPTED)
         .json({ message: MESSAGES.TOKEN_CREATED, accessToken });
     } catch (error) {
+      logger.error({err:error},"Issue in referesh token")
       next(error);
     }
   }
@@ -95,6 +97,7 @@ export class AdminAuthController {
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, message: MESSAGES.LOGOUT_SUCCESS });
     } catch (error) {
+      logger.error({err:error},"Somethoing went wrong while logged out")
       next(error);
     }
   }
