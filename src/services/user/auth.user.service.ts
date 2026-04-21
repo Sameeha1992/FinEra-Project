@@ -182,6 +182,10 @@ export class AuthUserService implements IAuthUserService {
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH);
     }
 
+    if (userData.role !== Role.Admin && userData.isBlocked) {
+      throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
+    }
+
     const loginResponse: LoginResponseDto = UserMapper.UserResponse(userData);
 
     const accessToken = this._jwtService.generateAccessToken(
@@ -224,6 +228,14 @@ export class AuthUserService implements IAuthUserService {
       decoded._id,
       decoded.role,
     );
+
+    if (decoded.role !== Role.Admin) {
+      const user = await this._userRepository.findById(decoded._id);
+      if (user && user.isBlocked) {
+        throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
+      }
+    }
+
     const newRefreshToken = this._jwtService.generateRefreshToken(
       decoded._id,
       decoded.role,
@@ -332,6 +344,10 @@ export class AuthUserService implements IAuthUserService {
       };
 
       user = await this._userRepository.create(userModel);
+    }
+
+    if (user.role !== Role.Admin && user.isBlocked) {
+      throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
     }
 
     const userResponse = UserMapper.UserResponse(user);

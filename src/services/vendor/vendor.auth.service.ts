@@ -185,6 +185,10 @@ export class VendorAuthService implements IVendorAuthService {
       throw new CustomError(MESSAGES.PASSWORD_MISMATCH, STATUS_CODES.NOT_FOUND);
     }
 
+    if (vendorData.isBlocked) {
+      throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
+    }
+
     const loginResponse: LoginResponseDto =
       VendorMapper.VendorResponse(vendorData);
 
@@ -227,6 +231,12 @@ export class VendorAuthService implements IVendorAuthService {
       decode._id,
       decode.role,
     );
+
+    const vendor = await this._vendorRepository.findById(decode._id);
+    if (vendor && vendor.isBlocked) {
+      throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
+    }
+
     const newRefreshToken = this._IJwtService.generateRefreshToken(
       decode._id,
       decode.role,
@@ -343,6 +353,10 @@ export class VendorAuthService implements IVendorAuthService {
       };
 
       vendor = await this._vendorRepository.create(vendorModel);
+    }
+
+    if (vendor.isBlocked) {
+      throw new CustomError(MESSAGES.ACCOUNT_BLOCKED, STATUS_CODES.FORBIDDEN);
     }
 
     const vendorResponse = VendorMapper.VendorResponse(vendor);

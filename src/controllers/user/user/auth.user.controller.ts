@@ -26,7 +26,7 @@ export class AuthUserController {
       const createUser = await this._authUserService.registerUser(userData);
       res.status(201).json({ success: true, data: createUser });
     } catch (error) {
-      console.error("Controller error:", error);
+      logger.error({ err: error }, "User registration failed");
 
       if (error instanceof Error) {
         return res.status(400).json({ success: false, error: error.message });
@@ -50,11 +50,7 @@ export class AuthUserController {
         debug: "Email service temporarly disabled",
       });
     } catch (error) {
-      console.error("Generate OTP Error:", error);
-      res.status(500).json({
-        success: false,
-        error: "OTP generation failed",
-      });
+      logger.error({ err: error }, "OTP generation failed");
       next(error);
     }
   }
@@ -67,10 +63,7 @@ export class AuthUserController {
         .status(200)
         .json({ success: true, message: "Otp verified successfully" });
     } catch (error) {
-      console.error(MESSAGES.OTP_NOT_VERIFIED, error);
-      res
-        .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: MESSAGES.OTP_NOT_VERIFIED });
+      logger.error({ err: error }, MESSAGES.OTP_NOT_VERIFIED);
       next(error);
     }
   }
@@ -95,9 +88,7 @@ export class AuthUserController {
         message: MESSAGES.LOGIN_SUCCESS,
       });
     } catch (error) {
-      res
-        .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS, error });
+      logger.error({ err: error }, "User login failed");
       next(error);
     }
   }
@@ -132,9 +123,6 @@ export class AuthUserController {
         .status(STATUS_CODES.ACCEPTED)
         .json({ message: MESSAGES.TOKEN_CREATED, accessToken });
     } catch (error) {
-      res
-        .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: "no access token available" });
       logger.error("no access token available");
       next(error);
     }
@@ -171,7 +159,7 @@ export class AuthUserController {
       }
 
       const otpData: OtpVerifyForgetDto = { email, otp };
-      console.log(otpData, "otpdata");
+      logger.debug(otpData, "Verifying forget password OTP");
       await this._authUserService.verifyforgetOtp(otpData);
 
       logger.info({ email }, "Forget password OTP verified successfully");
@@ -198,10 +186,7 @@ export class AuthUserController {
       const result = await this._authUserService.resetPassword(email, password);
       res.status(STATUS_CODES.SUCCESS).json({ message: result });
     } catch (error) {
-      console.error("Reset password error:", error);
-      res
-        .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({ message: error || "Something went wrong in reset password" });
+      logger.error({ err: error }, "Reset password failed");
       next(error);
     }
   }
@@ -209,8 +194,7 @@ export class AuthUserController {
   async googlelogin(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.body.token;
-
-      console.log("tokewn nkjhjkb", token);
+      logger.debug({ token }, "Processing Google login");
 
       if (!token) {
         throw new CustomError(
@@ -232,7 +216,7 @@ export class AuthUserController {
         accessToken,
       });
     } catch (error) {
-      console.log("google auth issue", error);
+      logger.error({ err: error }, "Google login failed");
       next(error);
     }
   }
@@ -254,9 +238,7 @@ export class AuthUserController {
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, message: MESSAGES.LOGOUT_SUCCESS });
     } catch (error) {
-      res
-        .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: MESSAGES.LOGOUT_FAILED });
+      logger.error({ err: error }, "User logout failed");
       next(error);
     }
   }

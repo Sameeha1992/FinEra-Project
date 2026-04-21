@@ -8,6 +8,7 @@ import { env } from "../../validations/envValidation";
 import { clearAuthCookies } from "../../utils/clearAuthCookies";
 import { isProduction } from "../../utils/setAuthCookies";
 import { Role } from "../../models/enums/enum";
+import logger from "../../middleware/loggerMiddleware";
 
 
 @injectable()
@@ -37,10 +38,7 @@ export class AdminAuthController {
         message: MESSAGES.LOGIN_SUCCESS,
       });
     } catch (error) {
-      res
-        .status(STATUS_CODES.UNAUTHORIZED)
-        .json({ success: false, message: MESSAGES.INVALID_CREDENTIALS, error });
-        next(error)
+      next(error);
     }
   }
   async refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -77,9 +75,6 @@ export class AdminAuthController {
         .status(STATUS_CODES.ACCEPTED)
         .json({ message: MESSAGES.TOKEN_CREATED, accessToken });
     } catch (error) {
-      res
-        .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: MESSAGES.ACCESS_TOKEN_NOT_FOUND });
       next(error);
     }
   }
@@ -100,10 +95,7 @@ export class AdminAuthController {
         .status(STATUS_CODES.SUCCESS)
         .json({ success: true, message: MESSAGES.LOGOUT_SUCCESS });
     } catch (error) {
-      res
-        .status(STATUS_CODES.BAD_REQUEST)
-        .json({ success: false, message: MESSAGES.LOGOUT_FAILED, error });
-        next(error)
+      next(error);
     }
   }
 }

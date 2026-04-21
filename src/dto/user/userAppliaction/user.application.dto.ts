@@ -76,4 +76,5 @@ export interface UserApplicationDetailsDTO {
 
   rejectionReason?: string;
   verifiedAt?: Date;
+  
 }
