@@ -8,16 +8,15 @@ import {
   PaginationQuery,
 } from "@/interfaces/shared/pagination.interface";
 import { IUser, UserModel } from "@/models/user/user.model";
-import { AccountStatus} from "@/models/enums/enum";
+import { AccountStatus } from "@/models/enums/enum";
 
 type RoleModel = "vendor" | "user";
 
 @injectable()
 export class AdminVendorMgtRepo
   extends BaseRepository<IVendor | IUser>
-  implements IAdminVendorMgtRepo
-{
-  
+  implements IAdminVendorMgtRepo {
+
 
   async findAllVendors(
     query: PaginationQuery & { role: RoleModel },
