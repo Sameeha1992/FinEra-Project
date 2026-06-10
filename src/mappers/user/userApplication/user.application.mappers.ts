@@ -3,6 +3,7 @@ import {
   UserApplicationListItemDTO,
 } from "@/dto/user/userAppliaction/user.application.dto";
 import { ILoanApplication } from "@/models/applications/application.model";
+import { IVendor } from "@/models/vendor/vendor.model";
 import { Types } from "mongoose";
 
 export class userApplicationListMapper {
@@ -15,6 +16,7 @@ export class userApplicationListMapper {
       status: app.status,
       appliedDate: app.createdAt.toISOString(),
       rejectionReason: app.rejectionReason,
+      bankName: (app.vendorId as unknown as IVendor)?.vendorName || "Unknown",
     };
   }
 
@@ -38,6 +40,7 @@ export class userApplicationListMapper {
 
       rejectionReason: app.rejectionReason,
       verifiedAt: app.verifiedAt,
+      bankName: (app.vendorId as unknown as IVendor)?.vendorName || "Unknown",
     };
   }
 }

@@ -11,6 +11,7 @@ export interface UserApplicationListItemDTO {
   status: string;
   appliedDate: string;
   rejectionReason?: string;
+  bankName: string;
 }
 
 export interface IUserApplicationsListResult {
@@ -76,5 +77,5 @@ export interface UserApplicationDetailsDTO {
 
   rejectionReason?: string;
   verifiedAt?: Date;
-  
+  bankName: string;
 }

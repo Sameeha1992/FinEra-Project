@@ -41,6 +41,7 @@ export class UserApplicationsRepository
 
     const applications = await loanApplication
       .find(filter)
+      .populate("vendorId", "vendorName")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
